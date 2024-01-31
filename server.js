@@ -6,6 +6,7 @@ const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const errorHandler = require('./middleware/errorHandler');
 const credentials = require('./middleware/credentials');
+const verifyJWT = require('./middleware/verifyJWT');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const cookieParser = require('cookie-parser');
@@ -27,6 +28,14 @@ app.use(cookieParser());
 
 // Routes
 app.use('/register', require('./routes/register'));
+app.use('/authenticate', require('./routes/authenticate'));
+
+// Everything after this line will use the verifyJWT middleware
+// to protect the route
+app.use(verifyJWT);
+
+app.use('/updatePermissions', require('./routes/updatePermissions'));
+app.use('/deleteUser', require('./routes/deleteUser'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {
