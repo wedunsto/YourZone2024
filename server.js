@@ -5,9 +5,9 @@ const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 const errorHandler = require('./middleware/errorHandler');
+const credentials = require('./middleware/credentials');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
-const credentials = require('./middleware/credentials');
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 3500;
@@ -24,6 +24,9 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 // Middleware for cookies
 app.use(cookieParser());
+
+// Routes
+app.use('/register', require('./routes/register'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {
