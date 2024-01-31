@@ -29,6 +29,9 @@ app.use(cookieParser());
 // Routes
 app.use('/register', require('./routes/register'));
 app.use('/authenticate', require('./routes/authenticate'));
+// Receives the cookie that has the refresh token
+app.use('/refresh', require('./routes/refresh'));
+app.use('/logout', require('./routes/logout'));
 
 // Everything after this line will use the verifyJWT middleware
 // to protect the route
