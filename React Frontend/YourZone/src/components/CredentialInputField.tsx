@@ -8,11 +8,9 @@ interface CredentialInputFieldProp {
     property: HTMLInputTypeAttribute,
     value: string,
     valid: boolean,
-    ref: LegacyRef<HTMLInputElement> | undefined,
-    setCredential: Function,
-    setFocus: Function
+    setCredential: Function
 }
-const CredentialInputField = ({title, property, value, valid, ref, setCredential, setFocus}: CredentialInputFieldProp) => {
+const CredentialInputField = ({title, property, value, valid, setCredential}: CredentialInputFieldProp) => {
     return(
         <label htmlFor={title} className="form-control w-full max-w-xs">
             <div className="label">
@@ -22,15 +20,12 @@ const CredentialInputField = ({title, property, value, valid, ref, setCredential
             <input 
                 type={property}
                 id={title}
-                ref={ref}
                 autoComplete="off"
                 onChange={(input) => setCredential(input.target.value)}
                 value={value}
                 required
                 aria-invalid={valid ? "false" : true}
                 aria-describedby="uidnote"
-                onFocus={setFocus(true)}
-                onBlur={setFocus(false)}
                 className="input input-bordered w-full max-w-xs" />
         </label>
     );

@@ -12,13 +12,11 @@ interface ValidationNoticeProp {
 
 const ValidationNotice = ({ valid, notice }: ValidationNoticeProp) => {
     return(
-        <div>
+        <div className="m-5">
             {
             valid == false ? 
-            <p className="m-5" id="uidnote">
-                <FontAwesomeIcon className="my-2" icon={faInfoCircle} />
-                {notice}
-            </p> 
+            <div><FontAwesomeIcon className="my-2" icon={faInfoCircle} />
+            {notice}</div>
             : 
             null
         }
