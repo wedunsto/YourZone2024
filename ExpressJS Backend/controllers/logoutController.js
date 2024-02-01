@@ -2,7 +2,6 @@ const User = require('../models/Users');
 
 const handleLogout = async (req, res) => {
     // On client, also delete the accessToken
-
     const cookies = req.cookies;
     // If there are no cookies, or there is no jwt property
     if (!cookies?.jwt) return res.sendStatus(204); //No content to send back

@@ -3,16 +3,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const authenticateUser = async (req, res) => {
-    const {user, password} = req.body;
+    const {username, password} = req.body;
 
-    if (!user || !password) {
+    if (!username || !password) {
         return res.status(400).json({ 
             'message': 'Username and password are required.' 
         });
     }
     
     // Find the user that is sent in
-    const foundUser = await User.findOne({ username: user }).exec();
+    const foundUser = await User.findOne({ username: username }).exec();
     if(!foundUser) {
         return res.sendStatus(404); // Unauthorized
     }
