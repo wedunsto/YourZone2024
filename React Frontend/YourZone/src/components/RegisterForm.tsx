@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CredentialInputField from './CredentialInputField';
+import ValidationNotice from "./ValidationNotice";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -49,7 +48,7 @@ const RegisterForm = () => {
     // Compare password and matching password
     useEffect(() => {
         setValidPassword(PASSWORD_REGEX.test(password));
-        setValidMatchingPassword(password === matchingPassword);
+        setValidMatchingPassword(password === matchingPassword && matchingPassword != '');
     }, [password, matchingPassword]);
 
     // Clear the error when any input changes
@@ -57,35 +56,65 @@ const RegisterForm = () => {
         setErrorMessage('');
     }, [username, password, matchingPassword]);
 
+    const handleSubmit = () => {
+        console.log("User registered.");
+    };
+
     return (
         <div className='flex flex-col'>
-            <CredentialInputField 
-                title='Username'
-                property='text'
-                value={username}
-                valid={validUsername}
-                ref={userRef}
-                setCredential={setUsername}
-                setFocus={setUsernameFocus}
-            />
-            <CredentialInputField 
-                title='Password'
-                property='password'
-                value={password}
-                valid={validPassword}
-                ref={undefined}
-                setCredential={setPassword}
-                setFocus={setPasswordFocus}
-            />
-            <CredentialInputField 
-                title='Matching Password'
-                property='password'
-                value={matchingPassword}
-                valid={validMatchingPassword}
-                ref={undefined}
-                setCredential={setMatchingPassword}
-                setFocus={setMatchingPasswordFocus}
-            />
+            <form onSubmit={handleSubmit}>
+                <CredentialInputField 
+                    title='Username'
+                    property='text'
+                    value={username}
+                    valid={validUsername}
+                    ref={userRef}
+                    setCredential={setUsername}
+                    setFocus={setUsernameFocus}
+                />
+                <ValidationNotice
+                    valid={validUsername}
+                    notice={<div>3 to 24 characters. <br />
+                            Must begin with a letter <br />
+                            Letters, numbers, underscores, hyphens allowed.</div>}/>
+
+                <CredentialInputField 
+                    title='Password'
+                    property='password'
+                    value={password}
+                    valid={validPassword}
+                    ref={undefined}
+                    setCredential={setPassword}
+                    setFocus={setPasswordFocus}
+                />
+                <ValidationNotice
+                    valid={validPassword}
+                    notice={<div>8 to 24 characters.<br />
+                            Must include uppercase and lowercase letters, a number and a special character.<br />
+                            Allowed special characters: 
+                                <span aria-label="exclamation mark">!</span>
+                                <span aria-label="at symbol">@</span>
+                                <span aria-label="hashtag">#</span>
+                                <span aria-label="dollar sign">$</span>
+                                <span aria-label="percent">%</span></div>}/>
+
+                <CredentialInputField 
+                    title='Matching Password'
+                    property='password'
+                    value={matchingPassword}
+                    valid={validMatchingPassword}
+                    ref={undefined}
+                    setCredential={setMatchingPassword}
+                    setFocus={setMatchingPasswordFocus}
+                />
+                <ValidationNotice
+                    valid={validMatchingPassword}
+                    notice={<div>Must match the first password input field.</div>}/>
+                
+                <button
+                    disabled={!validUsername || !validPassword || !validMatchingPassword? true : false}
+                    className='my-5 btn btn-outline'>Sign Up</button>
+            </form>
         </div>
     );
 }

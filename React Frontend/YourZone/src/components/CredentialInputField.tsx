@@ -1,6 +1,8 @@
 import { HTMLInputTypeAttribute, LegacyRef } from "react";
+import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// Formated input field for username, password, or matching password
+// Formatted input field for username, password, or matching password
 interface CredentialInputFieldProp {
     title: string,
     property: HTMLInputTypeAttribute,
@@ -12,9 +14,10 @@ interface CredentialInputFieldProp {
 }
 const CredentialInputField = ({title, property, value, valid, ref, setCredential, setFocus}: CredentialInputFieldProp) => {
     return(
-        <label className="form-control w-full max-w-xs">
+        <label htmlFor={title} className="form-control w-full max-w-xs">
             <div className="label">
                 <span className="label-text">{title}</span>
+                {valid && !(value == '') == true ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
             </div>
             <input 
                 type={property}
