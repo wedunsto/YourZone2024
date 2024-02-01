@@ -1,8 +1,9 @@
-function App() {
+import RegisterForm from "./components/RegisterForm";
 
-  return (
-    <p>Test</p>
-  )
+const App = () => {
+  return(
+    <RegisterForm />
+  );
 }
 
-export default App
+export default App;
