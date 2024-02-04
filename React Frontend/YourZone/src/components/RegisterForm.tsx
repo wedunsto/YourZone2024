@@ -1,9 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
+import axios from '../api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+const REGISTER_URL = '/register';
 
 const RegisterForm = () => {
     // Hooks used to store username, validate username, and focus
@@ -24,14 +26,10 @@ const RegisterForm = () => {
     // Hook for error states
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
-        console.log("test");
-    }, []);
-
     // Validate the username when it changes
     useEffect(() => {
         setValidUsername(USER_REGEX.test(username));
-    });
+    }, [username]);
 
     // Validate the password when it changes
     // Compare password and matching password
@@ -45,12 +43,48 @@ const RegisterForm = () => {
         setErrorMessage('');
     }, [username, password, matchingPassword]);
 
-    const handleSubmit = () => {
-        console.log("User registered.");
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
+        const v1 = USER_REGEX.test(username);
+        const v2 = PASSWORD_REGEX.test(password);
+        if (!v1 || !v2) {
+            setErrorMessage("Invalid Entry");
+            return;
+        }
+
+        try {
+            const response = await axios.post(REGISTER_URL,
+                JSON.stringify({username: username, password}),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+            );
+            console.log(response.data);
+            console.log(JSON.stringify(response));
+            // Clear input fields out of registration field
+            setUsername("");
+            setPassword("");
+            setMatchingPassword("");
+        } catch(err) {
+            if(!(err as any)?.response) {
+                setErrorMessage('No Server Response');
+            } else if ((err as any).response?.status === 409){
+                setErrorMessage('Username Taken');
+            } else {
+                setErrorMessage('Registration Failed');
+            }
+        }
     };
 
     return (
         <div className='flex flex-col'>
+            {
+                errorMessage? 
+                <p>{errorMessage}</p> :
+                null
+            }
             <form onSubmit={handleSubmit}>
                 <CredentialInputField 
                     title='Username'
