@@ -7,7 +7,7 @@ interface CredentialInputFieldProp {
     title: string,
     property: HTMLInputTypeAttribute,
     value: string,
-    valid: boolean,
+    valid: boolean | null,
     setCredential: Function
 }
 const CredentialInputField = ({title, property, value, valid, setCredential}: CredentialInputFieldProp) => {
@@ -15,7 +15,7 @@ const CredentialInputField = ({title, property, value, valid, setCredential}: Cr
         <label htmlFor={title} className="form-control w-full max-w-xs">
             <div className="label">
                 <span className="label-text">{title}</span>
-                {valid && !(value == '') == true ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
+                {valid == null? null : valid && !(value == '') == true ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
             </div>
             <input 
                 type={property}

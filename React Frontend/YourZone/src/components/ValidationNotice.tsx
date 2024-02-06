@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
 
 interface ValidationNoticeProp {
-    valid: boolean,
+    valid: boolean | null,
     notice: ReactNode
 }
 

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -8,6 +9,9 @@ const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
 const REGISTER_URL = '/register';
 
 const RegisterForm = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     // Hooks used to store username, validate username, and focus
     // on username text field
     const [username, setUsername] = useState('');
@@ -61,12 +65,13 @@ const RegisterForm = () => {
                     withCredentials: true
                 }
             );
-            console.log(response.data);
-            console.log(JSON.stringify(response));
+            
             // Clear input fields out of registration field
             setUsername("");
             setPassword("");
             setMatchingPassword("");
+
+            navigate("/");
         } catch(err) {
             if(!(err as any)?.response) {
                 setErrorMessage('No Server Response');
@@ -132,6 +137,12 @@ const RegisterForm = () => {
                     disabled={!validUsername || !validPassword || !validMatchingPassword? true : false}
                     className='my-5 btn btn-outline'>Sign Up</button>
             </form>
+            <p>
+                Already registered?<br />
+                <span className="line">
+                    <a href="login">Sign In</a>
+                </span>
+            </p>
         </div>
     );
 }
