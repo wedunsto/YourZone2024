@@ -140,7 +140,7 @@ const RegisterForm = () => {
             <p>
                 Already registered?<br />
                 <span className="line">
-                    <a href="login">Sign In</a>
+                    <a href="/">Sign In</a>
                 </span>
             </p>
         </div>

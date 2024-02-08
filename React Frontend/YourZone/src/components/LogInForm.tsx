@@ -7,7 +7,7 @@ import CredentialInputField from './CredentialInputField';
 
 const LOGIN_URL = '/authenticate';
 
-const LogIn = () => {
+const LogInForm = () => {
     const { setAuth } = useAuth() as any;
     // Used to navigate to the home page after authentication
     const navigate = useNavigate();
@@ -47,6 +47,7 @@ const LogIn = () => {
             setUsername("");
             setPassword("");
             setErrorMessage("");
+            navigate("/home");
         } catch(err) {
             if(!(err as any)?.response) {
                 setErrorMessage('No Server Response');
@@ -85,11 +86,11 @@ const LogIn = () => {
             <p>
                 Need an Account?<br />
                 <span className="line">
-                    <a href="register">Sign Up</a>
+                    <a href="/register">Sign Up</a>
                 </span>
             </p>
         </div>
     );
 };
 
-export default LogIn;
+export default LogInForm;
