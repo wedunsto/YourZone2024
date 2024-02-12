@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
         const hashedPwd = await bcrypt.hash(password, 10);
         //store the new user
         // Add role of user when the user registers
-        // Create an store new user
+        // Create and store new user
         const result = await User.create({ 
             "username": username,
             "password": hashedPwd 

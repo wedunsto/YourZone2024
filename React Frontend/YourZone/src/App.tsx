@@ -5,6 +5,7 @@ import LogInView from "./views/LogInView";
 import RegisterView from "./views/RegisterView";
 import HomePageView from "./views/HomePageView";
 import MissingView from "./views/MissingView";
+import YourBibleView from "./views/YourBibleView";
 
 const ROLES = {
   'User': 1984,
@@ -23,6 +24,7 @@ const App = () => {
       {/* Private routes */}
       <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>
           <Route path="/home" element={<HomePageView />} />
+          <Route path="/yourbible" element={<YourBibleView />} />
       </Route>
 
       {/* catch all */}

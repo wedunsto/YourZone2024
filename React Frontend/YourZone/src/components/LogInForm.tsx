@@ -1,8 +1,8 @@
 // Log in component used to access the home page for those authorized
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 
 const LOGIN_URL = '/authenticate';
