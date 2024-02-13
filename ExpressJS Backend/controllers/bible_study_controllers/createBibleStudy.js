@@ -2,15 +2,15 @@
 const BibleStudy = require('../../models/BibleVerses');
 
 const createBibleVerse = async (req, res) => {
-    const { username, type, title, bibleverses, notes } = req.body;
-    if(!username || !type || !title || !bibleverses) {
+    const { userId, type, title, bibleverses, notes } = req.body;
+    if(!userId || !type || !title || !bibleverses) {
         return res.status(400).json({'message': 'Please enter the required properties.' });
     }
 
     try {
         // Create and store a new Bible verse / sermon note
         const result = await BibleStudy.create({
-            "username": username,
+            "userId": userId,
             "type": type,
             "title": title,
             "bibleverses": bibleverses,

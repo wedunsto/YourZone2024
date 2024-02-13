@@ -26,9 +26,11 @@ const authenticateUser = async (req, res) => {
         // Then pass in your secret
         // Then pass in an option that handles expiration
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        const id = Object.values(foundUser.id).join('');
         const accessToken = jwt.sign(
             {
                 "UserInfo": {
+                    "id": id,
                     "username": foundUser.username,
                     "roles": roles
                 }
@@ -54,7 +56,7 @@ const authenticateUser = async (req, res) => {
          maxAge: 24 * 60 * 60 * 1000})
 
         // Sent as JSON so the front end can grab this
-        res.json({roles, accessToken});
+        res.json({id, roles, accessToken});
     } else {
         res.sendStatus(401);
     }

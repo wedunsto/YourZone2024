@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const bibleverseSchema = new Schema({
-    username: {
+    userId: {
         type: String,
         required: true
     },
     type: {
-        type: Array,
+        type: String,
         required: true
     },
     title: {

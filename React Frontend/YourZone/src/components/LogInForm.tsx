@@ -38,10 +38,10 @@ const LogInForm = () => {
                     withCredentials: true
                 }
             );
-
+            const id = response?.data?.id;
             const accessToken = response?.data?.accessToken;
             const roles =response?.data?.roles;
-            setAuth({username, password, roles, accessToken});
+            setAuth({username, password, roles, accessToken, id});
 
             // Reset inputs upon logging in
             setUsername("");
