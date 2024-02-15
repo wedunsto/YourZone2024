@@ -1,18 +1,31 @@
 // Collapsable table entries for YourBible
 
 interface YourBibleEntryProp{
-    collapseText: String,
-    expandText: String,
+    id: string,
+    collapseText: string,
+    bibleVerses: string[],
+    expandText: string,
 }
-const YourBibleEntry = ({collapseText, expandText}: YourBibleEntryProp) => {
+const YourBibleEntry = ({id, collapseText, bibleVerses, expandText}: YourBibleEntryProp) => {
+    const lineSeperatedNotes = expandText.split(/\n/g);
+
     return (
-        <div className="collapse collapse-arrow">
-            <input type="radio" name="my-accordion-2" checked={true} /> 
+        <div className="mb-4 collapse collapse-arrow bg-base-200">
+            <input type="checkbox" /> 
             <div className="collapse-title text-xl font-medium">
                 {collapseText}
             </div>
-            <div className="collapse-content"> 
-                {expandText}
+            <div className="collapse-content">
+                {bibleVerses.map((bibleVerse: string, index: number) => (
+                        bibleVerses.length == 1 || index == bibleVerses.length - 1? (
+                            <span>{bibleVerse}</span>
+                        ) : <span>{bibleVerse}, </span>
+                    )
+                )}
+                <div className="divider"></div>
+                <ul className="list-disc">
+                    {lineSeperatedNotes.map((note: string) => <li key={id}>{note}</li>)}
+                </ul> 
             </div>
         </div>
     );

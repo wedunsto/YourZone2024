@@ -6,7 +6,12 @@ import useAuth from "../../hooks/useAuth";
 
 const BIBLE_URL = '/createBibleStudy';
 
-const YourBibleButtons = () => {
+interface YourBibleButtonsProp {
+    submittedBool: boolean
+    setSubmittedFtn: Function
+}
+
+const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
     const [type, setType] = useState('');
     const [title, setTitle] = useState('');
     const [bibleVerses, setBibleVerses] = useState('');
@@ -27,7 +32,8 @@ const YourBibleButtons = () => {
     }
 
     const updateBibleNotes = (e: any) => {
-        setBibleNotes(e.target.value);
+        const updatedValue = e.target.value.replace(/\r\n/g, '\n');
+        setBibleNotes(updatedValue);
     }
 
     const clearFields = () => {
@@ -52,14 +58,15 @@ const YourBibleButtons = () => {
                 setBibleVerses('');
                 setBibleVerses('');
                 setBibleNotes('');
+                setSubmittedFtn(!(submittedBool));
         } catch(err) {
             setErrorMessage((err as any).response);
         }
     }
 
     return (
-        <div>
-            <div>
+        <div className="flex mr-10">
+            <div className="flex-1">
                 {errorMessage? <p>{errorMessage}</p> : null}
                 <label 
                     htmlFor="createBibleStudy"
@@ -99,18 +106,21 @@ const YourBibleButtons = () => {
                                 </div>
                             </div>
                             <input 
+                                id="title"
                                 type="text"
                                 value={title}
                                 className="border-2 border-white rounded-lg mb-2 p-2"
                                 onChange={updateTitle} 
                                 placeholder="Enter Title" />
                             <input 
+                                id="bibleverses"
                                 type="text"
                                 value={bibleVerses}
                                 className="border-2 border-white rounded-lg my-2 p-2"
                                 onChange={updateBibleVerses}
                                 placeholder="Enter Bible verses" />
                             <textarea
+                                id="notes"
                                 value={bibleNotes}
                                 className="border-2 border-white rounded-lg my-2 p-2"
                                 onChange={updateBibleNotes}
