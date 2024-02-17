@@ -42,7 +42,7 @@ const YourBibleView = () => {
                 <YourBibleButtons submittedBool={submitted} setSubmittedFtn={setSubmitted} />
                 <div className="flex flex-col">
                     {
-                        bibleNotes.map((note: any) => <YourBibleEntry key={note.id} id={note.id} collapseText={note.title} bibleVerses={note.bibleverses} expandText={note.notes}/>)
+                        bibleNotes.map((note: any) => <YourBibleEntry key={note.id} id={note.id} type={note.type} collapseText={note.title} bibleVerses={note.bibleverses} expandText={note.notes}/>)
                     }
                 </div>
             </div>
