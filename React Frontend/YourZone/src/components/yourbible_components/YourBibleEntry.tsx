@@ -21,21 +21,23 @@ const YourBibleEntry = (
     const [newTitle, setNewTitle] = useState('');
     const [newBibleVerses, setNewBibleVerses] = useState('');
     const [newBibleNotes, setNewBibleNotes] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const { auth } = useAuth() as any;
 
     const lineSeperatedNotes = expandText.split(/\n/g);
 
-    useEffect(() => {
-        console.log(newTitle)
-    }, [newType, newTitle, newBibleVerses, newBibleNotes]);
-
     const onClickEdit = () => {
         setNewType(type);
         setNewTitle(collapseText);
         setNewBibleVerses(bibleVerses.join(", "));
         setNewBibleNotes(expandText);
+        setModalVisible(true);
+    }
+    
+    const onClose = () => {
+        setModalVisible(false);
     }
 
     const onTypeChange = (e: any) => {
@@ -100,8 +102,9 @@ const YourBibleEntry = (
         <input 
             type="checkbox"
             id="updateBibleStudy"
-            className="modal-toggle" />
-        <div className="modal">
+            className="modal-toggle"
+            checked={modalVisible} />
+        <div className={`modal ${modalVisible ? 'visible' : ''}`}>
             <div className="modal-box">
                 <form 
                     className="flex flex-col rounded-lg">
@@ -155,7 +158,8 @@ const YourBibleEntry = (
                 <div className="flex justify-between">
                     <label 
                         htmlFor="updateBibleStudy"
-                        className="btn mt-2">Close</label>
+                        className="btn mt-2"
+                        onClick={onClose}>Close</label>
                             
                     <label
                         htmlFor="updateBibleStudy"
