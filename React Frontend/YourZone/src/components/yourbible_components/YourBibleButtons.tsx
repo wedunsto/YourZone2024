@@ -100,7 +100,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                                     <span className="label-text mr-2">Service Notes</span>
                                     <input 
                                         type="radio"
-                                        value="ServiceNotes"
+                                        value={"ServiceNotes"}
                                         checked={type === "ServiceNotes"}
                                         className="radio" onChange={onTypeChange} />
                                 </div>
