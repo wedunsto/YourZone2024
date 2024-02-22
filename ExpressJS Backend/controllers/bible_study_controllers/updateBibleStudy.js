@@ -4,15 +4,12 @@ const BibleStudy = require('../../models/BibleVerses');
 
 const updateBibleStudy = async (req, res) => {
     const { id, type, title, bibleverses, notes } = req.body;
-
+    
     try {
         // Find Bible and update properties
         const updateBible = await BibleStudy.findOneAndUpdate(
-            { id: id },
-            {$set: { type: type } },
-            {$set: { title: title } },
-            {$set: { bibleverses: bibleverses} },
-            {$set: { notes: notes }},
+            { _id: id },
+            {$set: { type: type, title: title, bibleverses: bibleverses, notes: notes } },
             { new: true }
         );
 
