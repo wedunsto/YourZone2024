@@ -42,6 +42,8 @@ app.use('/deleteUser', require('./routes/deleteUser'));
 app.use('/createBibleStudy', require('./routes/bible_study_routes/createBibleStudy'));
 app.use('/getBibleStudy', require('./routes/bible_study_routes/getBibleStudy'));
 app.use('/updateBibleStudy', require('./routes/bible_study_routes/updateBibleStudy'));
+app.use('/deleteBibleStudy', require('./routes/bible_study_routes/deleteBibleStudy'));
+
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');

@@ -15,7 +15,8 @@ interface YourBibleEntryProp{
 
 const YourBibleEntry = (
     {id, type, collapseText, bibleVerses, expandText, submitted, setSubmitted}: YourBibleEntryProp) => {
-        const BIBLE_URL = '/updateBibleStudy';
+        const UPDATE_BIBLE_URL = '/updateBibleStudy';
+        const DELETE_STUDY_URL = '/deleteBibleStudy';
 
         const [newType, setNewType] = useState('');
         const [newTitle, setNewTitle] = useState('');
@@ -60,9 +61,8 @@ const YourBibleEntry = (
         const updateBibleStudy = async (e: any) => {
             e.preventDefault();
 
-            console.log(`id: ${id}, original title: ${collapseText}, new title: ${newTitle}`)
             try {
-                const response = await axios.post(BIBLE_URL,
+                const response = await axios.post(UPDATE_BIBLE_URL,
                     JSON.stringify({ 
                         id,
                         "type": newType,
@@ -83,7 +83,20 @@ const YourBibleEntry = (
 
         const deleteBibleStudy = async (e:any) => {
             e.preventDefault();
-            console.log("Stub");
+            
+            try {
+                const response = await axios.delete(DELETE_STUDY_URL, {
+                    data: JSON.stringify({ id }),
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                    withCredentials: true,
+                  });
+                    setSubmitted(!(submitted));
+            } catch(err) {
+                setErrorMessage((err as any).response);
+            }
         }
 
         return (
