@@ -29,7 +29,10 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const result = await User.create({ 
             "username": username,
-            "password": hashedPassword 
+            "password": hashedPassword,
+            "roles": {
+                "Submitted":2001
+            }
         });
         res.status(201).json({ 
             'success': `New user ${username} created!` 
