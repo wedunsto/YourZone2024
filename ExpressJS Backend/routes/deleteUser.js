@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const deleteUserController = require('../controllers/deleteUserController');
+const userController = require('../controllers/userController');
+const ROLES_LIST = require('../config/roles_list');
+const verifyRoles = require('../middleware/verifyRoles');
 
-router.post('/', deleteUserController.deleteUser);
+router.route('/')
+    .post(verifyRoles(ROLES_LIST.Admin), userController.deleteUser);
 
 module.exports = router;

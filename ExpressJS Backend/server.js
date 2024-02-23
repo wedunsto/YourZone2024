@@ -1,10 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
-const errorHandler = require('./middleware/errorHandler');
 const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
 const mongoose = require('mongoose');
@@ -27,17 +25,17 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/register', require('./routes/register'));
-app.use('/authenticate', require('./routes/authenticate'));
+app.use('/register', require('./routes/createUser'));
+app.use('/login', require('./routes/logUserIn'));
 // Receives the cookie that has the refresh token
 app.use('/refresh', require('./routes/refresh'));
-app.use('/logout', require('./routes/logout'));
 
 // Everything after this line will use the verifyJWT middleware
 // to protect the route
 app.use(verifyJWT);
 
-app.use('/updatePermissions', require('./routes/updatePermissions'));
+app.use('/logout', require('./routes/logUserOut'));
+app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
 app.use('/createBibleStudy', require('./routes/bible_study_routes/createBibleStudy'));
 app.use('/getBibleStudy', require('./routes/bible_study_routes/getBibleStudy'));
