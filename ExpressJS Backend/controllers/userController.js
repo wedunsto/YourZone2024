@@ -106,14 +106,17 @@ const logUserIn = async (req, res) => {
     }
 }
 
-// Update a user's role
+/*
+    Update a user's roles
+    Set ALL the roles at once
+*/
 const updateUserRoles = async (req, res) => {
-    const { username, roles } = req.body;
+    const { id, roles } = req.body;
 
     try {
         // Find user by username and update the role property
         const updatedUserRole = await User.findOneAndUpdate(
-            { username: username },
+            { _id: id },
             { $set: { roles: roles } },
             { new: true } // Return the new updated document
         );
