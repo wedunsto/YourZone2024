@@ -2,13 +2,15 @@
 const User = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const eventLogger = require('../middleware/logEvents');
 
 // Create a new user with the Submitted role
 const createUser = async (req, res) => {
     const { username, password } = req.body;
 
     if(!username || !password) {
-        return res.status(400).json({ 
+        eventLogger.logEvents('Username and password are required to create a new user.');
+        return res.status(400).json({
             'message': 'Username and password are required.' 
         });
     }
@@ -17,6 +19,7 @@ const createUser = async (req, res) => {
     const duplicate = await User.findOne({ username: username }).exec();
     
     if (duplicate) {
+        eventLogger.logEvents('Username already exists.');
         return res.sendStatus(409);
     }
 
@@ -34,10 +37,12 @@ const createUser = async (req, res) => {
                 "Submitted":2001
             }
         });
+        eventLogger.logEvents(`New user ${username} created!`);
         res.status(201).json({ 
             'success': `New user ${username} created!` 
         });
     } catch(err) {
+        eventLogger.logEvents(`Error encountered while creating a new user: ${err.message}`);
         res.status(500).json({ 
             'message': err.message 
         });
@@ -49,6 +54,7 @@ const logUserIn = async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
+        eventLogger.logEvents('Username and password are required to log a user in.');
         return res.status(400).json({ 
             'message': 'Username and password are required.' 
         });
@@ -58,6 +64,7 @@ const logUserIn = async (req, res) => {
     const foundUser = await User.findOne({username: username }).exec();
 
     if(!foundUser) {
+        eventLogger.logEvents(`Did not find user: ${username} to log in`);
         return res.sendStatus(404);
     }
 
@@ -98,10 +105,11 @@ const logUserIn = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000
         });
-        
+        eventLogger.logEvents(`User ${username} successfully logged in`);
         // Sent as JSON so the front end can grab this
         res.json({id, roles, accessToken});
     } else {
+        eventLogger.logEvents(`Invalid password for user: ${username}, while logging in`);
         res.sendStatus(401);
     }
 }
@@ -122,14 +130,17 @@ const updateUserRoles = async (req, res) => {
         );
 
         if(!updatedUserRole) {
+            eventLogger.logEvents(`User not found to update roles`);
             return res.status(404).json({ 
                 message: 'User not found' 
             });
         }
 
+        eventLogger.logEvents(`User roles updated`);
         // Send the updated document in the response
         res.json(updatedUserRole);
     } catch(err) {
+        eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
 }
@@ -146,9 +157,11 @@ const logUserOut = async (req, res) => {
         );
 
         if(!loggedOutUser) {
+            eventLogger.logEvents(`User not found to log out`);
             return res.status(404).json({ message: 'User not found' });
         }
     } catch(err) {
+        eventLogger.logEvents(`Error encountered while logging out: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
 
@@ -156,6 +169,7 @@ const logUserOut = async (req, res) => {
     // secure: only serves on https; if you dont have https dont use this, apparently it works in dev?
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     
+    eventLogger.logEvents("User successfully logged out");
     return res.status(200).json({ 
         message: "Successfully logged out." 
     });
@@ -171,12 +185,15 @@ const deleteUser = async (req, res) => {
         );
 
         if(!deletedUser) {
+            eventLogger.logEvents("Did not find user to delete");
             return res.sendStatus(404);
         }
 
+        eventLogger.logEvents("Successfully deleted user");
         // Send the deleted document in the response
         res.json(deletedUser);
     } catch(err) {
+        eventLogger.logEvents(`Error encountered while deleting user: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
 }
