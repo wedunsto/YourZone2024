@@ -37,10 +37,10 @@ app.use(verifyJWT);
 app.use('/logout', require('./routes/logUserOut'));
 app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
-app.use('/createBibleStudy', require('./routes/bible_study_routes/createBibleStudy'));
-app.use('/getBibleStudy', require('./routes/bible_study_routes/getBibleStudy'));
-app.use('/updateBibleStudy', require('./routes/bible_study_routes/updateBibleStudy'));
-app.use('/deleteBibleStudy', require('./routes/bible_study_routes/deleteBibleStudy'));
+app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));
+app.use('/getBibleStudyNotes', require('./routes/api/getBibleStudyNotes'));
+app.use('/updateBibleStudyNote', require('./routes/api/updateBibleStudyNote'));
+app.use('/deleteBibleStudyNote', require('./routes/api/deleteBibleStudyNote'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {

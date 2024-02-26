@@ -1,8 +1,8 @@
 // Route used to create a new bible study / sermon note
 const express = require('express');
 const router = express.Router();
-const createBibleVerse = require('../../controllers/bible_study_controllers/createBibleStudy');
+const bibleStudyController = require('../../controllers/api/bibleStudyController');
 
-router.post('/', createBibleVerse.createBibleVerse);
+router.post('/', bibleStudyController.createBibleStudyNotes);
 
 module.exports = router;
