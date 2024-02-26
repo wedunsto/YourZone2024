@@ -4,11 +4,11 @@ import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 
-const BIBLE_URL = '/createBibleStudy';
+const BIBLE_URL = '/createBibleStudyNote';
 
 interface YourBibleButtonsProp {
-    submittedBool: boolean
-    setSubmittedFtn: Function
+    submittedBool: boolean,
+    setSubmittedFtn: (value: boolean) => void;
 }
 
 const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
@@ -46,6 +46,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         e.preventDefault();
 
         try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const response = await axios.post(BIBLE_URL,
                 JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
                 {

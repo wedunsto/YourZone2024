@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
 
-const BIBLE_URL = '/getBibleStudy';
+const BIBLE_URL = '/getBibleStudyNotes';
 
 const YourBibleView = () => {
     const { auth } = useAuth() as any;
