@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import YourBibleModal from "./YourBibleModal";
 
 const BIBLE_URL = '/createBibleStudyNote';
 
@@ -20,18 +21,19 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
     const { auth } = useAuth() as any;
 
-    const onTypeChange = (e: any) => {
+    const updateType = (e: React.ChangeEvent<HTMLInputElement>) => {
         setType(e.target.value);
     }
 
-    const updateTitle = (e: any) => {
+    const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
     }
-    const updateBibleVerses = (e: any) => {
+
+    const updateBibleVerses = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBibleVerses(e.target.value);
     }
 
-    const updateBibleNotes = (e: any) => {
+    const updateBibleNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
         const updatedValue = e.target.value.replace(/\r\n/g, '\n');
         setBibleNotes(updatedValue);
     }
@@ -42,7 +44,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         setBibleNotes('');
     }
 
-    const createBibleStudy = async (e: any) => {
+    const createBibleStudy = async (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
 
         try {
@@ -76,70 +78,18 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     type="checkbox"
                     id="createBibleStudy" 
                     className="modal-toggle" />
-                <div className="modal">
-                    <div className="modal-box">
-                        <form 
-                            className="flex flex-col rounded-lg">
-                            <div className="flex flex-row">
-                                <div className="flex flex-row m-4">
-                                    <span className="label-text mr-2">Bible Notes</span>
-                                    <input 
-                                        type="radio"
-                                        value={"BibleNotes"}
-                                        checked={type === "BibleNotes"}
-                                        className="radio" onChange={onTypeChange} />
-                                </div>
-                                <div className="flex flex-row m-4">
-                                    <span className="label-text mr-2">Sermon Notes</span>
-                                    <input 
-                                        type="radio"
-                                        value={"SermonNotes"}
-                                        checked={type === "SermonNotes"}
-                                        className="radio" onChange={onTypeChange} />
-                                </div>
-                                <div className="flex flex-row m-4">
-                                    <span className="label-text mr-2">Service Notes</span>
-                                    <input 
-                                        type="radio"
-                                        value={"ServiceNotes"}
-                                        checked={type === "ServiceNotes"}
-                                        className="radio" onChange={onTypeChange} />
-                                </div>
-                            </div>
-                            <input 
-                                id="title"
-                                type="text"
-                                value={title}
-                                className="border-2 border-white rounded-lg mb-2 p-2"
-                                onChange={updateTitle} 
-                                placeholder="Enter Title" />
-                            <input 
-                                id="bibleverses"
-                                type="text"
-                                value={bibleVerses}
-                                className="border-2 border-white rounded-lg my-2 p-2"
-                                onChange={updateBibleVerses}
-                                placeholder="Enter Bible verses" />
-                            <textarea
-                                id="notes"
-                                value={bibleNotes}
-                                className="border-2 border-white rounded-lg my-2 p-2"
-                                onChange={updateBibleNotes}
-                                placeholder="Enter Bible Notes" />
-                        </form>
-                        <div className="flex justify-between">
-                            <label 
-                                htmlFor="createBibleStudy"
-                                className="btn mt-2"
-                                onClick={clearFields}>Close</label>
-                            
-                            <label
-                                htmlFor="createBibleStudy"
-                                className="btn mt-2"
-                                onClick={createBibleStudy}>Submit</label>
-                        </div>
-                    </div>
-                </div>
+                <YourBibleModal
+                    type={type}
+                    title={title}
+                    bibleVerses={bibleVerses}
+                    bibleNotes={bibleNotes}
+                    updateType={updateType}
+                    updateTitle={updateTitle}
+                    updateBibleVerses={updateBibleVerses}
+                    updateBibleNotes={updateBibleNotes}
+                    clearFields={clearFields}
+                    createBibleStudy={createBibleStudy}
+                />
             </div>
         </div>
     );

@@ -1,9 +1,22 @@
 // Modal used to create new Bible study notes and edit existing ones
 interface YourBibleModalProp {
     type: string,
-    
+    title: string,
+    bibleVerses: string,
+    bibleNotes: string,
+    updateType: (e: any) => void,
+    updateTitle: (e: any) => void,
+    updateBibleVerses: (e: any) => void,
+    updateBibleNotes: (e: any) => void,
+    clearFields: () => void,
+    createBibleStudy: (e: any) => void
 }
-const YourBibleModal = () => {
+
+const YourBibleModal = ({type, title, bibleVerses, 
+                         bibleNotes, updateType,
+                         updateTitle, updateBibleVerses,
+                         updateBibleNotes, clearFields, createBibleStudy}: YourBibleModalProp) => {
+                            
     return(
         <div className="modal">
             <div className="modal-box">
@@ -15,7 +28,7 @@ const YourBibleModal = () => {
                                 type="radio"
                                 value={"BibleNotes"}
                                 checked={type === "BibleNotes"}
-                                className="radio" onChange={onTypeChange} />
+                                className="radio" onChange={updateType} />
                         </div>
                         <div className="flex flex-row m-4">
                             <span className="label-text mr-2">Sermon Notes</span>
@@ -23,7 +36,7 @@ const YourBibleModal = () => {
                                 type="radio"
                                 value={"SermonNotes"}
                                 checked={type === "SermonNotes"}
-                                className="radio" onChange={onTypeChange} />
+                                className="radio" onChange={updateType} />
                         </div>
                         <div className="flex flex-row m-4">
                             <span className="label-text mr-2">Service Notes</span>
@@ -31,7 +44,7 @@ const YourBibleModal = () => {
                                 type="radio"
                                 value={"ServiceNotes"}
                                 checked={type === "ServiceNotes"}
-                                className="radio" onChange={onTypeChange} />
+                                className="radio" onChange={updateType} />
                         </div>
                     </div>
                     <input 

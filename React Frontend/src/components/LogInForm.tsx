@@ -5,7 +5,7 @@ import axios from "../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 
-const LOGIN_URL = '/authenticate';
+const LOGIN_URL = '/login';
 
 const LogInForm = () => {
     const { setAuth } = useAuth() as any;
