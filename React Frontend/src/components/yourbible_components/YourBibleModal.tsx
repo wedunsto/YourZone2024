@@ -1,5 +1,6 @@
 // Modal used to create new Bible study notes and edit existing ones
 interface YourBibleModalProp {
+    modalVisible: boolean,
     type: string,
     title: string,
     bibleVerses: string,
@@ -8,17 +9,17 @@ interface YourBibleModalProp {
     updateTitle: (e: any) => void,
     updateBibleVerses: (e: any) => void,
     updateBibleNotes: (e: any) => void,
-    clearFields: () => void,
-    createBibleStudy: (e: any) => void
+    submit: (e: any) => void,
+    onClickClose: () => void
 }
 
 const YourBibleModal = ({type, title, bibleVerses, 
-                         bibleNotes, updateType,
-                         updateTitle, updateBibleVerses,
-                         updateBibleNotes, clearFields, createBibleStudy}: YourBibleModalProp) => {
-                            
+                         bibleNotes, updateType, updateTitle,
+                         updateBibleVerses, updateBibleNotes, modalVisible,
+                         onClickClose, submit}: YourBibleModalProp) => {
+
     return(
-        <div className="modal">
+        <div className={`modal ${modalVisible ? 'visible' : ''}`}>
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
                     <div className="flex flex-row">
@@ -72,11 +73,11 @@ const YourBibleModal = ({type, title, bibleVerses,
                     <label 
                         htmlFor="createBibleStudy"
                         className="btn mt-2"
-                        onClick={clearFields}>Close</label>
+                        onClick={onClickClose}>Close</label>
                     <label
                         htmlFor="createBibleStudy"
                         className="btn mt-2"
-                        onClick={createBibleStudy}>Submit</label>
+                        onClick={submit}>Submit</label>
                 </div>
             </div>
         </div>

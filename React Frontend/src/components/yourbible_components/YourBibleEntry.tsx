@@ -1,7 +1,8 @@
 // Collapsable table entries for YourBible
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
+import YourBibleModal from "./YourBibleModal";
 
 interface YourBibleEntryProp{
     id: string,
@@ -10,19 +11,19 @@ interface YourBibleEntryProp{
     bibleVerses: string[],
     expandText: string,
     submitted: boolean,
-    setSubmitted: Function
+    setSubmitted: (submittedStatus: boolean) => void
 }
 
 const YourBibleEntry = (
     {id, type, collapseText, bibleVerses, expandText, submitted, setSubmitted}: YourBibleEntryProp) => {
-        const UPDATE_BIBLE_URL = '/updateBibleStudy';
-        const DELETE_STUDY_URL = '/deleteBibleStudy';
+        const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
+        const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
         const [newType, setNewType] = useState('');
         const [newTitle, setNewTitle] = useState('');
         const [newBibleVerses, setNewBibleVerses] = useState('');
         const [newBibleNotes, setNewBibleNotes] = useState('');
-        const [modalVisible, setModalVisible] = useState(false);
+        const [editModalVisible, setEditModalVisible] = useState(false);
         const [errorMessage, setErrorMessage] = useState('');
 
         const { auth } = useAuth() as any;
@@ -34,10 +35,10 @@ const YourBibleEntry = (
             setNewTitle(collapseText);
             setNewBibleVerses(bibleVerses.join(", "));
             setNewBibleNotes(expandText);
-            setModalVisible(true);
+            setEditModalVisible(true);
         }
     
-        const onClose = () => {
+        const onClickClose = () => {
             setModalVisible(false);
         }
 
@@ -125,76 +126,29 @@ const YourBibleEntry = (
                     onClick={onClickEdit}
                     htmlFor="updateBibleStudy">Edit</label>
 
-                <label 
+                <label
                     className="bg-red-600 text-black btn btn-sm"
-                    onClick={deleteBibleStudy}>Delete</label>
+                    onClick={deleteBibleStudy}
+                    htmlFor="deleteBibleStudy">Delete</label>
             </div>
             <input 
                 type="checkbox"
                 id="updateBibleStudy"
                 className="modal-toggle"
-                checked={modalVisible} />
-            <div className={`modal ${modalVisible ? 'visible' : ''}`}>
-                <div className="modal-box">
-                    <form 
-                        className="flex flex-col rounded-lg">
-                        <div className="flex flex-row">
-                            <div className="flex flex-row m-4">
-                                <span className="label-text mr-2">Bible Notes</span>
-                                <input 
-                                    type="radio"
-                                    value={"BibleNotes"}
-                                    checked={newType === "BibleNotes"}
-                                    className="radio" onChange={onTypeChange} />
-                            </div>
-                            <div className="flex flex-row m-4">
-                                <span className="label-text mr-2">Sermon Notes</span>
-                                <input 
-                                    type="radio"
-                                    value={"SermonNotes"}
-                                    checked={newType === "SermonNotes"}
-                                    className="radio" onChange={onTypeChange} />
-                            </div>
-                            <div className="flex flex-row m-4">
-                                <span className="label-text mr-2">Service Notes</span>
-                                <input 
-                                    type="radio"
-                                    value={"ServiceNotes"}
-                                    checked={newType === "ServiceNotes"}
-                                    className="radio" onChange={onTypeChange} />
-                            </div>
-                        </div>
-                        <input 
-                            id="title"
-                            type="text"
-                            value={newTitle}
-                            className="border-2 border-white rounded-lg mb-2 p-2"
-                            onChange={updateTitle} />
-                        <input 
-                            id="bibleverses"
-                            type="text"
-                            value={newBibleVerses}
-                            className="border-2 border-white rounded-lg my-2 p-2"
-                            onChange={updateBibleVerses} />
-                        <textarea
-                            id="notes"
-                            value={newBibleNotes}
-                            className="border-2 border-white rounded-lg my-2 p-2"
-                            onChange={updateBibleNotes} />
-                    </form>
-                    <div className="flex justify-between">
-                        <label 
-                            htmlFor="updateBibleStudy"
-                            className="btn mt-2"
-                            onClick={onClose}>Close</label>
-                                
-                        <label
-                            htmlFor="updateBibleStudy"
-                            className="btn mt-2"
-                            onClick={updateBibleStudy}>Submit</label>
-                    </div>
-                </div>
-            </div>
+                checked={editModalVisible} />
+
+            <YourBibleModal 
+                type={newType}
+                title={newTitle}
+                bibleVerses={newBibleVerses}
+                bibleNotes={newBibleNotes}
+                updateType={onTypeChange}
+                updateTitle={updateTitle}
+                updateBibleVerses={updateBibleVerses}
+                updateBibleNotes={updateBibleNotes}
+                submit={updateBibleStudy}
+                modalVisible={editModalVisible}
+                onClickClose={onClickClose} />
         </div>
         );
 }
