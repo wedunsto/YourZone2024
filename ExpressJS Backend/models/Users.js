@@ -8,13 +8,10 @@ const userSchema = new Schema({
         required: true
     },
     roles: {
-        Submitted: {
-            type: Number,
-            default: 2001
-        },
         User: Number,
         Editor: Number,
-        Admin: Number
+        Admin: Number,
+        Submitted: Number
     },
     password: {
         type: String,
