@@ -1,4 +1,7 @@
-// Menu buttons for the YourBible view
+/**
+ * Menu buttons for the YourBible view:
+ *  Create: Creates a new Bible study entry
+ */
 
 import { useState } from "react";
 import axios from "../../api/axios";
@@ -10,6 +13,10 @@ const BIBLE_URL = '/createBibleStudyNote';
 interface YourBibleButtonsProp {
     submittedBool: boolean,
     setSubmittedFtn: (value: boolean) => void;
+}
+
+interface ErrorProp {
+    response: string
 }
 
 const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
@@ -24,19 +31,27 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
     const updateType = (e: React.ChangeEvent<HTMLInputElement>) => {
         setType(e.target.value);
+
+        if(errorMessage !== '') setErrorMessage('');
     }
 
     const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
+
+        if(errorMessage !== '') setErrorMessage('');
     }
 
     const updateBibleVerses = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBibleVerses(e.target.value);
+
+        if(errorMessage !== '') setErrorMessage('');
     }
 
     const updateBibleNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
         const updatedValue = e.target.value.replace(/\r\n/g, '\n');
         setBibleNotes(updatedValue);
+
+        if(errorMessage !== '') setErrorMessage('');
     }
 
     const onClickCreate = () => {
@@ -47,6 +62,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         setTitle('');
         setBibleVerses('');
         setBibleNotes('');
+        setErrorMessage('');
     }
 
     const onClickClose = () => {
@@ -55,32 +71,34 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
     }
 
     const createBibleStudy = async (e: React.FormEvent<HTMLInputElement>) => {
-        console.log({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes});
-
         e.preventDefault();
 
-        try {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const response = await axios.post(BIBLE_URL,
-                JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
-                {
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${auth.accessToken}`},
-                        withCredentials: true
-                });
-                clearFields();
-                setSubmittedFtn(!(submittedBool)); // Reloads the screen
-                setModalVisible(false);
-        } catch(err) {
-            setErrorMessage((err as any).response);
+        if(!(type === '' || title === '' || bibleVerses === '' || bibleNotes === '')) {
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const response = await axios.post(BIBLE_URL,
+                    JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
+                    {
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${auth.accessToken}`},
+                            withCredentials: true
+                    });
+                    clearFields();
+                    setSubmittedFtn(!(submittedBool)); // Reloads the screen
+                    setModalVisible(false);
+            } catch(err) {
+                setErrorMessage((err as ErrorProp).response);
+            }
+        } else {
+            setErrorMessage('Ensure all fields are filled out.');
         }
     }
 
     return (
         <div className="flex mr-10">
             <div className="flex-1">
-                {errorMessage? <p>{errorMessage}</p> : null}
+                {errorMessage !== '' ? <p>{errorMessage}</p> : null}
                 <label 
                     className="btn"
                     onClick={onClickCreate}
@@ -89,6 +107,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     type="checkbox"
                     id="createBibleStudy" 
                     className="modal-toggle"
+                    readOnly
                     checked={modalVisible} />
 
                     <YourBibleModal
@@ -102,7 +121,8 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                         updateBibleNotes={updateBibleNotes}
                         submit={createBibleStudy}
                         modalVisible={modalVisible}
-                        onClickClose={onClickClose} />
+                        onClickClose={onClickClose}
+                        errorMessage={errorMessage} />
             </div>
         </div>
     );

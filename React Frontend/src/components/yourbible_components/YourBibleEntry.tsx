@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Collapsable table entries for YourBible
 import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
+import { v4 as uuidv4 } from 'uuid';
 
 interface YourBibleEntryProp{
     id: string,
@@ -12,6 +14,10 @@ interface YourBibleEntryProp{
     expandText: string,
     submitted: boolean,
     setSubmitted: (submittedStatus: boolean) => void
+}
+
+interface ErrorProp {
+    response: string
 }
 
 const YourBibleEntry = (
@@ -40,6 +46,7 @@ const YourBibleEntry = (
         }
     
         const onClickClose = () => {
+            setErrorMessage('');
             setEditModalVisible(false);
         }
 
@@ -84,7 +91,7 @@ const YourBibleEntry = (
                     setSubmitted(!(submitted));
                     setEditModalVisible(false);
             } catch(err) {
-                setErrorMessage((err as any).response);
+                setErrorMessage((err as ErrorProp).response);
             }
         }
 
@@ -102,7 +109,7 @@ const YourBibleEntry = (
                   });
                     setSubmitted(!(submitted));
             } catch(err) {
-                setErrorMessage((err as any).response);
+                setErrorMessage((err as ErrorProp).response);
             }
         }
 
@@ -117,13 +124,13 @@ const YourBibleEntry = (
                         <div className="collapse-content">
                             {bibleVerses.map((bibleVerse: string, index: number) => (
                                     bibleVerses.length == 1 || index == bibleVerses.length - 1? (
-                                        <span>{bibleVerse}</span>
-                                    ) : <span>{bibleVerse}, </span>
+                                        <span key={uuidv4()}>{bibleVerse}</span>
+                                    ) : <span key={uuidv4()}>{bibleVerse}, </span>
                                 )
                             )}
                             <div className="divider"></div>
                             <ul className="list-disc">
-                                {lineSeperatedNotes.map((note: string) => <li key={id}>{note}</li>)}
+                                {lineSeperatedNotes.map((note: string) => <li key={uuidv4()}>{note}</li>)}
                             </ul> 
                         </div>
                     </div>
@@ -140,6 +147,7 @@ const YourBibleEntry = (
                     </div>
 
                     <input 
+                        readOnly
                         type="checkbox"
                         id="updateBibleStudy"
                         className="modal-toggle"
@@ -156,7 +164,8 @@ const YourBibleEntry = (
                         updateBibleNotes={updateBibleNotes}
                         submit={updateBibleStudy}
                         modalVisible={editModalVisible}
-                        onClickClose={onClickClose} />
+                        onClickClose={onClickClose}
+                        errorMessage={errorMessage} />
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">

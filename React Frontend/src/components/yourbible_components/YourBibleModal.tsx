@@ -5,18 +5,19 @@ interface YourBibleModalProp {
     title: string,
     bibleVerses: string,
     bibleNotes: string,
-    updateType: (e: any) => void,
-    updateTitle: (e: any) => void,
-    updateBibleVerses: (e: any) => void,
+    updateType: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    updateTitle: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    updateBibleVerses: (e: React.ChangeEvent<HTMLInputElement>) => void,
     updateBibleNotes: (e: any) => void,
     submit: (e: any) => void,
-    onClickClose: () => void
+    onClickClose: () => void,
+    errorMessage: string
 }
 
 const YourBibleModal = ({type, title, bibleVerses, 
                          bibleNotes, updateType, updateTitle,
                          updateBibleVerses, updateBibleNotes, modalVisible,
-                         onClickClose, submit}: YourBibleModalProp) => {
+                         onClickClose, submit, errorMessage}: YourBibleModalProp) => {
 
     return(
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
@@ -70,14 +71,14 @@ const YourBibleModal = ({type, title, bibleVerses,
                         placeholder="Enter Bible Notes" />
                 </form>
                 <div className="flex justify-between">
-                    <label 
-                        htmlFor="createBibleStudy"
+                    <button
                         className="btn mt-2"
-                        onClick={onClickClose}>Close</label>
-                    <label
-                        htmlFor="createBibleStudy"
+                        onClick={onClickClose}>
+                        Close</button>
+                    <button 
                         className="btn mt-2"
-                        onClick={submit}>Submit</label>
+                        disabled={errorMessage !== ''}
+                        onClick={submit}>Submit</button>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
+import { v4 as uuidv4 } from 'uuid';
 
 const BIBLE_URL = '/getBibleStudyNotes';
 
@@ -46,7 +47,7 @@ const YourBibleView = () => {
                     {
                         bibleNotes.map((note: any) => 
                             <YourBibleEntry 
-                                key={note._id}
+                                key={uuidv4()}
                                 id={note._id}
                                 type={note.type}
                                 collapseText={note.title}
