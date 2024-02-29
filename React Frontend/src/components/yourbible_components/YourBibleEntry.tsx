@@ -24,6 +24,7 @@ const YourBibleEntry = (
         const [newBibleVerses, setNewBibleVerses] = useState('');
         const [newBibleNotes, setNewBibleNotes] = useState('');
         const [editModalVisible, setEditModalVisible] = useState(false);
+        const [deleteEntryConfirmation, setDeleteEntryConfirmation] = useState(false);
         const [errorMessage, setErrorMessage] = useState('');
 
         const { auth } = useAuth() as any;
@@ -39,7 +40,11 @@ const YourBibleEntry = (
         }
     
         const onClickClose = () => {
-            setModalVisible(false);
+            setEditModalVisible(false);
+        }
+
+        const onClickDelete = () => {
+            setDeleteEntryConfirmation(true);
         }
 
         const onTypeChange = (e: any) => {
@@ -77,6 +82,7 @@ const YourBibleEntry = (
                             withCredentials: true
                     });
                     setSubmitted(!(submitted));
+                    setEditModalVisible(false);
             } catch(err) {
                 setErrorMessage((err as any).response);
             }
@@ -101,55 +107,69 @@ const YourBibleEntry = (
         }
 
         return (
-            <div className="flex flex-row mb-6">
-                <div className="collapse collapse-arrow bg-base-200">
-                <input type="checkbox" /> 
-                <div className="collapse-title text-xl font-medium">
-                    {collapseText}
-                </div>
-                <div className="collapse-content">
-                    {bibleVerses.map((bibleVerse: string, index: number) => (
-                            bibleVerses.length == 1 || index == bibleVerses.length - 1? (
-                                <span>{bibleVerse}</span>
-                            ) : <span>{bibleVerse}, </span>
-                        )
-                    )}
-                    <div className="divider"></div>
-                    <ul className="list-disc">
-                        {lineSeperatedNotes.map((note: string) => <li key={id}>{note}</li>)}
-                    </ul> 
-                </div>
-            </div>
-            <div className="flex flex-col ml-5">
-                <label 
-                    className="mb-2 bg-slate-400 text-black btn btn-sm"
-                    onClick={onClickEdit}
-                    htmlFor="updateBibleStudy">Edit</label>
+            <div className="flex flex-col">
+                <div className="flex flex-row mb-6">
+                    <div className="collapse collapse-arrow bg-base-200">
+                        <input type="checkbox" /> 
+                        <div className="collapse-title text-xl font-medium">
+                            {collapseText}
+                        </div>
+                        <div className="collapse-content">
+                            {bibleVerses.map((bibleVerse: string, index: number) => (
+                                    bibleVerses.length == 1 || index == bibleVerses.length - 1? (
+                                        <span>{bibleVerse}</span>
+                                    ) : <span>{bibleVerse}, </span>
+                                )
+                            )}
+                            <div className="divider"></div>
+                            <ul className="list-disc">
+                                {lineSeperatedNotes.map((note: string) => <li key={id}>{note}</li>)}
+                            </ul> 
+                        </div>
+                    </div>
+                    <div className="flex flex-col ml-5">
+                        <label 
+                            className="mb-2 bg-slate-400 text-black btn btn-sm"
+                            onClick={onClickEdit}
+                            htmlFor="updateBibleStudy">Edit</label>
 
-                <label
-                    className="bg-red-600 text-black btn btn-sm"
-                    onClick={deleteBibleStudy}
-                    htmlFor="deleteBibleStudy">Delete</label>
-            </div>
-            <input 
-                type="checkbox"
-                id="updateBibleStudy"
-                className="modal-toggle"
-                checked={editModalVisible} />
+                        <label
+                            className="bg-red-600 text-black btn btn-sm"
+                            onClick={onClickDelete}
+                            htmlFor="deleteBibleStudy">Delete</label>
+                    </div>
 
-            <YourBibleModal 
-                type={newType}
-                title={newTitle}
-                bibleVerses={newBibleVerses}
-                bibleNotes={newBibleNotes}
-                updateType={onTypeChange}
-                updateTitle={updateTitle}
-                updateBibleVerses={updateBibleVerses}
-                updateBibleNotes={updateBibleNotes}
-                submit={updateBibleStudy}
-                modalVisible={editModalVisible}
-                onClickClose={onClickClose} />
-        </div>
+                    <input 
+                        type="checkbox"
+                        id="updateBibleStudy"
+                        className="modal-toggle"
+                        checked={editModalVisible} />
+
+                    <YourBibleModal 
+                        type={newType}
+                        title={newTitle}
+                        bibleVerses={newBibleVerses}
+                        bibleNotes={newBibleNotes}
+                        updateType={onTypeChange}
+                        updateTitle={updateTitle}
+                        updateBibleVerses={updateBibleVerses}
+                        updateBibleNotes={updateBibleNotes}
+                        submit={updateBibleStudy}
+                        modalVisible={editModalVisible}
+                        onClickClose={onClickClose} />
+                </div>
+                { deleteEntryConfirmation ? 
+                    <div role="alert" className="alert">
+                        <span>Are you sure you want to delete this entry?</span>
+                        <div>
+                            <button className="btn btn-sm" onClick={() => {setDeleteEntryConfirmation(false)}}>No</button>
+                            <button className="btn btn-sm" onClick={deleteBibleStudy}>Yes</button>
+                        </div>
+                    </div>
+                    :
+                    null
+                }
+            </div>
         );
 }
 
