@@ -1,3 +1,5 @@
+// Component allowing users to register for access.
+// Registered users are given the "Submitted" status and must request access
 import Header from "../components/Header";
 import RegisterForm from "../components/RegisterForm";
 

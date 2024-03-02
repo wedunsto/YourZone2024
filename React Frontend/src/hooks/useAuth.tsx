@@ -1,3 +1,4 @@
+// UseContext allows easier access to values throughout the application components
 import { useContext } from "react";
 import AuthContext from "../context/AuthProvider";
 

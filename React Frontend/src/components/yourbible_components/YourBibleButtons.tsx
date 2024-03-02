@@ -10,6 +10,16 @@ import YourBibleModal from "./YourBibleModal";
 
 const BIBLE_URL = '/createBibleStudyNote';
 
+// Explicit types for properties in this component
+interface accessTokenProp {
+    accessToken: string,
+    id: string
+}
+
+interface AuthProp {
+    auth: accessTokenProp
+}
+
 interface YourBibleButtonsProp {
     submittedBool: boolean,
     setSubmittedFtn: (value: boolean) => void;
@@ -27,7 +37,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const { auth } = useAuth() as any;
+    const { auth } = useAuth() as AuthProp;
 
     const updateType = (e: React.ChangeEvent<HTMLInputElement>) => {
         setType(e.target.value);
@@ -75,8 +85,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
         if(!(type === '' || title === '' || bibleVerses === '' || bibleNotes === '')) {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const response = await axios.post(BIBLE_URL,
+                await axios.post(BIBLE_URL,
                     JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
                     {
                         headers: { 

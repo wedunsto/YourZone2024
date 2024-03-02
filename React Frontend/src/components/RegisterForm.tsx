@@ -1,29 +1,37 @@
-import { useRef, useState, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Registration form that takes in new username and password
+import { useState, useEffect, FormEvent } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 
+// Replace any type with details about objects
+interface ResponseProp {
+    status: number
+}
+
+interface ErrorProp {
+    response: ResponseProp
+}
+
+// Requirements for registering usernames and passwords
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = '/register';
 
 const RegisterForm = () => {
     const navigate = useNavigate();
-    const location = useLocation();
 
-    // Hooks used to store username, validate username, and focus
-    // on username text field
+    // Hooks used to store username, validate username
     const [username, setUsername] = useState('');
     const [validUsername, setValidUsername] = useState(false);
 
-    // Hooks used to store password, validate password, and focus
-    // on password text field
+    // Hooks used to store password, validate password
     const [password, setPassword] = useState('');
     const [validPassword, setValidPassword] = useState(false);
 
-    // Hooks used to store matching password and focus on the matching
-    // password text field
+    // Hooks used to store matching password
     const [matchingPassword, setMatchingPassword] = useState('');
     const [validMatchingPassword, setValidMatchingPassword] = useState(false);
 
@@ -39,7 +47,7 @@ const RegisterForm = () => {
     // Compare password and matching password
     useEffect(() => {
         setValidPassword(PASSWORD_REGEX.test(password));
-        setValidMatchingPassword(password === matchingPassword && matchingPassword != '');
+        setValidMatchingPassword(password === matchingPassword && matchingPassword !== '');
     }, [password, matchingPassword]);
 
     // Clear the error when any input changes
@@ -47,7 +55,7 @@ const RegisterForm = () => {
         setErrorMessage('');
     }, [username, password, matchingPassword]);
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         const v1 = USER_REGEX.test(username);
@@ -71,11 +79,12 @@ const RegisterForm = () => {
             setPassword("");
             setMatchingPassword("");
 
+            // Navigate back to login view
             navigate("/");
         } catch(err) {
-            if(!(err as any)?.response) {
+            if(!(err as ErrorProp)?.response) {
                 setErrorMessage('No Server Response');
-            } else if ((err as any).response?.status === 409){
+            } else if ((err as ErrorProp).response?.status === 409){
                 setErrorMessage('Username Taken');
             } else {
                 setErrorMessage('Registration Failed');
@@ -85,11 +94,7 @@ const RegisterForm = () => {
 
     return (
         <div className='flex flex-col'>
-            {
-                errorMessage? 
-                <p>{errorMessage}</p> :
-                null
-            }
+            {errorMessage? <p>{errorMessage}</p> : null}
             <form onSubmit={handleSubmit}>
                 <CredentialInputField 
                     title='Username'

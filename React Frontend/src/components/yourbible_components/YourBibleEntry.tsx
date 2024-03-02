@@ -16,6 +16,16 @@ interface YourBibleEntryProp{
     setSubmitted: (submittedStatus: boolean) => void
 }
 
+// Explicit types for properties in this component
+interface accessTokenProp {
+    accessToken: string,
+    id: string
+}
+
+interface AuthProp {
+    auth: accessTokenProp
+}
+
 interface ErrorProp {
     response: string
 }
@@ -33,7 +43,7 @@ const YourBibleEntry = (
         const [deleteEntryConfirmation, setDeleteEntryConfirmation] = useState(false);
         const [errorMessage, setErrorMessage] = useState('');
 
-        const { auth } = useAuth() as any;
+        const { auth } = useAuth() as AuthProp;
 
         const lineSeperatedNotes = expandText.split(/\n/g);
 

@@ -1,21 +1,33 @@
 // Log in component used to access the home page for those authorized
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 
+// Replace any type with details about objects
+interface ResponseProp {
+    status: number
+}
+
+interface ErrorProp {
+    response: ResponseProp
+}
+
+interface AuthProp {
+    setAuth: (e: object) => void
+}
+
 const LOGIN_URL = '/login';
 
 const LogInForm = () => {
-    const { setAuth } = useAuth() as any;
-    // Used to navigate to the home page after authentication
+    const { setAuth } = useAuth() as AuthProp;
     const navigate = useNavigate();
     const location = useLocation();
 
     // Get the location of where you wanted to access after log in
-    // Or set the destination to the root path
-    const from = location.state?.from?.pathname || "/";
+    // Or set the destination to the home page
+    const from = location.state?.from?.pathname || "/home";
 
     // Hooks used for username, password, and error values
     const [username, setUsername] = useState("");
@@ -27,7 +39,8 @@ const LogInForm = () => {
         setErrorMessage("");
     }, [username, password]);
 
-    const handleSubmit = async (e: any) => {
+    // Authenticate credentials for login process
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         try {
@@ -41,19 +54,22 @@ const LogInForm = () => {
             const id = response?.data?.id;
             const accessToken = response?.data?.accessToken;
             const roles =response?.data?.roles;
+
+            // Store user data in context to use in other components
             setAuth({username, password, roles, accessToken, id});
 
             // Reset inputs upon logging in
+            // Return to last page or go to home page
             setUsername("");
             setPassword("");
             setErrorMessage("");
-            navigate("/home");
+            navigate(from, {replace: true});
         } catch(err) {
-            if(!(err as any)?.response) {
+            if(!(err as ErrorProp)?.response) {
                 setErrorMessage('No Server Response');
-            } else if ((err as any).response?.status === 400) {
+            } else if ((err as ErrorProp).response?.status === 400) {
                 setErrorMessage('Missing Username or Password');
-            } else if ((err as any).response?.status === 401) {
+            } else if ((err as ErrorProp).response?.status === 401) {
                 setErrorMessage('Unauthorized');
             } else {
                 setErrorMessage('Login Failed');

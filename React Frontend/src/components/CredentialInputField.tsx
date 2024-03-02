@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute, LegacyRef } from "react";
+import { HTMLInputTypeAttribute } from "react";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -8,7 +8,7 @@ interface CredentialInputFieldProp {
     property: HTMLInputTypeAttribute,
     value: string,
     valid: boolean | null,
-    setCredential: Function
+    setCredential: (e: string) => void
 }
 const CredentialInputField = ({title, property, value, valid, setCredential}: CredentialInputFieldProp) => {
     return(

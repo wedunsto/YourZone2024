@@ -7,13 +7,11 @@ import HomePageView from "./views/HomePageView";
 import MissingView from "./views/MissingView";
 import YourBibleView from "./views/YourBibleView";
 
-const ROLES = {
-  'User': 1984,
-  'Submitted': 2001,
-  'Admin': 5150
-}
+const userRole = import.meta.env.VITE_USER_ROLE;
+const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
 const App = () => {
+
   return (
     <Routes>
       {/* Public routes */}
@@ -22,7 +20,7 @@ const App = () => {
       <Route path="/unauthorized" element={<UnauthorizedView />} />
 
       {/* Private routes */}
-      <Route element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}>
+      <Route element={<RequireAuth allowedRoles={[userRole, adminRole]} />}>
           <Route path="/home" element={<HomePageView />} />
           <Route path="/yourbible" element={<YourBibleView />} />
       </Route>

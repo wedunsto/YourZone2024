@@ -33,9 +33,13 @@ const createBibleStudyNotes = async (req, res) => {
     }
 }
 
-// Read all Bible study notes
+// Read all Bible study notes for a specific user
 const getAllBibleStudyNotes = async (req, res) => {
-    const bibleVerses = await BibleStudy.find();
+    const { userId } = req.query;
+
+    const bibleVerses = await BibleStudy.find(
+        {userId: userId}
+    );
     if (!bibleVerses) {
         eventLogger.logEvents('No Bible studies found.');
         return res.status(204).json({ 'message': 'No Bible studies found.' });
