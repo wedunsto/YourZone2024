@@ -35,6 +35,7 @@ app.use('/refresh', require('./routes/refresh'));
 app.use(verifyJWT);
 
 app.use('/logout', require('./routes/logUserOut'));
+app.use('/getUsersAwaitingApproval', require('./routes/getUsersAwaitingApproval'));
 app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
 app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));

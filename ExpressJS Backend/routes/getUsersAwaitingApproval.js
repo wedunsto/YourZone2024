@@ -4,6 +4,6 @@ const userController = require('../controllers/userController');
 const ROLES_LIST = require('../config/roles_list');
 const verifyRoles = require('../middleware/verifyRoles');
 
-router.route('/').put(verifyRoles(ROLES_LIST.Admin), userController.updateUserRoles);
+router.route('/').get(verifyRoles(ROLES_LIST.Admin), userController.getUsersAwaitingApproval);
 
 module.exports = router;

@@ -5,6 +5,8 @@ import axios from "../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 
+const adminRole = import.meta.env.VITE_ADMIN_ROLE;
+
 // Replace any type with details about objects
 interface ResponseProp {
     status: number
@@ -63,7 +65,8 @@ const LogInForm = () => {
             setUsername("");
             setPassword("");
             setErrorMessage("");
-            navigate(from, {replace: true});
+            
+            roles.indexOf(parseInt(adminRole, 10)) ? navigate('/userapproval') : roles.indexOf(parseInt(adminRole, 10))
         } catch(err) {
             if(!(err as ErrorProp)?.response) {
                 setErrorMessage('No Server Response');

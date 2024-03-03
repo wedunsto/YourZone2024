@@ -114,18 +114,36 @@ const logUserIn = async (req, res) => {
     }
 }
 
-/*
-    Update a user's roles
-    Set ALL the roles at once
-*/
+// Get all users who's role includes Submitted
+const getUsersAwaitingApproval = async (req, res) => {
+   try {
+    const getSubmittedUsers = await User.find(
+        { roles: { "Submitted": 2001 } }
+    );
+
+    if(!getSubmittedUsers) {
+        eventLogger.logEvents(`No users found with the submitted status`);
+        return res.status(404).json({ 
+            message: 'No users found with the submitted status' 
+        });
+    }
+
+    res.json(getSubmittedUsers);
+   } catch( err ) {
+    eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
+    res.status(500).json({ 'message': err.message });
+   }
+}
+
+// Update a user's roles to User
 const updateUserRoles = async (req, res) => {
-    const { id, roles } = req.body;
+    const { id } = req.body;
 
     try {
         // Find user by username and update the role property
         const updatedUserRole = await User.findOneAndUpdate(
             { _id: id },
-            { $set: { roles: roles } },
+            { $set: { roles: { "User": 1984 } } },
             { new: true } // Return the new updated document
         );
 
@@ -201,6 +219,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
     createUser,
     logUserIn,
+    getUsersAwaitingApproval,
     updateUserRoles,
     logUserOut,
     deleteUser

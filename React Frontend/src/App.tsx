@@ -3,6 +3,7 @@ import UnauthorizedView from "./views/UnauthorizedView";
 import RequireAuth from "./components/RequiredAuth";
 import LogInView from "./views/LogInView";
 import RegisterView from "./views/RegisterView";
+import UserApprovalView from "./views/UserApprovalView";
 import HomePageView from "./views/HomePageView";
 import MissingView from "./views/MissingView";
 import YourBibleView from "./views/YourBibleView";
@@ -20,6 +21,11 @@ const App = () => {
       <Route path="/unauthorized" element={<UnauthorizedView />} />
 
       {/* Private routes */}
+
+      <Route element={<RequireAuth allowedRoles={[adminRole]} />}>
+      <Route path="/userapproval" element={<UserApprovalView />} />
+      </Route>
+
       <Route element={<RequireAuth allowedRoles={[userRole, adminRole]} />}>
           <Route path="/home" element={<HomePageView />} />
           <Route path="/yourbible" element={<YourBibleView />} />
