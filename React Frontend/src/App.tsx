@@ -12,7 +12,7 @@ const userRole = import.meta.env.VITE_USER_ROLE;
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
 const App = () => {
-
+console.log(userRole)
   return (
     <Routes>
       {/* Public routes */}
@@ -21,14 +21,13 @@ const App = () => {
       <Route path="/unauthorized" element={<UnauthorizedView />} />
 
       {/* Private routes */}
-
-      <Route element={<RequireAuth allowedRoles={[adminRole]} />}>
-      <Route path="/userapproval" element={<UserApprovalView />} />
-      </Route>
-
       <Route element={<RequireAuth allowedRoles={[userRole, adminRole]} />}>
           <Route path="/home" element={<HomePageView />} />
           <Route path="/yourbible" element={<YourBibleView />} />
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={[adminRole]} />}>
+          <Route path="/userapproval" element={<UserApprovalView />} />
       </Route>
 
       {/* catch all */}

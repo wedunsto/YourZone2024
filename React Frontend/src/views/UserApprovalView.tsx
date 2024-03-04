@@ -1,9 +1,9 @@
 // List of users pending access to YourZone, and buttons to approve them
 
 import axios from "../api/axios";
+import UnapprovedUser from "../components/UnapprovedUser";
 import useAuth from "../hooks/useAuth";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -15,16 +15,22 @@ interface AuthProp {
     auth: accessTokenProp
 }
 
+interface UnapprovedUserProp {
+    username: string,
+    _id: string
+}
+
 interface ErrorProp {
     response: string
 }
 
+const USER_APPROVAL_URL = '/getUsersAwaitingApproval';
+
 const UserApprovalView = () => {
+    const [unapprovedUsers, setUnapprovedUsers] = useState(new Array<UnapprovedUserProp>);
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const { auth } = useAuth() as AuthProp;
-
-    const USER_APPROVAL_URL = '/getUsersAwaitingApproval';
 
     // On page load, get all users who are awaiting approval
     useEffect(() => {
@@ -37,8 +43,7 @@ const UserApprovalView = () => {
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-                
-                console.log(response.data);
+                setUnapprovedUsers(response?.data);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -50,7 +55,12 @@ const UserApprovalView = () => {
 
     return(
         <div>
-            <p>Test</p>
+            {errorMessage? <p>{errorMessage}</p> : null}
+            <UnapprovedUser
+                unapprovedUsers={unapprovedUsers}
+                submitted={submitted}
+                setSubmitted={setSubmitted}
+             />
         </div>
     );
 }

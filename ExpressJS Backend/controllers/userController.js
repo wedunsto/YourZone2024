@@ -195,11 +195,11 @@ const logUserOut = async (req, res) => {
 
 // Delete a user from the backend database
 const deleteUser = async (req, res) => {
-    const { id } = req.body;
+    const { userId } = req.query;
 
     try {
         const deletedUser = await User.findOneAndDelete(
-            { _id: id }
+            { _id: userId }
         );
 
         if(!deletedUser) {

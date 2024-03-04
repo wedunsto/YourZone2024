@@ -66,7 +66,12 @@ const LogInForm = () => {
             setPassword("");
             setErrorMessage("");
             
-            roles.indexOf(parseInt(adminRole, 10)) ? navigate('/userapproval') : roles.indexOf(parseInt(adminRole, 10))
+            if(roles.indexOf(parseInt(adminRole, 10)) > -1) {
+                navigate('/userapproval')
+            } else {
+                navigate(from, { replace: true });
+            }
+
         } catch(err) {
             if(!(err as ErrorProp)?.response) {
                 setErrorMessage('No Server Response');

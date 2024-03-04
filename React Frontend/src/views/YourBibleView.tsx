@@ -34,7 +34,7 @@ const YourBibleView = () => {
 
     const BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
 
-    const [bibleNotes, setBibleVerse] = useState([]);
+    const [bibleNotes, setBibleNotes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
@@ -50,7 +50,7 @@ const YourBibleView = () => {
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-                setBibleVerse(response?.data);
+                setBibleNotes(response?.data);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
