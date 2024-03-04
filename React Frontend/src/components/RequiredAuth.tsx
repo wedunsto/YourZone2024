@@ -18,7 +18,7 @@ const RequireAuth = ({ allowedRoles }: RequireAuthProp) => {
     const { auth } = useAuth() as AuthProp;
     const location = useLocation();
 
-    // replace: Replace the login in their navigation history with the location they came from
+    // replace: Replace the location in their navigation history with the location they came from
     // Allow you to back up to the last place you were
     // This will take you to where you wanted to go originally when you do log in
     return (

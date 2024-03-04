@@ -5,6 +5,7 @@ import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import Captcha from './Captcha';
 
 // Replace any type with details about objects
 interface ResponseProp {
@@ -38,6 +39,9 @@ const RegisterForm = () => {
     // Hook for error states
     const [errorMessage, setErrorMessage] = useState('');
 
+    // Hook used to confirm captcha status
+    const [isCaptchaVerified, setCaptchaVerified] = useState(false);
+    
     // Validate the username when it changes
     useEffect(() => {
         setValidUsername(USER_REGEX.test(username));
@@ -66,21 +70,26 @@ const RegisterForm = () => {
         }
 
         try {
-            const response = await axios.post(REGISTER_URL,
-                JSON.stringify({username: username, password}),
-                {
-                    headers: {'Content-Type': 'application/json'},
-                    withCredentials: true
-                }
-            );
-            
-            // Clear input fields out of registration field
-            setUsername("");
-            setPassword("");
-            setMatchingPassword("");
+            if(isCaptchaVerified) {
+                const response = await axios.post(REGISTER_URL,
+                    JSON.stringify({username: username, password}),
+                    {
+                        headers: {'Content-Type': 'application/json'},
+                        withCredentials: true
+                    }
+                );
+                
+                // Clear input fields out of registration field
+                setUsername("");
+                setPassword("");
+                setMatchingPassword("");
+    
+                // Navigate back to login view
+                navigate("/");
+            } else {
+                setErrorMessage('Please complete CAPTCHA verification.');
+            }
 
-            // Navigate back to login view
-            navigate("/");
         } catch(err) {
             if(!(err as ErrorProp)?.response) {
                 setErrorMessage('No Server Response');
@@ -136,8 +145,11 @@ const RegisterForm = () => {
                 />
                 <ValidationNotice
                     valid={validMatchingPassword}
-                    notice={<div>Must match the first password input field.</div>}/>
-                
+                    notice={<div>Must match the first password input field.</div>}
+                />
+                <Captcha
+                    setCaptchaVerified={setCaptchaVerified}
+                />
                 <button
                     disabled={!validUsername || !validPassword || !validMatchingPassword? true : false}
                     className='my-5 btn btn-outline'>Sign Up</button>

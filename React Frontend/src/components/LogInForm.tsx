@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
+import Captcha from './Captcha';
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
@@ -36,6 +37,9 @@ const LogInForm = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
+    // Hook used to confirm captcha status
+    const [isCaptchaVerified, setCaptchaVerified] = useState(false);
+
     // Empty out existing error message when username or password change
     useEffect(() => {
         setErrorMessage("");
@@ -46,30 +50,34 @@ const LogInForm = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(LOGIN_URL,
-                JSON.stringify({username, password}),
-                {
-                    headers: { 'Content-Type': 'application/json'},
-                    withCredentials: true
+            if(isCaptchaVerified) {
+                const response = await axios.post(LOGIN_URL,
+                    JSON.stringify({username, password}),
+                    {
+                        headers: { 'Content-Type': 'application/json'},
+                        withCredentials: true
+                    }
+                );
+                const id = response?.data?.id;
+                const accessToken = response?.data?.accessToken;
+                const roles =response?.data?.roles;
+    
+                // Store user data in context to use in other components
+                setAuth({username, password, roles, accessToken, id});
+    
+                // Reset inputs upon logging in
+                // Return to last page or go to home page
+                setUsername("");
+                setPassword("");
+                setErrorMessage("");
+                
+                if(roles.indexOf(parseInt(adminRole, 10)) > -1) {
+                    navigate('/userapproval')
+                } else {
+                    navigate(from, { replace: true });
                 }
-            );
-            const id = response?.data?.id;
-            const accessToken = response?.data?.accessToken;
-            const roles =response?.data?.roles;
-
-            // Store user data in context to use in other components
-            setAuth({username, password, roles, accessToken, id});
-
-            // Reset inputs upon logging in
-            // Return to last page or go to home page
-            setUsername("");
-            setPassword("");
-            setErrorMessage("");
-            
-            if(roles.indexOf(parseInt(adminRole, 10)) > -1) {
-                navigate('/userapproval')
             } else {
-                navigate(from, { replace: true });
+                setErrorMessage('Please complete CAPTCHA verification.');
             }
 
         } catch(err) {
@@ -102,6 +110,9 @@ const LogInForm = () => {
                     value={password}
                     valid={null}
                     setCredential={setPassword}
+                />
+                <Captcha 
+                    setCaptchaVerified={setCaptchaVerified}
                 />
                 <button
                     disabled={!username || !password? true : false}
