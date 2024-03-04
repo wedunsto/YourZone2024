@@ -94,36 +94,43 @@ const LogInForm = () => {
     };
 
     return(
-        <div>
-            {errorMessage? <p>{errorMessage}</p> : null}
-            <form onSubmit={handleSubmit}>
-                <CredentialInputField 
-                    title='Username'
-                    property='text'
-                    valid={null}
-                    value={username}
-                    setCredential={setUsername}
-                />
-                <CredentialInputField 
-                    title='Password'
-                    property='password'
-                    value={password}
-                    valid={null}
-                    setCredential={setPassword}
-                />
-                <Captcha 
-                    setCaptchaVerified={setCaptchaVerified}
-                />
-                <button
-                    disabled={!username || !password? true : false}
-                    className='my-5 btn btn-outline'>Log In</button>
-            </form>
-            <p>
-                Need an Account?<br />
-                <span className="line">
-                    <a href="/register">Sign Up</a>
-                </span>
-            </p>
+        <div className='flex justify-center'>
+            <div className="flex-col">
+                {errorMessage? <p className='text-white'>{errorMessage}</p> : null}
+                <form onSubmit={handleSubmit}>
+                    <CredentialInputField 
+                        title='Username'
+                        property='text'
+                        valid={null}
+                        value={username}
+                        setCredential={setUsername}
+                    />
+                    <CredentialInputField 
+                        title='Password'
+                        property='password'
+                        value={password}
+                        valid={null}
+                        setCredential={setPassword}
+                    />
+                    <Captcha 
+                        setCaptchaVerified={setCaptchaVerified}
+                    />
+                    
+                    <button
+                        style={{ backgroundColor: !username || !password ? '#CCCCCC' : '#FFFFFF' }}
+                        disabled={!username || !password? true : false}
+                        className='my-5 btn btn-outline'>Log In</button>
+                </form>
+                <p className='text-white'>
+                    Need an Account?<br />
+                    <span className="line">
+                        <a
+                            className='text-white'
+                            href="/register">Sign Up
+                        </a>
+                    </span>
+                </p>
+            </div>
         </div>
     );
 };

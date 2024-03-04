@@ -5,7 +5,7 @@ import RegisterForm from "../components/RegisterForm";
 
 const RegisterView = () => {
     return (
-        <div>
+        <div className="h-screen w-screen bg-current">
             <div className="grow flex justify-center">
                 <Header />
             </div>
