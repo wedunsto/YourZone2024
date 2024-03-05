@@ -3,8 +3,8 @@ import LogInForm from "../components/LogInForm";
 
 const LogInView = () => {
     return (
-        <div>
-            <div className="grow flex justify-center">
+        <div className="h-screen w-screen">
+            <div className="flex justify-center">
                 <Header />
             </div>
             <LogInForm />

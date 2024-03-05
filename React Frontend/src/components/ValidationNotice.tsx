@@ -12,7 +12,7 @@ interface ValidationNoticeProp {
 
 const ValidationNotice = ({ valid, notice }: ValidationNoticeProp) => {
     return(
-        <div className="m-5">
+        <div className="text-white m-5">
             {
             valid == false ? 
             <div><FontAwesomeIcon className="my-2" icon={faInfoCircle} />

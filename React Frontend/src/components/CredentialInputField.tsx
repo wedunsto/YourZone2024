@@ -14,7 +14,7 @@ const CredentialInputField = ({title, property, value, valid, setCredential}: Cr
     return(
         <label htmlFor={title} className="form-control w-full max-w-xs">
             <div className="label">
-                <span className="label-text">{title}</span>
+                <span className="text-white label-text">{title}</span>
                 {valid == null? null : valid && !(value == '') == true ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
             </div>
             <input 

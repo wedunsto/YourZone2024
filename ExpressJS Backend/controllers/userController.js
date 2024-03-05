@@ -165,12 +165,12 @@ const updateUserRoles = async (req, res) => {
 
 // Log user out of the web application
 const logUserOut = async (req, res) => {
-    const { id } = req.body;
+    const { userId } = req.query;
 
     // Clear out the value of the refresh token
     try {
         const loggedOutUser = await User.findOneAndUpdate(
-            { _id: id },
+            { _id: userId },
             { $set: { refreshToken: '' } }
         );
 

@@ -102,7 +102,7 @@ const RegisterForm = () => {
     };
 
     return (
-        <div className='flex flex-col'>
+        <div className='ml-5 flex flex-col'>
             {errorMessage? <p>{errorMessage}</p> : null}
             <form onSubmit={handleSubmit}>
                 <CredentialInputField 
@@ -130,10 +130,10 @@ const RegisterForm = () => {
                     notice={<div>8 to 24 characters.<br />
                             Must include uppercase and lowercase letters, a number and a special character.<br />
                             Allowed special characters: 
-                                <span aria-label="exclamation mark">!</span>
-                                <span aria-label="at symbol">@</span>
-                                <span aria-label="hashtag">#</span>
-                                <span aria-label="dollar sign">$</span>
+                                <span aria-label="exclamation mark"> !, </span>
+                                <span aria-label="at symbol">@, </span>
+                                <span aria-label="hashtag">#, </span>
+                                <span aria-label="dollar sign">$, </span>
                                 <span aria-label="percent">%</span></div>}/>
 
                 <CredentialInputField 
@@ -151,14 +151,15 @@ const RegisterForm = () => {
                     setCaptchaVerified={setCaptchaVerified}
                 />
                 <button
+                    style={{ backgroundColor: !username || !password ? '#CCCCCC' : '#FFFFFF' }}
                     disabled={!validUsername || !validPassword || !validMatchingPassword? true : false}
                     className='my-5 btn btn-outline'>Sign Up</button>
             </form>
-            <p>
+            <p className="text-white">
                 Already registered?<br />
-                <span className="line">
-                    <a href="/">Sign In</a>
-                </span>
+                <a 
+                    className='text-white underline'
+                    href="/">Sign In</a>
             </p>
         </div>
     );
