@@ -4,7 +4,7 @@ import HomePageButtons from "../components/HomePageButtons";
 
 const HomePageView = () => {
     return (
-        <div>
+        <div className="h-screen w-screen">
             <div className="grow flex justify-center">
                 <Header />
             </div>

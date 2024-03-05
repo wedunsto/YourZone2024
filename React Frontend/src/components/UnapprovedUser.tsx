@@ -1,10 +1,10 @@
 // Entry of a unauthorized user, and a button to approve them
 
-import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-import { useState } from "react";
+import LogoutButton from "./LogoutButton";
+import HomeButton from "./HomeButton";
 
 interface accessTokenProp {
     accessToken: string,
@@ -32,14 +32,13 @@ interface UnapprovedUsersProp {
     unapprovedUsers: Array<UnapprovedUserProp>,
     submitted: boolean,
     setSubmitted: (e: boolean) => void
+    setErrorMessage: (e: string) => void
 }
 
 const USER_APPROVAL_URL = '/updateUserRoles';
 const USER_DENIAL_URL = '/deleteUser';
 
-const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted }: UnapprovedUsersProp) => {
-    const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate();
+const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMessage }: UnapprovedUsersProp) => {
     const { auth } = useAuth() as AuthProp;
 
     // Approve a user to User status
@@ -72,7 +71,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted }: Unapproved
     // Deny a user, deleting the user
     const handleDenial = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
         e.preventDefault();
-        const BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
+
         try {
             const response = await axios.delete(`${USER_DENIAL_URL}?userId=${userId}`,
                 {
@@ -97,20 +96,22 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted }: Unapproved
 
     return(
         <div className="overflow-x-auto">
-            {errorMessage? <p>{errorMessage}</p> : null}
-            <button onClick={() => navigate("/home")}>Home</button>
-            <table className="table">
+            <div className='m-3 flex space-x-3'>
+                <HomeButton />
+                <LogoutButton setErrorMessage={setErrorMessage}/>
+            </div>
+            <table className="m-5 table">
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>Approve</th>
-                        <th>Deny</th>
+                        <th className="text-white text-lg">Username</th>
+                        <th className="text-white text-lg">Approve</th>
+                        <th className="text-white text-lg">Deny</th>
                     </tr>
                 </thead>
                 <tbody>
                     {unapprovedUsers.map((user) =>
                         <tr key={uuidv4()}>
-                            <th>{user.username}</th>
+                            <th className="text-white text-lg">{user.username}</th>
                             <td>
                                 <button onClick={(e) => handleApproval(e, user._id)}>Approve</button>
                             </td>

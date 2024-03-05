@@ -54,12 +54,13 @@ const UserApprovalView = () => {
     }, [submitted]);
 
     return(
-        <div>
+        <div className="h-screen w-screen">
             {errorMessage? <p>{errorMessage}</p> : null}
             <UnapprovedUser
                 unapprovedUsers={unapprovedUsers}
                 submitted={submitted}
                 setSubmitted={setSubmitted}
+                setErrorMessage={setErrorMessage}
              />
         </div>
     );

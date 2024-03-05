@@ -151,14 +151,15 @@ const RegisterForm = () => {
                     setCaptchaVerified={setCaptchaVerified}
                 />
                 <button
+                    style={{ backgroundColor: !username || !password ? '#CCCCCC' : '#FFFFFF' }}
                     disabled={!validUsername || !validPassword || !validMatchingPassword? true : false}
                     className='my-5 btn btn-outline'>Sign Up</button>
             </form>
-            <p>
+            <p className="text-white">
                 Already registered?<br />
-                <span className="line">
-                    <a href="/">Sign In</a>
-                </span>
+                <a 
+                    className='text-white underline'
+                    href="/">Sign In</a>
             </p>
         </div>
     );

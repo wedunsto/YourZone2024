@@ -61,12 +61,12 @@ const YourBibleView = () => {
     },[submitted]);
 
     return(
-        <div>
+        <div className="h-screen w-screen grow">
             {errorMessage? <p>{errorMessage}</p> : null}
             <div className="grow flex justify-center">
                 <YourBibleHeader />
             </div>
-            <div className="flex flex-row ml-5">
+            <div className="flex flex-row ml-5 justify-center">
                 <YourBibleButtons 
                     submittedBool={submitted}
                     setSubmittedFtn={setSubmitted} />

@@ -125,7 +125,7 @@ const LogInForm = () => {
                     Need an Account?<br />
                     <span className="line">
                         <a
-                            className='text-white'
+                            className='text-white underline'
                             href="/register">Sign Up
                         </a>
                     </span>

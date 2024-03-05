@@ -7,6 +7,8 @@ import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
+import LogoutButton from "../LogoutButton";
+import HomeButton from "../HomeButton";
 
 const BIBLE_URL = '/createBibleStudyNote';
 
@@ -108,10 +110,14 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         <div className="flex mr-10">
             <div className="flex-1">
                 {errorMessage !== '' ? <p>{errorMessage}</p> : null}
-                <label 
-                    className="btn"
-                    onClick={onClickCreate}
-                    htmlFor="createBibleStudy">Add Bible Study Notes</label>
+                <div className="flex flex-col space-y-3">
+                    <label 
+                        className="btn"
+                        onClick={onClickCreate}
+                        htmlFor="createBibleStudy">Add Bible Study Notes</label>
+                    <HomeButton />
+                    <LogoutButton setErrorMessage={setErrorMessage} />
+                </div>
                 <input
                     type="checkbox"
                     id="createBibleStudy" 
