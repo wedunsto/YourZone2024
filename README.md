@@ -17,7 +17,7 @@ To run YourZone locally, follow these steps:
 1. Clone the repository:
 
     ```bash
-    git clone [https://github.com/yourusername/yourzone-spa.git](https://github.com/wedunsto/YourZone2024.git)
+    git clone https://github.com/wedunsto/YourZone2024.git
     ```
 
 2. Navigate to the backend project directory:
