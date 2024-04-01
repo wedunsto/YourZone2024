@@ -1,0 +1,17 @@
+.login-background {
+    background: linear-gradient(249.86deg, #0F0920 42.5%, #3F2686 138.64%);
+}
+
+.login-header {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 681px;
+    height: 72px;
+    left: 94px;
+    top: 36px;
+
+    background: rgba(217, 217, 217, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+}
