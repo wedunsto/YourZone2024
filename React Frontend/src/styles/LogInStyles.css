@@ -53,40 +53,40 @@
     font-size: 15px;
     color: #F2F0FF;
 }
-.description-contain {
-    position: absolute;
-    left: 150px;
-    top: 150px
-}
+
 .page-description {
+    position: absolute;
     font-family: 'Trispace';
     font-size: 45px;
     font-weight: bold;
     width: 600px;
     height: 222px;
+    left: 10%;
+    top: 20%
 }
 
 .page-sub-description {
+    position: absolute;
     width: 600px;
     height: 222px;
     font-family: 'Trispace';
     font-size: 20px;
     line-height: 180%;
-}
-
-.get-started-container {
-    position: absolute;
-    left: 150px;
-    top: 470px
+    left: 10%;
+    top: 50%
 }
 
 .get-started {
+    position: absolute;
     background-color: #0047FF;
+    left: 10%;
+    bottom: 30%
 }
 
 .preview {
     position: absolute;
-    width: 476px;
-    height: 517.12px;
-    right: 5%
+    width: 33%;
+    height: 70%;
+    right: 10%;
+    top: 15%
 }

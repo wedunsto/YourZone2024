@@ -13,16 +13,10 @@ const LogInView = () => {
                 <p className="login-logo-text">YourZone</p>
                 <LogInMenu />
             </div>
-            <div className="description-contain">
-                <p className="page-description">Empowering your spiritual, financial, and fitness journey</p>
-                <p className="page-sub-description">Track your goals like never before with our innovative online platform.</p>
-            </div>
-            <div className="get-started-container">
-                <button className="get-started">Get Started</button>
-            </div>
-            <div>
-                <img className="preview" src={BibleStudy} />
-            </div>
+            <p className="page-description">Empowering your spiritual, financial, and fitness journey</p>
+            <p className="page-sub-description">Track your goals like never before with our innovative online platform.</p>
+            <button className="get-started">Get Started</button>
+            <img className="preview" src={BibleStudy} />
         </div>
     );
 }
