@@ -6,10 +6,10 @@
     box-sizing: border-box;
 
     position: absolute;
-    width: 681px;
+    width: 680px;
     height: 72px;
-    left: 94px;
-    top: 36px;
+    left: 5%;
+    top: 4%;
 
     background: rgba(217, 217, 217, 0.1);
     backdrop-filter: blur(12px);
@@ -20,20 +20,19 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0px;
     gap: 10px;
 
-    position: absolute;
+    position: relative;
     width: 133px;
     height: 23px;
-    left: 136px;
-    top: 60.5px;
+    left: 6%;
+    top: 6%;
 }
 
 .login-logo-text {
     font-family: 'Trispace';
     font-weight: 700;
-    font-size: 20px;
+    font-size: 25px;
     color: #F2F0FF;
 }
 
@@ -50,18 +49,18 @@
     flex-grow: 1;
     font-family: 'Trispace';
     font-weight: 700;
-    font-size: 15px;
+    font-size: 20px;
     color: #F2F0FF;
 }
 
 .page-description {
     position: absolute;
     font-family: 'Trispace';
-    font-size: 45px;
+    font-size: 50px;
     font-weight: bold;
-    width: 600px;
+    width: 660px;
     height: 222px;
-    left: 10%;
+    left: 6%;
     top: 20%
 }
 
@@ -70,16 +69,16 @@
     width: 600px;
     height: 222px;
     font-family: 'Trispace';
-    font-size: 20px;
+    font-size: 25px;
     line-height: 180%;
-    left: 10%;
+    left: 6%;
     top: 50%
 }
 
 .get-started {
     position: absolute;
     background-color: #0047FF;
-    left: 10%;
+    left: 6%;
     bottom: 30%
 }
 
