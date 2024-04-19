@@ -76,10 +76,23 @@
 }
 
 .get-started {
+    display: flex;
     position: absolute;
-    background-color: #0047FF;
+    width: 35%;
     left: 6%;
-    bottom: 30%
+    bottom: 0%;
+}
+
+.get-started-button {
+    top: 5%;
+    height: 50px;
+    position: relative;
+    background-color: #0047FF;
+}
+
+.login-fields {
+    position: relative;
+    left: 5%
 }
 
 .preview {

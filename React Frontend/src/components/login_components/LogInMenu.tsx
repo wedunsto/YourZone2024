@@ -1,4 +1,4 @@
-import '../styles/LogInStyles.css'
+import '../../styles/LogInStyles.css'
 
 const LogInMenu =()=> {
     return(

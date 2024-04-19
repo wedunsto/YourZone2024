@@ -1,10 +1,11 @@
 // Log in component used to access the home page for those authorized
 import { useState, useEffect, FormEvent } from 'react';
-import useAuth from "../hooks/useAuth";
-import axios from "../api/axios";
+import useAuth from "../../hooks/useAuth";
+import axios from "../../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
-import CredentialInputField from './CredentialInputField';
-import Captcha from './Captcha';
+import CredentialInputField from '../CredentialInputField';
+import Captcha from '../Captcha';
+import "../../styles/LogInStyles.css";
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
@@ -94,7 +95,7 @@ const LogInForm = () => {
     };
 
     return(
-        <div className='flex justify-center'>
+        <div className='login-fields flex justify-center'>
             <div className="flex-col">
                 {errorMessage? <p className='text-white'>{errorMessage}</p> : null}
                 <form onSubmit={handleSubmit}>
@@ -115,21 +116,19 @@ const LogInForm = () => {
                     <Captcha 
                         setCaptchaVerified={setCaptchaVerified}
                     />
-                    
+                    <div className="flex flex-row items-center">
                     <button
                         style={{ backgroundColor: !username || !password ? '#CCCCCC' : '#FFFFFF' }}
                         disabled={!username || !password? true : false}
-                        className='my-5 btn btn-outline'>Log In</button>
-                </form>
-                <p className='text-white'>
-                    Need an Account?<br />
-                    <span className="line">
+                        className='my-5 mr-5 btn btn-outline'>Log In</button>
+                        <span className="line">
                         <a
                             className='text-white underline'
                             href="/register">Sign Up
                         </a>
                     </span>
-                </p>
+                    </div>
+                </form>
             </div>
         </div>
     );
