@@ -84,8 +84,8 @@
 
 .preview {
     position: absolute;
-    width: 33%;
-    height: 70%;
+    width: 476px;
+    height: 600px;
     right: 10%;
     top: 15%
 }
