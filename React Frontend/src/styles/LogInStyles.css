@@ -80,11 +80,11 @@
     position: absolute;
     width: 35%;
     left: 6%;
-    bottom: 0%;
+    top: 62%
 }
 
 .get-started-button {
-    top: 5%;
+    top: 15px;
     height: 50px;
     position: relative;
     background-color: #0047FF;

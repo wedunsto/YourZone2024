@@ -120,7 +120,7 @@ const LogInForm = () => {
                     <button
                         style={{ backgroundColor: !username || !password ? '#CCCCCC' : '#FFFFFF' }}
                         disabled={!username || !password? true : false}
-                        className='my-5 mr-5 btn btn-outline'>Log In</button>
+                        className='mr-5 btn btn-outline'>Log In</button>
                         <span className="line">
                         <a
                             className='text-white underline'
