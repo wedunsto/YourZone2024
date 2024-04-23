@@ -1,0 +1,15 @@
+.home-page-background {
+    background: linear-gradient(249.86deg, #0F0920 42.5%, #3F2686 138.64%);
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button {
+    position: relative;
+    left: 30%
+}
