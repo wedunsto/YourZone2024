@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
 import { v4 as uuidv4 } from 'uuid';
+import Header from "../components/Header";
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -64,7 +65,7 @@ const YourBibleView = () => {
         <div className="h-screen w-screen grow">
             {errorMessage? <p>{errorMessage}</p> : null}
             <div className="grow flex justify-center">
-                <YourBibleHeader />
+                <Header title="YourBible" subTitle="His word, your light"/>
             </div>
             <div className="flex flex-row ml-5 justify-center">
                 <YourBibleButtons 
