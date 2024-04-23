@@ -116,7 +116,6 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                         onClick={onClickCreate}
                         htmlFor="createBibleStudy">Add Bible Study Notes</label>
                     <HomeButton />
-                    <LogoutButton setErrorMessage={setErrorMessage} />
                 </div>
                 <input
                     type="checkbox"

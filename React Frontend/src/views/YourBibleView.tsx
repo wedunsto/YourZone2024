@@ -1,12 +1,13 @@
 // View for all current Bible notes, and buttons to add, edit, and delete Bible notes
+import "../styles/YourBibleStyles.css";
 import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
-import YourBibleHeader from "../components/yourbible_components/YourBibleHeader";
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
 import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header";
+import "../../assets/images/OpenBible.jpeg"
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -62,12 +63,18 @@ const YourBibleView = () => {
     },[submitted]);
 
     return(
-        <div className="h-screen w-screen grow">
-            {errorMessage? <p>{errorMessage}</p> : null}
+        <div className="your-bible-page-background h-screen w-screen">
             <div className="grow flex justify-center">
-                <Header title="YourBible" subTitle="His word, your light"/>
+                <Header textColor="text-black" title="YourBible" subTitle="His word, your light"/>
             </div>
-            <div className="flex flex-row ml-5 justify-center">
+            {errorMessage? <p>{errorMessage}</p> : null}
+            <div className="flex justify-center items-center bg-black p-5">
+                <section className="flex flex-row bg-gray-900 px-20 py-12 rounded-lg">
+                    <span className="flex text-white text-2xl mr-10 items-center">Enter and manage YourBible verses</span>
+                    <img className="open-bible-icon rounded-lg shadow-lg" src="../../assets/images/OpenBible.jpeg" />
+                </section>
+            </div>
+            <div className="flex flex-row ml-5 mt-5">
                 <YourBibleButtons 
                     submittedBool={submitted}
                     setSubmittedFtn={setSubmitted} />
