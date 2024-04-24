@@ -27,7 +27,7 @@ const LogoutButton = () => {
         e.preventDefault();
     
         try {
-            await axios.get(LOGOUT_URL,
+            const response = await axios.get(LOGOUT_URL,
                 {
                     headers: { 
                         'Content-Type': 'application/json',
@@ -35,6 +35,7 @@ const LogoutButton = () => {
                         withCredentials: true
                 }
             );
+            console.log(response);
             navigate("/");
         } catch(err) {
             console.log((err as ErrorProp).response);

@@ -71,13 +71,15 @@ const RegisterForm = () => {
 
         try {
             if(isCaptchaVerified) {
-                await axios.post(REGISTER_URL,
-                    JSON.stringify({username: username, password}),
+                const response = await axios.post(REGISTER_URL,
+                    JSON.stringify({ username, password }),
                     {
                         headers: {'Content-Type': 'application/json'},
                         withCredentials: true
                     }
                 );
+
+                console.log(response);
                 
                 // Clear input fields out of registration field
                 setUsername("");
