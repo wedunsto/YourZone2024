@@ -68,12 +68,6 @@ const YourBibleView = () => {
                 <Header textColor="text-black" title="YourBible" subTitle="His word, your light"/>
             </div>
             {errorMessage? <p>{errorMessage}</p> : null}
-            <div className="flex justify-center items-center bg-black p-5">
-                <section className="flex flex-row bg-gray-900 px-20 py-12 rounded-lg">
-                    <span className="flex text-white text-2xl mr-10 items-center">Enter and manage YourBible verses</span>
-                    <img className="open-bible-icon rounded-lg shadow-lg" src="../../assets/images/OpenBible.jpeg" />
-                </section>
-            </div>
             <div className="flex flex-row ml-5 mt-5">
                 <YourBibleButtons 
                     submittedBool={submitted}

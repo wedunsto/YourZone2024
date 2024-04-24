@@ -7,7 +7,6 @@ import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
-import LogoutButton from "../LogoutButton";
 import HomeButton from "../HomeButton";
 
 const BIBLE_URL = '/createBibleStudyNote';
@@ -32,36 +31,14 @@ interface ErrorProp {
 }
 
 const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
-    const [type, setType] = useState('');
     const [title, setTitle] = useState('');
-    const [bibleVerses, setBibleVerses] = useState('');
-    const [bibleNotes, setBibleNotes] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const { auth } = useAuth() as AuthProp;
 
-    const updateType = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setType(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
-    }
-
     const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
-    }
-
-    const updateBibleVerses = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setBibleVerses(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
-    }
-
-    const updateBibleNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedValue = e.target.value.replace(/\r\n/g, '\n');
-        setBibleNotes(updatedValue);
 
         if(errorMessage !== '') setErrorMessage('');
     }
@@ -72,8 +49,6 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
     const clearFields = () => {
         setTitle('');
-        setBibleVerses('');
-        setBibleNotes('');
         setErrorMessage('');
     }
 
@@ -85,10 +60,10 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
     const createBibleStudy = async (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
 
-        if(!(type === '' || title === '' || bibleVerses === '' || bibleNotes === '')) {
+        if(!(title === '')) {
             try {
                 await axios.post(BIBLE_URL,
-                    JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
+                    JSON.stringify({ "userId": auth.id, title }),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
@@ -125,14 +100,8 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     checked={modalVisible} />
 
                     <YourBibleModal
-                        type={type}
                         title={title}
-                        bibleVerses={bibleVerses}
-                        bibleNotes={bibleNotes}
-                        updateType={updateType}
                         updateTitle={updateTitle}
-                        updateBibleVerses={updateBibleVerses}
-                        updateBibleNotes={updateBibleNotes}
                         submit={createBibleStudy}
                         modalVisible={modalVisible}
                         onClickClose={onClickClose}

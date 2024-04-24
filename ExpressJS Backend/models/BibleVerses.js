@@ -7,21 +7,12 @@ const bibleverseSchema = new Schema({
         type: String,
         required: true
     },
-    type: {
-        type: String,
-        required: true
-    },
     title: {
         type: String,
         required: true
     },
-    bibleverses: {
-        type: Array,
-        required: true
-    },
-    notes: {
-        type: String,
-        default: ""
+    bibleVerseNotes: {
+        type: Array
     },
     date: {
         type: Date,
