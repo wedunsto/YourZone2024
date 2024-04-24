@@ -7,8 +7,7 @@ interface CaptchaProp {
 }
 
 const Captcha = ({ setCaptchaVerified }: CaptchaProp) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleCaptchaChange = (value: string | null) => {
+    const handleCaptchaChange = () => {
         // Value: Response from reCAPTCH. Used to verify the user on the server
         setCaptchaVerified(true);
     }

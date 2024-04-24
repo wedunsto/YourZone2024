@@ -25,7 +25,7 @@ const UnauthorizedView = () => {
                     <div className="my-5 flexGrow">
                         <button onClick={goBack}>Go Back</button>
                         <HomeButton />
-                        <LogoutButton setErrorMessage={setErrorMessage} />
+                        <LogoutButton />
                     </div>
                 </section>
             </div>

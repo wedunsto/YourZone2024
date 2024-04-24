@@ -85,7 +85,7 @@ const YourBibleEntry = (
             e.preventDefault();
 
             try {
-                const response = await axios.post(UPDATE_BIBLE_URL,
+                await axios.post(UPDATE_BIBLE_URL,
                     JSON.stringify({ 
                         id,
                         "type": newType,
@@ -109,7 +109,7 @@ const YourBibleEntry = (
             e.preventDefault();
             
             try {
-                const response = await axios.delete(DELETE_STUDY_URL, {
+                await axios.delete(DELETE_STUDY_URL, {
                     data: JSON.stringify({ id }),
                     headers: {
                       'Content-Type': 'application/json',
@@ -164,14 +164,8 @@ const YourBibleEntry = (
                         checked={editModalVisible} />
 
                     <YourBibleModal 
-                        type={newType}
                         title={newTitle}
-                        bibleVerses={newBibleVerses}
-                        bibleNotes={newBibleNotes}
-                        updateType={onTypeChange}
                         updateTitle={updateTitle}
-                        updateBibleVerses={updateBibleVerses}
-                        updateBibleNotes={updateBibleNotes}
                         submit={updateBibleStudy}
                         modalVisible={editModalVisible}
                         onClickClose={onClickClose}
