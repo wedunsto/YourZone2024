@@ -71,6 +71,7 @@ const RegisterForm = () => {
 
         try {
             if(isCaptchaVerified) {
+                // @ts-ignore
                 const response = await axios.post(REGISTER_URL,
                     JSON.stringify({username: username, password}),
                     {

@@ -85,6 +85,7 @@ const YourBibleEntry = (
             e.preventDefault();
 
             try {
+                // @ts-ignore
                 const response = await axios.post(UPDATE_BIBLE_URL,
                     JSON.stringify({ 
                         id,
@@ -109,6 +110,7 @@ const YourBibleEntry = (
             e.preventDefault();
             
             try {
+                // @ts-ignore
                 const response = await axios.delete(DELETE_STUDY_URL, {
                     data: JSON.stringify({ id }),
                     headers: {

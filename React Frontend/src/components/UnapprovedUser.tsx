@@ -46,6 +46,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         e.preventDefault();
 
         try {
+            // @ts-ignore
             const response = await axios.put(USER_APPROVAL_URL,
                 JSON.stringify({"id": userId}),
                 {
@@ -73,6 +74,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         e.preventDefault();
 
         try {
+            // @ts-ignore
             const response = await axios.delete(`${USER_DENIAL_URL}?userId=${userId}`,
                 {
                     headers: { 

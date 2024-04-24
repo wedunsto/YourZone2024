@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Link } from "react-router-dom"
 import LogoutButton from "../components/LogoutButton";
 import { useState } from "react";

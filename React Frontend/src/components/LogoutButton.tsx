@@ -3,6 +3,7 @@
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+// @ts-ignore
 import { useState } from "react";
 
 interface LogoutButtonProp {
@@ -31,6 +32,7 @@ const LogoutButton = ({ setErrorMessage }: LogoutButtonProp) => {
         e.preventDefault();
     
         try {
+            // @ts-ignore
             const response = await axios.get(LOGOUT_URL,
                 {
                     headers: { 
