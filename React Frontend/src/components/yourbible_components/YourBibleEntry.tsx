@@ -64,21 +64,8 @@ const YourBibleEntry = (
             setDeleteEntryConfirmation(true);
         }
 
-        const onTypeChange = (e: any) => {
-            setNewType(e.target.value);
-        }
-
         const updateTitle = (e: any) => {
             setNewTitle(e.target.value);
-        }
-
-        const updateBibleVerses = (e: any) => {
-            setNewBibleVerses(e.target.value);
-        }
-
-        const updateBibleNotes = (e: any) => {
-            const updatedValue = e.target.value.replace(/\r\n/g, '\n');
-            setNewBibleNotes(updatedValue);
         }
 
         const updateBibleStudy = async (e: any) => {
