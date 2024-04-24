@@ -70,15 +70,15 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-                    clearFields();
-                    setSubmittedFtn(!(submittedBool)); // Reloads the screen
-                    setModalVisible(false);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
         } else {
             setErrorMessage('Ensure all fields are filled out.');
         }
+        clearFields();
+        setSubmittedFtn(!(submittedBool)); // Reloads the screen
+        setModalVisible(false);
     }
 
     return (
