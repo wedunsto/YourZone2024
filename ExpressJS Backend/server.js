@@ -18,7 +18,19 @@ connectDB();
 // and fetch cookie credentials requirement
 app.use(credentials);
 // Enables the frontend to access the backend
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://yourzone.hopto.org');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+  } else {
+    next();
+  }
+});
+
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 // Middleware for cookies
