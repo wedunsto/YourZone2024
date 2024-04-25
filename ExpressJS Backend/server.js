@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const cookieParser = require('cookie-parser');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Connect to MongoDB
 connectDB();
