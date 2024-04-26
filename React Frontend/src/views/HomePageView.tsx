@@ -2,8 +2,9 @@
 import "../styles/HomePageStyles.css";
 import Header from "../components/Header";
 import HomePageButton from "../components/home_page_components/HomePageButton";
+import YourBibleButton from "../../assets/images/YourBibleButton.webp";
 
-const buttonProps= [{imageSrc: "../../assets/images/YourBibleButton.webp",
+const buttonProps= [{imageSrc: `${YourBibleButton}`,
                      title: "YourBible", subTitle: "Track your Bible verses", destination: "/yourbible"}];
 const HomePageView = () => {
     return (
