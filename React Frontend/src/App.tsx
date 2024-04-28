@@ -8,6 +8,7 @@ import HomePageView from "./views/HomePageView";
 import MissingView from "./views/MissingView";
 import YourBibleView from "./views/YourBibleView";
 import './App.css';
+import BibleLessonView from "./views/BibleLessonView";
 
 const userRole = import.meta.env.VITE_USER_ROLE;
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
@@ -24,7 +25,9 @@ const App = () => {
         {/* Private routes */}
         <Route element={<RequireAuth allowedRoles={[userRole, adminRole]} />}>
           <Route path="/home" element={<HomePageView />} />
-          <Route path="/yourbible" element={<YourBibleView />} />
+          <Route path="/yourbible" element={<YourBibleView />}>
+            <Route path=":bibleLesson" element={<BibleLessonView />}></Route>
+          </Route>
         </Route>
 
         <Route element={<RequireAuth allowedRoles={[adminRole]} />}>

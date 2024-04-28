@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
+import axios from '../../api/axios';
 import Captcha from './Captcha';
 
 // Replace any type with details about objects

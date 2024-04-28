@@ -5,13 +5,11 @@ import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 interface YourBibleEntryProp{
     id: string,
-    type: string,
-    collapseText: string,
-    bibleVerses: string[],
-    expandText: string,
+    title: string,
     submitted: boolean,
     setSubmitted: (submittedStatus: boolean) => void
 }
@@ -31,27 +29,21 @@ interface ErrorProp {
 }
 
 const YourBibleEntry = (
-    {id, type, collapseText, bibleVerses, expandText, submitted, setSubmitted}: YourBibleEntryProp) => {
+    {id, title, submitted, setSubmitted}: YourBibleEntryProp) => {
         const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
-        const [newType, setNewType] = useState('');
         const [newTitle, setNewTitle] = useState('');
-        const [newBibleVerses, setNewBibleVerses] = useState('');
-        const [newBibleNotes, setNewBibleNotes] = useState('');
         const [editModalVisible, setEditModalVisible] = useState(false);
         const [deleteEntryConfirmation, setDeleteEntryConfirmation] = useState(false);
         const [errorMessage, setErrorMessage] = useState('');
 
         const { auth } = useAuth() as AuthProp;
 
-        const lineSeperatedNotes = expandText.split(/\n/g);
+        const navigate = useNavigate();
 
         const onClickEdit = () => {
-            setNewType(type);
-            setNewTitle(collapseText);
-            setNewBibleVerses(bibleVerses.join(", "));
-            setNewBibleNotes(expandText);
+            setNewTitle(title);
             setEditModalVisible(true);
         }
     
@@ -75,10 +67,8 @@ const YourBibleEntry = (
                 await axios.post(UPDATE_BIBLE_URL,
                     JSON.stringify({ 
                         id,
-                        "type": newType,
                         "title": newTitle,
-                        "bibleverses": newBibleVerses.split(","),
-                        "notes": newBibleNotes }),
+                    }),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
@@ -113,24 +103,7 @@ const YourBibleEntry = (
         return (
             <div className="flex flex-col">
                 <div className="flex flex-row mb-6">
-                    <div className="collapse collapse-arrow bg-base-200">
-                        <input type="checkbox" /> 
-                        <div className="collapse-title text-xl font-medium">
-                            {collapseText}
-                        </div>
-                        <div className="collapse-content">
-                            {bibleVerses.map((bibleVerse: string, index: number) => (
-                                    bibleVerses.length == 1 || index == bibleVerses.length - 1? (
-                                        <span key={uuidv4()}>{bibleVerse}</span>
-                                    ) : <span key={uuidv4()}>{bibleVerse}, </span>
-                                )
-                            )}
-                            <div className="divider"></div>
-                            <ul className="list-disc">
-                                {lineSeperatedNotes.map((note: string) => <li key={uuidv4()}>{note}</li>)}
-                            </ul> 
-                        </div>
-                    </div>
+                    <button onClick={() => navigate(`/yourbible/1`)}>{title}</button>
                     <div className="flex flex-col ml-5">
                         <label 
                             className="mb-2 bg-slate-400 text-black btn btn-sm"

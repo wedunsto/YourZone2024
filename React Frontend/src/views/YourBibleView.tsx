@@ -8,6 +8,7 @@ import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
 import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header";
 import "../../assets/images/OpenBible.jpeg"
+import { Outlet, useLocation } from 'react-router-dom';
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -25,10 +26,7 @@ interface ErrorProp {
 
 interface NoteProp {
     _id: string
-    type: string
     title: string
-    bibleverses: Array<string>
-    notes: string
 }
 
 const YourBibleView = () => {
@@ -39,6 +37,10 @@ const YourBibleView = () => {
     const [bibleNotes, setBibleNotes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
+
+    const location = useLocation();
+
+    const hasSubPath = location.pathname !== "/yourbible";
 
     // On page load, get all exisiting Bible notes
     // Repload the page when the submitted boolean changes
@@ -59,7 +61,6 @@ const YourBibleView = () => {
         }
 
         getBibleStudyNotes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[submitted]);
 
     return(
@@ -67,26 +68,31 @@ const YourBibleView = () => {
             <div className="grow flex justify-center">
                 <Header textColor="text-black" title="YourBible" subTitle="His word, your light"/>
             </div>
-            {errorMessage? <p>{errorMessage}</p> : null}
-            <div className="flex flex-row ml-5 mt-5">
-                <YourBibleButtons 
-                    submittedBool={submitted}
-                    setSubmittedFtn={setSubmitted} />
-                <div className="flex flex-col">
-                    {
-                        bibleNotes.map((note: NoteProp) => 
-                            <YourBibleEntry 
-                                key={uuidv4()}
-                                id={note._id}
-                                type={note.type}
-                                collapseText={note.title}
-                                bibleVerses={note.bibleverses}
-                                expandText={note.notes}
-                                submitted={submitted}
-                                setSubmitted={setSubmitted}/>)
-                    }
-                </div>
-            </div>
+            
+            { hasSubPath ? (
+                <Outlet />
+                ) : (
+                <>
+                    {errorMessage? <p>{errorMessage}</p> : null}
+                    <div className="flex flex-row ml-5 mt-5">
+                        <YourBibleButtons 
+                            submittedBool={submitted}
+                            setSubmittedFtn={setSubmitted} />
+                        <div className="flex flex-col">
+                            {
+                                bibleNotes.map((note: NoteProp) => 
+                                    <YourBibleEntry 
+                                        key={uuidv4()}
+                                        id={note._id}
+                                        title={note.title}
+                                        submitted={submitted}
+                                        setSubmitted={setSubmitted}/>)
+                            }
+                        </div>
+                    </div>
+                </>
+                )
+            }
         </div>
     );
 }

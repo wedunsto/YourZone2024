@@ -62,7 +62,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
         if(!(title === '')) {
             try {
-                const response = await axios.post(BIBLE_URL,
+                await axios.post(BIBLE_URL,
                     JSON.stringify({ "userId": auth.id, title }),
                     {
                         headers: { 
@@ -71,7 +71,6 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                             withCredentials: true
                     }
                 );
-                console.log(response);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }

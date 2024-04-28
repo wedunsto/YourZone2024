@@ -3,8 +3,8 @@ import { useState, useEffect, FormEvent } from 'react';
 import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import { useNavigate, useLocation } from 'react-router-dom';
-import CredentialInputField from '../CredentialInputField';
-import Captcha from '../Captcha';
+import CredentialInputField from './CredentialInputField';
+import Captcha from './Captcha';
 import "../../styles/LogInStyles.css";
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
