@@ -103,7 +103,7 @@ const YourBibleEntry = (
         return (
             <div className="flex flex-col">
                 <div className="flex flex-row mb-6">
-                    <button onClick={() => navigate(`/yourbible/1`)}>{title}</button>
+                    <button onClick={() => navigate(`/yourbible/${id}`)}>{title}</button>
                     <div className="flex flex-col ml-5">
                         <label 
                             className="mb-2 bg-slate-400 text-black btn btn-sm"

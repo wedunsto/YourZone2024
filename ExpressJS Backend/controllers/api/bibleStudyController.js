@@ -55,6 +55,23 @@ const getAllBibleStudyNotes = async (req, res) => {
     res.json(bibleVerseNotes);
 }
 
+// Read all Bible verses and notes for a specific Bible study note
+const getAllBibleLessonNotes = async (req, res) => {
+    const { bibleStudyId } = req.query;
+
+    const bibleLessonNotes = await BibleStudy.find(
+        {_id: bibleStudyId }
+    );
+
+    if (!bibleLessonNotes) {
+        eventLogger.logEvents('No Bible notes found.');
+        return res.status(204).json({ 'message': 'No Bible notes found.' });
+    }
+
+    eventLogger.logEvents('Bible lessons retrieved');
+    res.json(bibleLessonNotes);
+};
+
 // Update a Bible study note
 const updateBibleStudyNote = async (req, res) => {
     const { id, title, bibleVerseNotes } = req.body;
@@ -109,6 +126,7 @@ const deleteBibleStudyNote = async (req, res) => {
 module.exports = {
     createBibleStudyNotes,
     getAllBibleStudyNotes,
+    getAllBibleLessonNotes,
     updateBibleStudyNote,
     deleteBibleStudyNote
 }

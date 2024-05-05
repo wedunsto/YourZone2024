@@ -38,12 +38,12 @@ const YourBibleView = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
+    // Used to conditionally render the parent or child route
     const location = useLocation();
-
     const hasSubPath = location.pathname !== "/yourbible";
 
     // On page load, get all exisiting Bible notes
-    // Repload the page when the submitted boolean changes
+    // Reload the page when the submitted boolean changes
     useEffect(() => {
         const getBibleStudyNotes = async () => {
             try {
