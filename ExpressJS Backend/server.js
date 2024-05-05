@@ -56,6 +56,7 @@ app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
 app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));
 app.use('/getBibleStudyNotes/', require('./routes/api/getBibleStudyNotes'));
+app.use('/getBibleLessonNotes', require('./routes/api/getBibleLessonNotes'));
 app.use('/updateBibleStudyNote', require('./routes/api/updateBibleStudyNote'));
 app.use('/deleteBibleStudyNote', require('./routes/api/deleteBibleStudyNote'));
 

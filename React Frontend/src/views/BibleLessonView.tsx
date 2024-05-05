@@ -26,6 +26,7 @@ const BibleLessonView = () => {
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
+        console.log("test");
         const getBibleStudyNotes = async () => {
             try {
                 const response = await axios.get(BIBLE_LESSON_URL,
