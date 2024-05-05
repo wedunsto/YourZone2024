@@ -12,6 +12,19 @@ interface AuthProp {
     auth: accessTokenProp
 }
 
+interface BibleNoteProp {
+    bibleVerse: string,
+    bibleVerseNote: string
+}
+
+interface BibleNotesProp {
+    _id: string,
+    bibleVerseNotes: Array<BibleNoteProp>
+    date: string,
+    title: string,
+    userId: string
+}
+
 interface ErrorProp {
     response: string
 }
@@ -26,7 +39,6 @@ const BibleLessonView = () => {
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
-        console.log("test");
         const getBibleStudyNotes = async () => {
             try {
                 const response = await axios.get(BIBLE_LESSON_URL,
@@ -37,8 +49,7 @@ const BibleLessonView = () => {
                             withCredentials: true
                     });
 
-                setBibleNotes(response?.data);
-                console.log(response);
+                setBibleNotes(response?.data?.bibleVerseNotes);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
