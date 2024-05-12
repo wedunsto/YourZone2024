@@ -99,6 +99,34 @@ const updateBibleStudyNote = async (req, res) => {
     }
 }
 
+// Update Bible study lesson: Contains Bible verse and note(s)
+const updateBibleLessonNote = async (req, res) => {
+    const { bibleStudyId, bibleVerse, bibleVerseNote } = req.body;
+
+    const newBibleLesson = {bibleVerse: bibleVerse, bibleVerseNote: bibleVerseNote}
+
+    // Find BibleStudy and update the lesson
+    try {
+        const updateLesson = await BibleStudy.findOneAndUpdate(
+            {_id: bibleStudyId},
+            {$push: {bibleVerseNotes: newBibleLesson} }
+        )
+
+        if(!updateLesson) {
+            eventLogger.logEvents('Bible lesson not found for updates.');
+            return res.status(404).json({ message: 'Bible lesson not found for updates.' });
+        }
+
+        eventLogger.logEvents('Bible lesson updated');
+        // Send the updated document in the response
+        res.json(updateLesson)
+
+    } catch(e) {
+        eventLogger.logEvents(`Error encountered while updating Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }
+}
+
 // Delete a Bible study note
 const deleteBibleStudyNote = async (req, res) => {
     const { id } = req.body;
@@ -128,5 +156,6 @@ module.exports = {
     getAllBibleStudyNotes,
     getAllBibleLessonNotes,
     updateBibleStudyNote,
+    updateBibleLessonNote,
     deleteBibleStudyNote
 }

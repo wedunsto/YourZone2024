@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
 
 interface accessTokenProp {
     id: string;
     accessToken: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
 }
 
 interface BibleNoteProp {
@@ -25,16 +22,20 @@ interface BibleNotesProp {
     userId: string
 }
 
+interface AuthProp {
+    auth: accessTokenProp
+}
+
 interface ErrorProp {
     response: string
 }
 
 const BibleLessonView = () => {
-    let { bibleLessonId } = useParams();
-    const BIBLE_LESSON_URL = `/getBibleLessonNotes?bibleStudyId=${bibleLessonId}`;
+    let { bibleStudyId } = useParams();
+    const BIBLE_LESSON_URL = `/getBibleLessonNotes?bibleStudyId=${bibleStudyId}`;
     const { auth } = useAuth() as AuthProp;
 
-    const [bibleNotes, setBibleNotes] = useState([]);
+    const [bibleNotes, setBibleNotes] = useState(Array<BibleNoteProp>);
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
@@ -48,8 +49,8 @@ const BibleLessonView = () => {
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-
-                setBibleNotes(response?.data?.bibleVerseNotes);
+                console.log(response?.data[0]?.bibleVerseNotes);
+                setBibleNotes(response?.data[0]?.bibleVerseNotes);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -60,7 +61,22 @@ const BibleLessonView = () => {
 
     return (
         <div>
-            <p className="text-black text-2xl">{bibleLessonId}</p>
+            {errorMessage? <p>{errorMessage}</p> : null}
+            <div className="flex flex-row ml-5 mt-5">
+                <YourBibleButtons 
+                    buttonTitle="Add Bible Verse Notes"
+                    bibleStudyId={bibleStudyId}
+                    bibleNotes = {bibleNotes}
+                    submittedBool={submitted}
+                    setSubmittedFtn={setSubmitted} />
+
+                {bibleNotes.map((bibleNote) =>
+                    <>
+                        <p>{bibleNote.bibleVerse}</p>
+                        <p>{bibleNote.bibleVerseNote}</p>
+                    </>
+                )}
+            </div>
         </div>
     );
 };

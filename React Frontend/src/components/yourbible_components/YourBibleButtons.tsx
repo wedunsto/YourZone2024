@@ -9,7 +9,9 @@ import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 import HomeButton from "../HomeButton";
 
-const BIBLE_URL = '/createBibleStudyNote';
+const BIBLE_STUDY_URL = '/createBibleStudyNote';
+
+const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -21,7 +23,15 @@ interface AuthProp {
     auth: accessTokenProp
 }
 
+interface BibleNoteProp {
+    bibleVerse: string,
+    bibleVerseNote: string
+}
+
 interface YourBibleButtonsProp {
+    buttonTitle: string,
+    bibleStudyId: string | undefined,
+    bibleNotes: Array<BibleNoteProp>
     submittedBool: boolean,
     setSubmittedFtn: (value: boolean) => void;
 }
@@ -30,8 +40,11 @@ interface ErrorProp {
     response: string
 }
 
-const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
+const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
     const [title, setTitle] = useState('');
+    const [bibleVerse, setBibleVerse] = useState('');
+    const [bibleVerseNote, setBibleVerseNote] = useState('');
+    const [bibleVerseNotes, setBibleVerseNotes] = useState(bibleNotes);
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -43,12 +56,21 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         if(errorMessage !== '') setErrorMessage('');
     }
 
+    const updateBibleVerse = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBibleVerse(e.target.value);
+
+        if(errorMessage !== '') setErrorMessage('');
+    }
+
     const onClickCreate = () => {
         setModalVisible(true);
     }
 
     const clearFields = () => {
         setTitle('');
+        setBibleVerse('');
+        setBibleVerseNote('');
+        setBibleVerseNotes(bibleNotes);
         setErrorMessage('');
     }
 
@@ -62,7 +84,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
         if(!(title === '')) {
             try {
-                await axios.post(BIBLE_URL,
+                await axios.post(BIBLE_STUDY_URL,
                     JSON.stringify({ "userId": auth.id, title }),
                     {
                         headers: { 
@@ -77,10 +99,31 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         } else {
             setErrorMessage('Ensure all fields are filled out.');
         }
+
         clearFields();
         setSubmittedFtn(!(submittedBool)); // Reloads the screen
         setModalVisible(false);
     }
+
+    const updateBibleLesson = async () => {
+        try {
+            await axios.post(BIBLE_LESSON_URL,
+                JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
+                {
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${auth.accessToken}`},
+                        withCredentials: true
+                }
+            )
+        } catch(err) {
+            
+        }
+
+        clearFields();
+        setSubmittedFtn(!(submittedBool)); // Reloads the screen
+        setModalVisible(false);
+    };
 
     return (
         <div className="flex mr-10">
@@ -90,7 +133,7 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     <label 
                         className="btn"
                         onClick={onClickCreate}
-                        htmlFor="createBibleStudy">Add Bible Study Notes</label>
+                        htmlFor="createBibleStudy">{buttonTitle}</label>
                     <HomeButton />
                 </div>
                 <input
@@ -101,12 +144,20 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     checked={modalVisible} />
 
                     <YourBibleModal
-                        title={title}
-                        updateTitle={updateTitle}
-                        submit={createBibleStudy}
-                        modalVisible={modalVisible}
-                        onClickClose={onClickClose}
-                        errorMessage={errorMessage} />
+                    buttonTitle={buttonTitle}
+                    title={title}
+                    updateTitle={updateTitle}
+                    bibleVerse={bibleVerse}
+                    bibleVerseNote={bibleVerseNote}
+                    bibleVerseNotes={bibleVerseNotes}
+                    updateBibleVerse={updateBibleVerse}
+                    updateBibleNotes={setBibleVerseNotes}
+                    createNewBibleStudy={createBibleStudy}
+                    bibleStudyId={bibleStudyId}
+                    modalVisible={modalVisible}
+                    onClickClose={onClickClose}
+                    errorMessage={errorMessage}
+                    createNewBibleLesson={updateBibleLesson} />
             </div>
         </div>
     );

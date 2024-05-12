@@ -58,6 +58,7 @@ app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));
 app.use('/getBibleStudyNotes/', require('./routes/api/getBibleStudyNotes'));
 app.use('/getBibleLessonNotes', require('./routes/api/getBibleLessonNotes'));
 app.use('/updateBibleStudyNote', require('./routes/api/updateBibleStudyNote'));
+app.use('/updateBibleLessonNotes', require('./routes/api/updateBibleLessonNotes'))
 app.use('/deleteBibleStudyNote', require('./routes/api/deleteBibleStudyNote'));
 
 // If our connection to the database fails, we dont want to listen for connections

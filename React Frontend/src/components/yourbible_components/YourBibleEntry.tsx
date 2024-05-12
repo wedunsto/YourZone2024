@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Collapsable table entries for YourBible
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
@@ -126,10 +126,18 @@ const YourBibleEntry = (
                     <YourBibleModal 
                         title={newTitle}
                         updateTitle={updateTitle}
-                        submit={updateBibleStudy}
                         modalVisible={editModalVisible}
                         onClickClose={onClickClose}
-                        errorMessage={errorMessage} />
+                        errorMessage={errorMessage}
+                        buttonTitle={undefined} 
+                        bibleVerse={undefined} 
+                        bibleVerseNote={undefined} 
+                        bibleVerseNotes={undefined} 
+                        updateBibleVerse={undefined} 
+                        updateBibleNotes={undefined} 
+                        createNewBibleStudy={undefined} 
+                        createNewBibleLesson={undefined}                     
+                    />
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">

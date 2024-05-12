@@ -76,8 +76,9 @@ const YourBibleView = () => {
                     {errorMessage? <p>{errorMessage}</p> : null}
                     <div className="flex flex-row ml-5 mt-5">
                         <YourBibleButtons 
-                            submittedBool={submitted}
-                            setSubmittedFtn={setSubmitted} />
+                                buttonTitle="Add Bible Study Notes"
+                                submittedBool={submitted}
+                                setSubmittedFtn={setSubmitted} bibleStudyId={undefined} bibleNotes={[]} />
                         <div className="flex flex-col">
                             {
                                 bibleNotes.map((note: NoteProp) => 
