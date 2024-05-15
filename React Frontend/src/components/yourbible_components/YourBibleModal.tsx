@@ -6,14 +6,14 @@ interface BibleNoteProp {
     bibleVerseNote: string
 }
 
-interface accessTokenProp {
+/*interface accessTokenProp {
     accessToken: string,
     id: string
 }
 
 interface AuthProp {
     auth: accessTokenProp
-}
+}*/
 
 interface YourBibleModalProp {
     modalVisible: undefined | boolean,
