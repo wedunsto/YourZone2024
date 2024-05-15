@@ -15,13 +15,13 @@ interface BibleNoteProp {
     bibleVerseNote: string
 }
 
-interface BibleNotesProp {
+/*interface BibleNotesProp {
     _id: string,
     bibleVerseNotes: Array<BibleNoteProp>
     date: string,
     title: string,
     userId: string
-}
+}*/
 
 interface AuthProp {
     auth: accessTokenProp
@@ -50,7 +50,6 @@ const BibleLessonView = () => {
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-                console.log(response?.data[0]?.bibleVerseNotes);
                 setBibleNotes(response?.data[0]?.bibleVerseNotes);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);

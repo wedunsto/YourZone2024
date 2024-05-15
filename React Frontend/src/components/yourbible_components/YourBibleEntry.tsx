@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Collapsable table entries for YourBible
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
 
 interface YourBibleEntryProp{
@@ -60,28 +60,6 @@ const YourBibleEntry = (
             setNewTitle(e.target.value);
         }
 
-        const updateBibleStudy = async (e: any) => {
-            e.preventDefault();
-
-            try {
-                await axios.post(UPDATE_BIBLE_URL,
-                    JSON.stringify({ 
-                        id,
-                        "title": newTitle,
-                    }),
-                    {
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${auth.accessToken}`},
-                            withCredentials: true
-                    });
-                    setSubmitted(!(submitted));
-                    setEditModalVisible(false);
-            } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
-            }
-        }
-
         const deleteBibleStudy = async (e:any) => {
             e.preventDefault();
             
@@ -129,15 +107,15 @@ const YourBibleEntry = (
                         modalVisible={editModalVisible}
                         onClickClose={onClickClose}
                         errorMessage={errorMessage}
-                        buttonTitle={undefined} 
-                        bibleVerse={undefined} 
-                        bibleVerseNote={undefined} 
-                        bibleVerseNotes={undefined} 
-                        updateBibleVerse={undefined} 
-                        updateBibleNotes={undefined} 
-                        createNewBibleStudy={undefined} 
-                        createNewBibleLesson={undefined}                     
-                    />
+                        buttonTitle={undefined}
+                        bibleVerse={undefined}
+                        bibleVerseNote={undefined}
+                        bibleVerseNotes={undefined}
+                        updateBibleVerse={undefined}
+                        updateBibleNotes={undefined}
+                        createNewBibleStudy={undefined}
+                        createNewBibleLesson={undefined}
+                         bibleStudyId={undefined}                    />
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">

@@ -1,4 +1,3 @@
-import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 
 // Modal used to create new Bible study notes and edit existing ones
@@ -33,10 +32,8 @@ interface YourBibleModalProp {
     errorMessage: string
 }
 
-const YourBibleModal = ({ buttonTitle, bibleStudyId, title, updateTitle, bibleVerse, bibleVerseNote, bibleVerseNotes, updateBibleVerse, modalVisible,
-                         onClickClose, updateBibleNotes, createNewBibleStudy, createNewBibleLesson, errorMessage}: YourBibleModalProp) => {
-
-    const { auth } = useAuth() as AuthProp;
+const YourBibleModal = ({ buttonTitle, title, updateTitle, bibleVerse, updateBibleVerse, modalVisible,
+                         onClickClose, createNewBibleStudy, createNewBibleLesson, errorMessage}: YourBibleModalProp) => {
 
     return(
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
