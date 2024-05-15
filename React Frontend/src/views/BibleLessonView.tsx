@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
+import YourBibleLessonEntry from "../components/yourbible_components/YourBibleLessonEntry";
 
 interface accessTokenProp {
     id: string;
@@ -70,12 +71,15 @@ const BibleLessonView = () => {
                     submittedBool={submitted}
                     setSubmittedFtn={setSubmitted} />
 
+            <div className="flex flex-col">
                 {bibleNotes.map((bibleNote) =>
-                    <>
-                        <p>{bibleNote.bibleVerse}</p>
-                        <p>{bibleNote.bibleVerseNote}</p>
-                    </>
+                    <YourBibleLessonEntry 
+                        collapseText={bibleNote.bibleVerse} 
+                        expandedText={bibleNote.bibleVerseNote}             
+                    />
                 )}
+            </div>
+                
             </div>
         </div>
     );
