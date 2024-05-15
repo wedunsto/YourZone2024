@@ -30,7 +30,7 @@ interface ErrorProp {
 
 const YourBibleEntry = (
     {id, title, submitted, setSubmitted}: YourBibleEntryProp) => {
-        const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
+        // const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
         const [newTitle, setNewTitle] = useState('');

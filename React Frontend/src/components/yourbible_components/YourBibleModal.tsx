@@ -1,4 +1,4 @@
-import useAuth from "../../hooks/useAuth";
+// import useAuth from "../../hooks/useAuth";
 
 // Modal used to create new Bible study notes and edit existing ones
 interface BibleNoteProp {
