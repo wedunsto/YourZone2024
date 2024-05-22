@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const cookieParser = require('cookie-parser');
 
-const PORT = process.env.PORT || 3500;
+const PORT = process.env.PORT;
 
 // Connect to MongoDB
 connectDB();
@@ -18,7 +18,23 @@ connectDB();
 // and fetch cookie credentials requirement
 app.use(credentials);
 // Enables the frontend to access the backend
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://yourzone.hopto.org', 'http://localhost:5173'];
+  const origin = req.headers.origin;
+  if(allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+  } else {
+    next();
+  }
+});
+
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 // Middleware for cookies
@@ -40,7 +56,9 @@ app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
 app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));
 app.use('/getBibleStudyNotes/', require('./routes/api/getBibleStudyNotes'));
+app.use('/getBibleLessonNotes', require('./routes/api/getBibleLessonNotes'));
 app.use('/updateBibleStudyNote', require('./routes/api/updateBibleStudyNote'));
+app.use('/updateBibleLessonNotes', require('./routes/api/updateBibleLessonNotes'))
 app.use('/deleteBibleStudyNote', require('./routes/api/deleteBibleStudyNote'));
 
 // If our connection to the database fails, we dont want to listen for connections

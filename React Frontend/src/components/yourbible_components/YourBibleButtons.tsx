@@ -7,10 +7,11 @@ import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
-import LogoutButton from "../LogoutButton";
 import HomeButton from "../HomeButton";
 
-const BIBLE_URL = '/createBibleStudyNote';
+const BIBLE_STUDY_URL = '/createBibleStudyNote';
+
+const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
 
 // Explicit types for properties in this component
 interface accessTokenProp {
@@ -22,7 +23,15 @@ interface AuthProp {
     auth: accessTokenProp
 }
 
+interface BibleNoteProp {
+    bibleVerse: string,
+    bibleVerseNote: string
+}
+
 interface YourBibleButtonsProp {
+    buttonTitle: string,
+    bibleStudyId: string | undefined,
+    bibleNotes: Array<BibleNoteProp>
     submittedBool: boolean,
     setSubmittedFtn: (value: boolean) => void;
 }
@@ -31,21 +40,15 @@ interface ErrorProp {
     response: string
 }
 
-const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
-    const [type, setType] = useState('');
+const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
     const [title, setTitle] = useState('');
-    const [bibleVerses, setBibleVerses] = useState('');
-    const [bibleNotes, setBibleNotes] = useState('');
+    const [bibleVerse, setBibleVerse] = useState('');
+    const [bibleVerseNote, setBibleVerseNote] = useState('');
+    const [bibleVerseNotes, setBibleVerseNotes] = useState(bibleNotes);
     const [modalVisible, setModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const { auth } = useAuth() as AuthProp;
-
-    const updateType = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setType(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
-    }
 
     const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -53,15 +56,8 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
         if(errorMessage !== '') setErrorMessage('');
     }
 
-    const updateBibleVerses = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setBibleVerses(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
-    }
-
-    const updateBibleNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedValue = e.target.value.replace(/\r\n/g, '\n');
-        setBibleNotes(updatedValue);
+    const updateBibleVerse = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBibleVerse(e.target.value);
 
         if(errorMessage !== '') setErrorMessage('');
     }
@@ -72,8 +68,9 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
 
     const clearFields = () => {
         setTitle('');
-        setBibleVerses('');
-        setBibleNotes('');
+        setBibleVerse('');
+        setBibleVerseNote('');
+        setBibleVerseNotes(bibleNotes);
         setErrorMessage('');
     }
 
@@ -85,26 +82,48 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
     const createBibleStudy = async (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
 
-        if(!(type === '' || title === '' || bibleVerses === '' || bibleNotes === '')) {
+        if(!(title === '')) {
             try {
-                await axios.post(BIBLE_URL,
-                    JSON.stringify({"userId": auth.id, type, title, "bibleverses": bibleVerses.split(","), "notes": bibleNotes}),
+                await axios.post(BIBLE_STUDY_URL,
+                    JSON.stringify({ "userId": auth.id, title }),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
-                    });
-                    clearFields();
-                    setSubmittedFtn(!(submittedBool)); // Reloads the screen
-                    setModalVisible(false);
+                    }
+                );
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
         } else {
             setErrorMessage('Ensure all fields are filled out.');
         }
+
+        clearFields();
+        setSubmittedFtn(!(submittedBool)); // Reloads the screen
+        setModalVisible(false);
     }
+
+    const updateBibleLesson = async () => {
+        try {
+            await axios.post(BIBLE_LESSON_URL,
+                JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
+                {
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${auth.accessToken}`},
+                        withCredentials: true
+                }
+            )
+        } catch(err) {
+            
+        }
+
+        clearFields();
+        setSubmittedFtn(!(submittedBool)); // Reloads the screen
+        setModalVisible(false);
+    };
 
     return (
         <div className="flex mr-10">
@@ -114,9 +133,8 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     <label 
                         className="btn"
                         onClick={onClickCreate}
-                        htmlFor="createBibleStudy">Add Bible Study Notes</label>
+                        htmlFor="createBibleStudy">{buttonTitle}</label>
                     <HomeButton />
-                    <LogoutButton setErrorMessage={setErrorMessage} />
                 </div>
                 <input
                     type="checkbox"
@@ -126,18 +144,20 @@ const YourBibleButtons = ({submittedBool, setSubmittedFtn}: YourBibleButtonsProp
                     checked={modalVisible} />
 
                     <YourBibleModal
-                        type={type}
-                        title={title}
-                        bibleVerses={bibleVerses}
-                        bibleNotes={bibleNotes}
-                        updateType={updateType}
-                        updateTitle={updateTitle}
-                        updateBibleVerses={updateBibleVerses}
-                        updateBibleNotes={updateBibleNotes}
-                        submit={createBibleStudy}
-                        modalVisible={modalVisible}
-                        onClickClose={onClickClose}
-                        errorMessage={errorMessage} />
+                    buttonTitle={buttonTitle}
+                    title={title}
+                    updateTitle={updateTitle}
+                    bibleVerse={bibleVerse}
+                    bibleVerseNote={bibleVerseNote}
+                    bibleVerseNotes={bibleVerseNotes}
+                    updateBibleVerse={updateBibleVerse}
+                    updateBibleNotes={setBibleVerseNotes}
+                    createNewBibleStudy={createBibleStudy}
+                    bibleStudyId={bibleStudyId}
+                    modalVisible={modalVisible}
+                    onClickClose={onClickClose}
+                    errorMessage={errorMessage}
+                    createNewBibleLesson={updateBibleLesson} />
             </div>
         </div>
     );

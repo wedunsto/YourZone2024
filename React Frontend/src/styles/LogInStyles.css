@@ -1,0 +1,104 @@
+.login-background {
+    background: linear-gradient(249.86deg, #0F0920 42.5%, #3F2686 138.64%);
+}
+
+.login-header {
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 680px;
+    height: 72px;
+    left: 5%;
+    top: 4%;
+
+    background: rgba(217, 217, 217, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+}
+
+.login-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    position: relative;
+    width: 133px;
+    height: 23px;
+    left: 5%;
+    top: 35%;
+}
+
+.login-logo-text {
+    font-family: 'Trispace';
+    font-weight: 700;
+    font-size: 25px;
+    color: #F2F0FF;
+}
+
+.login-menu {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-left: 40px;
+    gap: 30px;
+}
+
+.login-menu-text {
+    flex-grow: 1;
+    font-family: 'Trispace';
+    font-weight: 700;
+    font-size: 20px;
+    color: #F2F0FF;
+}
+
+.page-description {
+    position: absolute;
+    font-family: 'Trispace';
+    font-size: 50px;
+    font-weight: bold;
+    width: 660px;
+    height: 222px;
+    left: 6%;
+    top: 20%
+}
+
+.page-sub-description {
+    position: absolute;
+    width: 600px;
+    height: 222px;
+    font-family: 'Trispace';
+    font-size: 25px;
+    line-height: 180%;
+    left: 6%;
+    top: 50%
+}
+
+.get-started {
+    display: flex;
+    position: absolute;
+    width: 35%;
+    left: 6%;
+    top: 62%
+}
+
+.get-started-button {
+    top: 15px;
+    height: 50px;
+    position: relative;
+    background-color: #0047FF;
+}
+
+.login-fields {
+    position: relative;
+    left: 5%
+}
+
+.preview {
+    position: absolute;
+    width: 33%;
+    height: 70%;
+    right: 10%;
+    top: 15%
+}

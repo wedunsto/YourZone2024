@@ -14,10 +14,10 @@ const CredentialInputField = ({title, property, value, valid, setCredential}: Cr
     return(
         <label htmlFor={title} className="form-control w-full max-w-xs">
             <div className="label">
-                <span className="text-white label-text">{title}</span>
                 {valid == null? null : valid && !(value == '') == true ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faTimes} />}
             </div>
             <input 
+                placeholder={title}
                 type={property}
                 id={title}
                 autoComplete="off"

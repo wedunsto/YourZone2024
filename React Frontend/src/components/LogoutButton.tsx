@@ -1,14 +1,9 @@
 // Function called by logout buttons to log a user out
-
+import "../styles/HomePageStyles.css";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-// @ts-ignore
-import { useState } from "react";
 
-interface LogoutButtonProp {
-    setErrorMessage: (e: string) => void
-}
 interface accessTokenProp {
     accessToken: string,
     id: string
@@ -22,7 +17,7 @@ interface ErrorProp {
     response: string
 }
 
-const LogoutButton = ({ setErrorMessage }: LogoutButtonProp) => {
+const LogoutButton = () => {
     const navigate = useNavigate();
     const { auth } = useAuth() as AuthProp;
 
@@ -41,14 +36,15 @@ const LogoutButton = ({ setErrorMessage }: LogoutButtonProp) => {
                         withCredentials: true
                 }
             );
+            console.log(response);
             navigate("/");
         } catch(err) {
-            setErrorMessage((err as ErrorProp).response);
+            console.log((err as ErrorProp).response);
         }
     }
 
     return (
-        <button className="text-lg" onClick={(e) => logout(e)}>Logout</button>
+        <button className="logout-button" onClick={(e) => logout(e)}>Logout</button>
     );
 }
 

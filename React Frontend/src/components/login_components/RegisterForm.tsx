@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
+import axios from '../../api/axios';
 import Captcha from './Captcha';
 
 // Replace any type with details about objects
@@ -71,8 +71,7 @@ const RegisterForm = () => {
 
         try {
             if(isCaptchaVerified) {
-                // @ts-ignore
-                const response = await axios.post(REGISTER_URL,
+                await axios.post(REGISTER_URL,
                     JSON.stringify({username: username, password}),
                     {
                         headers: {'Content-Type': 'application/json'},

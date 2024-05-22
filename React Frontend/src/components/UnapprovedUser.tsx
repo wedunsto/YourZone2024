@@ -46,8 +46,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         e.preventDefault();
 
         try {
-            // @ts-ignore
-            const response = await axios.put(USER_APPROVAL_URL,
+            await axios.put(USER_APPROVAL_URL,
                 JSON.stringify({"id": userId}),
                 {
                     headers: { 
@@ -74,8 +73,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         e.preventDefault();
 
         try {
-            // @ts-ignore
-            const response = await axios.delete(`${USER_DENIAL_URL}?userId=${userId}`,
+            await axios.delete(`${USER_DENIAL_URL}?userId=${userId}`,
                 {
                     headers: { 
                         'Content-Type': 'application/json',
@@ -100,7 +98,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         <div className="overflow-x-auto">
             <div className='m-3 flex space-x-3'>
                 <HomeButton />
-                <LogoutButton setErrorMessage={setErrorMessage}/>
+                <LogoutButton />
             </div>
             <table className="m-5 table">
                 <thead>

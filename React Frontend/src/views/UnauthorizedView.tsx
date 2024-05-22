@@ -1,11 +1,9 @@
 // View reached when a user without sufficient access reaches an application feature
-import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import LogoutButton from "../components/LogoutButton";
 import HomeButton from "../components/HomeButton";
 
 const UnauthorizedView = () => {
-    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     // Return to the last page accessed
@@ -15,7 +13,6 @@ const UnauthorizedView = () => {
 
     return (
             <div className="flex justify-center">
-                {errorMessage? <p>{errorMessage}</p> : null}
                 <section className="m-10">
                     <h1 className="text-white">Unauthorized</h1>
                     <br />
@@ -25,7 +22,7 @@ const UnauthorizedView = () => {
                     <div className="my-5 flexGrow">
                         <button onClick={goBack}>Go Back</button>
                         <HomeButton />
-                        <LogoutButton setErrorMessage={setErrorMessage} />
+                        <LogoutButton />
                     </div>
                 </section>
             </div>
