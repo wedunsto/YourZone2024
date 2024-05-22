@@ -27,6 +27,7 @@ const LogoutButton = () => {
         e.preventDefault();
     
         try {
+            // @ts-ignore
             const response = await axios.get(LOGOUT_URL,
                 {
                     headers: { 
