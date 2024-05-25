@@ -4,32 +4,9 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
 import YourBibleLessonEntry from "../components/yourbible_components/YourBibleLessonEntry";
+import { BibleNoteProp } from "../props/BibleLessonProps";
+import { AuthProp, ErrorProp } from "../props/YourBibleProps";
 
-interface accessTokenProp {
-    id: string;
-    accessToken: string
-}
-
-interface BibleNoteProp {
-    bibleVerse: string,
-    bibleVerseNote: string
-}
-
-/*interface BibleNotesProp {
-    _id: string,
-    bibleVerseNotes: Array<BibleNoteProp>
-    date: string,
-    title: string,
-    userId: string
-}*/
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
-}
 
 const BibleLessonView = () => {
     let { bibleStudyId } = useParams();

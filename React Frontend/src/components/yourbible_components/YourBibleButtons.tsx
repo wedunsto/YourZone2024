@@ -8,37 +8,12 @@ import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 import HomeButton from "../HomeButton";
+import { AuthProp, ErrorProp } from "../../props/YourBibleProps";
+import { YourBibleButtonsProp } from "../../props/YourBibleButtonsProps";
 
 const BIBLE_STUDY_URL = '/createBibleStudyNote';
 
 const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface BibleNoteProp {
-    bibleVerse: string,
-    bibleVerseNote: string
-}
-
-interface YourBibleButtonsProp {
-    buttonTitle: string,
-    bibleStudyId: string | undefined,
-    bibleNotes: Array<BibleNoteProp>
-    submittedBool: boolean,
-    setSubmittedFtn: (value: boolean) => void;
-}
-
-interface ErrorProp {
-    response: string
-}
 
 const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
     const [title, setTitle] = useState('');

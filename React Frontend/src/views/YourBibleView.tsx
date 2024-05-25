@@ -9,25 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header";
 import "../../assets/images/OpenBible.jpeg"
 import { Outlet, useLocation } from 'react-router-dom';
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    id: string;
-    accessToken: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
-}
-
-interface NoteProp {
-    _id: string
-    title: string
-}
+import { AuthProp, ErrorProp, NoteProp } from "../props/YourBibleProps";
 
 const YourBibleView = () => {
     const { auth } = useAuth() as AuthProp;

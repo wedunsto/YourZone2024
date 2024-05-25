@@ -1,5 +1,4 @@
 .app-container {
-    background-color: #4c4b4b;
     min-height: 100vh; /* Ensure the container takes the full viewport height */
     overflow: auto; /* Enable scrolling if content overflows the viewport */
 }
