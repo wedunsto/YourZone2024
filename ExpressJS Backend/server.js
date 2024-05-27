@@ -20,7 +20,7 @@ app.use(credentials);
 // Enables the frontend to access the backend
 //app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   const allowedOrigins = ['http://yourzone.hopto.org', 'http://localhost:5173'];
   const origin = req.headers.origin;
   if(allowedOrigins.includes(origin)) {
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   } else {
     next();
   }
-});
+});*/
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -54,12 +54,15 @@ app.use('/logout', require('./routes/logUserOut'));
 app.use('/getUsersAwaitingApproval', require('./routes/getUsersAwaitingApproval'));
 app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
-app.use('/createBibleStudyNote', require('./routes/api/createBibleStudyNote'));
-app.use('/getBibleStudyNotes/', require('./routes/api/getBibleStudyNotes'));
-app.use('/getBibleLessonNotes', require('./routes/api/getBibleLessonNotes'));
-app.use('/updateBibleStudyNote', require('./routes/api/updateBibleStudyNote'));
-app.use('/updateBibleLessonNotes', require('./routes/api/updateBibleLessonNotes'))
-app.use('/deleteBibleStudyNote', require('./routes/api/deleteBibleStudyNote'));
+app.use('/createBibleStudyNote', require('./routes/api/BibleStudy/createBibleStudyNote'));
+app.use('/getBibleStudyNotes/', require('./routes/api/BibleStudy/getBibleStudyNotes'));
+app.use('/getBibleLessonNotes', require('./routes/api/BibleStudy/getBibleLessonNotes'));
+app.use('/updateBibleStudyNote', require('./routes/api/BibleStudy/updateBibleStudyNote'));
+app.use('/updateBibleLessonNotes', require('./routes/api/BibleStudy/updateBibleLessonNotes'))
+app.use('/deleteBibleStudyNote', require('./routes/api/BibleStudy/deleteBibleStudyNote'));
+
+app.use('/createExpense', require('./routes/api/Expenses/createExpense'));
+app.use('/getExpenses', require('./routes/api/Expenses/getExpeneses'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {

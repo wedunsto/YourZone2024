@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const expensesSchema = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
     totalfunds: {
         type: Number,
         set: value => {

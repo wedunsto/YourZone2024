@@ -2,9 +2,9 @@
 const Expense = require('../../models/Expenses');
 const eventLogger = require('../../middleware/logEvents');
 
-// Create new Expense
+// Create new expense
 const createExpense = async (req, res) => {
-    const { totalfunds, transactionname, transactionamount} = req.body;
+    const { userId, totalfunds, transactionname, transactionamount} = req.body;
 
     if(!totalfunds || !transactionname || !transactionamount) {
         eventLogger.logEvents('Please enter the required properties.');
@@ -18,6 +18,7 @@ const createExpense = async (req, res) => {
 
         // Create and store a new expense
         result = await Expense.create({
+            "userId": userId,
             "totalfunds": totalfunds,
             "transactionname": transactionname,
             "transactionamount": transactionamount
@@ -31,4 +32,26 @@ const createExpense = async (req, res) => {
         eventLogger.logEvents(`Error encountered while created an expense: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
+}
+
+// Read all existing expenses
+const readExpenses = async (req, res) => {
+    const { userId } = req.query;
+
+    const expenses = await Expense.find(
+        { userId: userId }
+    );
+
+    if(!expenses) {
+        eventLogger.logEvents('No expenses found.');
+        return res.status(204).json({ 'message': 'No expenses found.' });
+    }
+
+    eventLogger.logEvents('Expenses retrieved');
+    res.json(expenses);
+}
+
+module.exports = {
+    createExpense,
+    readExpenses
 }
