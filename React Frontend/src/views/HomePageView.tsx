@@ -3,9 +3,12 @@ import "../styles/HomePageStyles.css";
 import Header from "../components/Header";
 import HomePageButton from "../components/home_page_components/HomePageButton";
 import YourBibleButton from "../../assets/images/YourBibleButton.webp";
+import YourExpensesButton from "../../assets/images/YourExpensesButton.webp";
 
 const buttonProps= [{imageSrc: `${YourBibleButton}`,
-                     title: "YourBible", subTitle: "Track your Bible verses", destination: "/yourbible"}];
+                     title: "YourBible", subTitle: "Track your Bible verses", destination: "/yourbible"},
+                    {imageSrc: `${YourExpensesButton}`,
+                     title: "YourExpenses", subTitle: "Track your expenses", destination: "/yourexpenses"}];
 const HomePageView = () => {
     return (
         <div className="home-page-background h-screen w-screen">
