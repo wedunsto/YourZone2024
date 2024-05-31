@@ -20,7 +20,7 @@ app.use(credentials);
 // Enables the frontend to access the backend
 //app.use(cors(corsOptions));
 
-/*app.use((req, res, next) => {
+app.use((req, res, next) => {
   const allowedOrigins = ['http://yourzone.hopto.org', 'http://localhost:5173'];
   const origin = req.headers.origin;
   if(allowedOrigins.includes(origin)) {
@@ -33,7 +33,7 @@ app.use(credentials);
   } else {
     next();
   }
-});*/
+});
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
