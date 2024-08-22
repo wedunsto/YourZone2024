@@ -8,9 +8,10 @@ const expensesSchema = new Schema({
         required: true
     },
     totalfunds: {
-        type: Number,
-        set: value => {
-            return Math.round(value * 100) / 100;
+        type: mongoose.Types.Decimal128,
+        get: inValue => parseFloat(inValue.toString()),
+        set: outValue => {
+            return mongoose.Types.Decimal128.fromString(outValue.toFixed(2))
         },
         required: true
     },
@@ -19,9 +20,10 @@ const expensesSchema = new Schema({
         required: true
     },
     transactionamount: {
-        type: Number,
-        set: value => {
-            return Math.round(value * 100) / 100;
+        type: mongoose.Types.Decimal128,
+        get: inValue => parseFloat(inValue.toString()),
+        set: outValue => {
+            return mongoose.Types.Decimal128.fromString(outValue.toFixed(2))
         },
         required: true
     }

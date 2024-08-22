@@ -36,8 +36,7 @@ const createExpense = async (req, res) => {
 
 // Read all existing expenses
 const readExpenses = async (req, res) => {
-    const { userId } = req.query;
-
+    const { userId } = req.body;
     const expenses = await Expense.find(
         { userId: userId }
     );
