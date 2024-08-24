@@ -1,6 +1,6 @@
 interface ExpenseProp {
     userId: string,
-    totalfunds: Number,
+    totalfunds: number,
     transactionname: string,
-    transactionamount: Number
+    transactionamount: number
 }

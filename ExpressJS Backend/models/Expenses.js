@@ -26,6 +26,10 @@ const expensesSchema = new Schema({
             return mongoose.Types.Decimal128.fromString(outValue.toFixed(2))
         },
         required: true
+    },
+    transactiondate: {
+        type: Date,
+        default: Date.now,
     }
 });
 
