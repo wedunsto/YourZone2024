@@ -18,6 +18,7 @@ const YourExpensesView = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [expenses, setExpenses] = useState(Array<ExpenseProp>);
+    const [totalFunds, setTotalFunds] = useState(0);
     const [expenseName, setExpenseName] = useState("");
     const [expenseCost, setExpenseCost] = useState(0);
     const [submitted, setSubmitted] = useState(false);
@@ -34,6 +35,10 @@ const YourExpensesView = () => {
                             withCredentials: true
                     });
                     setExpenses(response?.data);
+                    const mongoObject: MongoDecimal = response?.data[response?.data.length-1].totalfunds;
+                    const decimalValue: string = mongoObject.$numberDecimal;
+                    const temp: number =+decimalValue;
+                    setTotalFunds(temp);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -65,8 +70,11 @@ const YourExpensesView = () => {
         e.preventDefault();
         if(!(expenseName === '') && !(expenseCost === 0)) {
             try {
+                console.log(`${totalFunds} + ${expenseCost} = ${totalFunds + expenseCost}`);
+                const dbTotalFunds = totalFunds + expenseCost;
+                console.log(dbTotalFunds)
                 await axios.post(CREATE_EXPENSE_URL,
-                    JSON.stringify({"userId": auth.id, "totalfunds": 5,
+                    JSON.stringify({"userId": auth.id, "totalfunds": dbTotalFunds,
                          "transactionname": expenseName, "transactionamount": expenseCost}),
                          {
                             headers: { 
@@ -91,6 +99,7 @@ const YourExpensesView = () => {
                 <Header textColor="text-black" title="YourBudget" subTitle="Master Your Finances, Achieve Your Goals" />
             </div>
             <div>
+                <p className="ml-5">{totalFunds}</p>
                 <label
                     className="btn m-5"
                     onClick={onClickCreate}
@@ -113,7 +122,7 @@ const YourExpensesView = () => {
                     createExpense={createExpense}
                 />
             </div>
-            <table className="border-collapse border border-slate-500">
+            <table className="border-collapse border border-slate-500 ml-5">
                 <tr>
                     <th className="border border-slate-600">Expense Name</th>
                     <th className="border border-slate-600">Expense Amount</th>
@@ -121,7 +130,6 @@ const YourExpensesView = () => {
                 </tr>
                 {
                     expenses.map((expense) => {
-                        console.log(expenses)
                         const mongoObject: MongoDecimal = expense.transactionamount;
                         const decimalValue: string = mongoObject.$numberDecimal;
                         const date = new Date(expense.transactiondate);

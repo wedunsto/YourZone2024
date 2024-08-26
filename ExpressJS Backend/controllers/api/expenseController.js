@@ -6,7 +6,7 @@ const eventLogger = require('../../middleware/logEvents');
 const createExpense = async (req, res) => {
     const { userId, totalfunds, transactionname, transactionamount} = req.body;
 
-    if(!totalfunds || !transactionname || !transactionamount) {
+    if( !transactionname || !transactionamount) {
         eventLogger.logEvents('Please enter the required properties.');
         return res.status(400).json({ 
             'message': 'Please enter the required properties.' 
@@ -36,16 +36,34 @@ const createExpense = async (req, res) => {
 
 // Read all existing expenses
 const readExpenses = async (req, res) => {
-    console.log(req.query);
     const { userId } = req.query;
 
-    const expenses = await Expense.find(
+    let expenses = await Expense.find(
         { userId: userId }
     );
 
-    if(!expenses) {
-        eventLogger.logEvents('No expenses found.');
-        return res.status(204).json({ 'message': 'No expenses found.' });
+    if(expenses.length < 1) {
+        try {
+            let result;
+    
+            // Create and store a new expense
+            result = await Expense.create({
+                "userId": userId,
+                "totalfunds": 0,
+                "transactionname": "Start",
+                "transactionamount": 0
+            });
+
+            expenses = await Expense.find(
+                { userId: userId }
+            );
+
+            eventLogger.logEvents('Successfully created a new expense');
+            
+        } catch(err) {
+            eventLogger.logEvents(`Error encountered while created an expense: ${err.message}`);
+            res.status(500).json({ 'message': err.message });
+        }
     }
 
     eventLogger.logEvents('Expenses retrieved');
