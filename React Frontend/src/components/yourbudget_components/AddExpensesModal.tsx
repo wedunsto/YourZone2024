@@ -18,27 +18,33 @@ const YourBudgetModal =({ modalVisible, expenseName, expenseCost, updateExpenseN
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
                     <div>
-                        <p className="text-xl mb-2">Expense name:</p>
+                        <p className="text-2xl mb-2">Expense name:</p>
                         <input
                             placeholder="Enter expense name"
                             id="expenseName"
                             type="text"
                             value={expenseName}
                             onChange={updateExpenseName}
-                            className="border-2 border-white rounded-lg mb-2 p2" />
-                        <p>Expense Cost:</p>
+                            className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
+                        <p className="text-2xl mb-2">Expense Cost:</p>
                         <input
                             placeholder="Enter Expense"
                             id="expenseCost"
-                            type="text"
+                            type="number"
+                            step="0.01"
                             value={expenseCost}
                             onChange={updateExpenseCost}
-                            className="border-2 border-white rounded-lg mb-2 p2" />
+                            className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
+                        <p className="text-2xl">Expense Date:</p>
+                        <input
+                            placeholder="Enter Date"
+                            type="date"
+                            className="border-2 p-2 text-lg border-white rounded-lg p2" />
                     </div>
                 </form>
                 <div className="flex justify-between">
-                    <button className="btn mt-2" onClick={onClickClose}>Close</button>
-                    <button className="btn mt-2" onClick={createExpense}>Submit</button>
+                    <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
+                    <button className="btn mt-2 text-lg text-white" onClick={createExpense}>Submit</button>
                 </div>
             </div>
         </div>

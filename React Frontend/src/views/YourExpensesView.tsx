@@ -11,6 +11,14 @@ interface MongoDecimal {
     $numberDecimal: string;
 }
 
+interface ExpenseProp {
+    totalfunds: MongoDecimal,
+    transactionname: string,
+    transactionamount: MongoDecimal,
+    transactiondate: string
+    userId: string
+}
+
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
     const GET_EXPENSES_URL = `/getExpenses?userId=${auth.id}`;
@@ -18,11 +26,11 @@ const YourExpensesView = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [expenses, setExpenses] = useState(Array<ExpenseProp>);
-    const [totalFunds, setTotalFunds] = useState(0);
+    const [totalFunds, setTotalFunds] = useState("");
     const [expenseName, setExpenseName] = useState("");
-    const [expenseCost, setExpenseCost] = useState(0);
+    const [expenseCost, setExpenseCost] = useState<number>(0);
     const [submitted, setSubmitted] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         const getExpenses = async () => {
@@ -35,10 +43,10 @@ const YourExpensesView = () => {
                             withCredentials: true
                     });
                     setExpenses(response?.data);
-                    const mongoObject: MongoDecimal = response?.data[response?.data.length-1].totalfunds;
-                    const decimalValue: string = mongoObject.$numberDecimal;
-                    const temp: number =+decimalValue;
-                    setTotalFunds(temp);
+                    const mongoTotalFunds: MongoDecimal = response?.data[response?.data.length-1].totalfunds;
+                    const stringTotalFunds: string = mongoTotalFunds.$numberDecimal;
+                    const numberTotalFunds: number =+stringTotalFunds;
+                    setTotalFunds(numberTotalFunds.toFixed(2));
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -70,9 +78,8 @@ const YourExpensesView = () => {
         e.preventDefault();
         if(!(expenseName === '') && !(expenseCost === 0)) {
             try {
-                console.log(`${totalFunds} + ${expenseCost} = ${totalFunds + expenseCost}`);
-                const dbTotalFunds = totalFunds + expenseCost;
-                console.log(dbTotalFunds)
+                const numberTotalFunds: number = +totalFunds;
+                const dbTotalFunds = numberTotalFunds + expenseCost;
                 await axios.post(CREATE_EXPENSE_URL,
                     JSON.stringify({"userId": auth.id, "totalfunds": dbTotalFunds,
                          "transactionname": expenseName, "transactionamount": expenseCost}),
@@ -98,10 +105,11 @@ const YourExpensesView = () => {
             <div className="grow flex justify-center">
                 <Header textColor="text-black" title="YourBudget" subTitle="Master Your Finances, Achieve Your Goals" />
             </div>
+            {errorMessage === ""? <p>{errorMessage}</p> : null}
             <div>
-                <p className="ml-5">{totalFunds}</p>
+                <p className="ml-5 text-7xl text-black font-bold">${totalFunds}</p>                
                 <label
-                    className="btn m-5"
+                    className="btn m-5 text-white text-lg"
                     onClick={onClickCreate}
                     htmlFor="createExpense">Create Expense</label>
                 <input
@@ -122,11 +130,11 @@ const YourExpensesView = () => {
                     createExpense={createExpense}
                 />
             </div>
-            <table className="border-collapse border border-slate-500 ml-5">
+            <table className="border-collapse border border-slate-500 ml-5 text-black">
                 <tr>
-                    <th className="border border-slate-600">Expense Name</th>
-                    <th className="border border-slate-600">Expense Amount</th>
-                    <th className="border border-slate-600">Expense Date</th>
+                    <th className="border border-slate-600 p-2 text-bold text-lg">Expense Name</th>
+                    <th className="border border-slate-600 p-2 text-bold text-lg">Expense Amount</th>
+                    <th className="border border-slate-600 p-2 text-bold text-lg">Expense Date</th>
                 </tr>
                 {
                     expenses.map((expense) => {
@@ -136,9 +144,9 @@ const YourExpensesView = () => {
                         const formattedDate = date.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric',}); 
                         return(
                             <tr className="border border-slate-600">
-                                <td className="border border-slate-600">{expense.transactionname}</td>
-                                <td className="border border-slate-600">${decimalValue}</td>
-                                <td className="border border-slate-600">{formattedDate}</td>
+                                <td className="border border-slate-600 px-2 text-bold text-md">{expense.transactionname}</td>
+                                <td className="border border-slate-600 px-2 text-bold text-md">${decimalValue}</td>
+                                <td className="border border-slate-600 px-2 text-bold text-md">{formattedDate}</td>
                             </tr>
                         );
                     })
