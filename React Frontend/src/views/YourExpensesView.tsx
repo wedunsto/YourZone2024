@@ -29,6 +29,7 @@ const YourExpensesView = () => {
     const [totalFunds, setTotalFunds] = useState("");
     const [expenseName, setExpenseName] = useState("");
     const [expenseCost, setExpenseCost] = useState<number>(0);
+    const [expenseDate, setExpenseDate] = useState<Date>(new Date())
     const [submitted, setSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -42,11 +43,15 @@ const YourExpensesView = () => {
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     });
-                    setExpenses(response?.data);
-                    const mongoTotalFunds: MongoDecimal = response?.data[response?.data.length-1].totalfunds;
-                    const stringTotalFunds: string = mongoTotalFunds.$numberDecimal;
-                    const numberTotalFunds: number =+stringTotalFunds;
-                    setTotalFunds(numberTotalFunds.toFixed(2));
+                    if(response?.data?.length === 0) {
+                        setModalVisible(true);
+                    } else {
+                        setExpenses(response?.data);
+                        const mongoTotalFunds: MongoDecimal = response?.data[response?.data.length-1].totalfunds;
+                        const stringTotalFunds: string = mongoTotalFunds.$numberDecimal;
+                        const numberTotalFunds: number =+stringTotalFunds;
+                        setTotalFunds(numberTotalFunds.toFixed(2));   
+                    }
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -74,15 +79,27 @@ const YourExpensesView = () => {
         setExpenseCost(temp);
     }
 
+    const updateExpenseDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setExpenseDate(new Date(Date.parse(e.target.value + "T00:00:00")));
+    };
+    
+
     const createExpense = async (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
-        if(!(expenseName === '') && !(expenseCost === 0)) {
+        const numberTotalFunds: number = +totalFunds;
+        let dbTotalFunds = numberTotalFunds - expenseCost;
+        let expensename = expenseName;
+
+        if(expenses.length === 0) {
+            expensename = "Initial funds";
+            dbTotalFunds = expenseCost;
+        } 
+        if(!(expensename === '') && !(expenseCost === 0)) {
             try {
-                const numberTotalFunds: number = +totalFunds;
-                const dbTotalFunds = numberTotalFunds + expenseCost;
                 await axios.post(CREATE_EXPENSE_URL,
                     JSON.stringify({"userId": auth.id, "totalfunds": dbTotalFunds,
-                         "transactionname": expenseName, "transactionamount": expenseCost}),
+                         "transactionname": expensename, "transactionamount": expenseCost,
+                         "transactiondate": expenseDate}),
                          {
                             headers: { 
                                 'Content-Type': 'application/json',
@@ -96,7 +113,10 @@ const YourExpensesView = () => {
         } else {
             setErrorMessage('Ensure all fields are filled out.');
         }
-        setSubmitted(!submitted);
+        setSubmitted(!submitted)
+        setExpenseCost(0);
+        setExpenseName("");
+        setExpenseDate(new Date());
         setModalVisible(false);
     }
 
@@ -124,10 +144,13 @@ const YourExpensesView = () => {
                     expenseId={""}
                     expenseName={expenseName}
                     expenseCost={expenseCost}
+                    expenseDate={expenseDate}
                     updateExpenseName={updateExpenseName} 
                     updateExpenseCost={updateExpenseCost}
+                    updateExpenseDate={updateExpenseDate}
+                    onClickSubmit={createExpense}
                     onClickClose={onClickClose}
-                    createExpense={createExpense}
+                    expensesLength={expenses.length}
                 />
             </div>
             <table className="border-collapse border border-slate-500 ml-5 text-black">
