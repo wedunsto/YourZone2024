@@ -1,11 +1,12 @@
 // View for all current expenses, and buttons to add, edit, and delete expenses
 import axios from "../api/axios";
-import { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 // import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header";
 import "../styles/YourExpensesStyles.css";
 import YourBudgetModal from "../components/yourbudget_components/AddExpensesModal";
+import AddIncomeButton from "../components/yourbudget_components/AddIncomeButton";
 
 interface MongoDecimal {
     $numberDecimal: string;
@@ -18,6 +19,7 @@ interface ExpenseProp {
     transactiondate: string
     userId: string
 }
+export const TotalFundsContext = createContext<string>("");
 
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
@@ -126,8 +128,8 @@ const YourExpensesView = () => {
                 <Header textColor="text-black" title="YourBudget" subTitle="Master Your Finances, Achieve Your Goals" />
             </div>
             {errorMessage === ""? <p>{errorMessage}</p> : null}
-            <div>
-                <p className="ml-5 text-7xl text-black font-bold">${totalFunds}</p>                
+            <p className="ml-5 text-7xl text-black font-bold">${totalFunds}</p>                
+            <div className="flex flex-row">
                 <label
                     className="btn m-5 text-white text-lg"
                     onClick={onClickCreate}
@@ -152,6 +154,9 @@ const YourExpensesView = () => {
                     onClickClose={onClickClose}
                     expensesLength={expenses.length}
                 />
+                <TotalFundsContext.Provider value={totalFunds}>
+                    <AddIncomeButton />
+                </TotalFundsContext.Provider>
             </div>
             <table className="border-collapse border border-slate-500 ml-5 text-black">
                 <tr>
