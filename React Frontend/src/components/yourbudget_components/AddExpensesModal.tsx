@@ -4,8 +4,6 @@ interface YourBudgetModalProp {
     modalVisible: boolean,
     expenseId: string,
     expenseName: string,
-    expenseCost: number,
-    expenseDate: Date,
     expensesLength: number,
     updateExpenseName: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     updateExpenseCost: ((e: React.ChangeEvent<HTMLInputElement>) => void)
@@ -14,7 +12,7 @@ interface YourBudgetModalProp {
     onClickClose: (() => void)
 }
 
-const YourBudgetModal =({ modalVisible, expenseName, expenseCost, expenseDate,
+const YourBudgetModal =({ modalVisible, expenseName,
                           expensesLength, updateExpenseName, updateExpenseDate,
                         updateExpenseCost, onClickSubmit, onClickClose }: YourBudgetModalProp) => {
     return(
@@ -54,7 +52,6 @@ const YourBudgetModal =({ modalVisible, expenseName, expenseCost, expenseDate,
                                     id="expenseCost"
                                     type="number"
                                     step="0.01"
-                                    value={expenseCost}
                                     onChange={updateExpenseCost}
                                     className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
                                 <p className="text-2xl">Expense Date:</p>

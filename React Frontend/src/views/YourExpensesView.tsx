@@ -61,6 +61,10 @@ const YourExpensesView = () => {
 
         getExpenses();
     }, [submitted]);
+
+    const rerender = () => {
+        setSubmitted(!submitted);
+    }
     
     const onClickCreate = () => {
         setModalVisible(true);
@@ -145,8 +149,6 @@ const YourExpensesView = () => {
                     modalVisible={false}
                     expenseId={""}
                     expenseName={expenseName}
-                    expenseCost={expenseCost}
-                    expenseDate={expenseDate}
                     updateExpenseName={updateExpenseName} 
                     updateExpenseCost={updateExpenseCost}
                     updateExpenseDate={updateExpenseDate}
@@ -155,7 +157,9 @@ const YourExpensesView = () => {
                     expensesLength={expenses.length}
                 />
                 <TotalFundsContext.Provider value={totalFunds}>
-                    <AddIncomeButton />
+                    <AddIncomeButton 
+                        rerender = {rerender}
+                    />
                 </TotalFundsContext.Provider>
             </div>
             <table className="border-collapse border border-slate-500 ml-5 text-black">

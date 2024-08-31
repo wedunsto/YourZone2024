@@ -1,71 +1,48 @@
-import { useState, useContext } from 'react';
-import useAuth from '../../hooks/useAuth';
-import { TotalFundsContext } from '../../views/YourExpensesView';
-import axios from '../../api/axios';
-
 interface AddIncomeModalProp {
     modalVisible: boolean
+    incomeName: string,
+    income: number,
+    updateIncomeName: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    updateIncome: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    updateIncomeDate: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    onClickSubmit: ((e: any) => void)
     onClickClose: (() => void)
 }
 
-const AddIncomeModal = ( { modalVisible, onClickClose }: AddIncomeModalProp ) => {
-    const { auth } = useAuth() as AuthProp;
-    const GET_EXPENSES_URL = `/getExpenses?userId=${auth.id}`;
-    const CREATE_EXPENSE_URL = '/createExpense';
-    const totalFunds = useContext(TotalFundsContext);
-    
-    const [ income, setIncome ] = useState<number>(0);
-    const [ incomeName, setIncomeName] = useState<string>("");
-    const [ incomeDate, setIncomeDate ] = useState<Date>(new Date());
-    const [errorMessage, setErrorMessage] = useState<string>("");
-
-    const updateIncome = (e: React.ChangeEvent<HTMLInputElement>) =>{
-        const numIncome:number = +e.target.value;
-        setIncome(numIncome);
-    }
-
-    const updateIncomeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIncomeDate(new Date(Date.parse(e.target.value + "T00:00:00")));
-    };
-
-    const createIncome = async (e: any) => {
-        e.preventDefault();
-        console.log(totalFunds);
-        /*const dbTotalFunds = totalFunds + income;
-        
-        if(!(incomeName === '') && !(income === 0)) {
-            try {
-                await axios.post(CREATE_EXPENSE_URL,
-                    JSON.stringify({"userId": auth.id, "totalfunds": dbTotalFunds,
-                         "transactionname": incomeName, "transactionamount": income,
-                         "transactiondate": incomeDate}),
-                         {
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                Authorization: `Bearer ${auth.accessToken}`},
-                                withCredentials: true
-                         }
-                );
-            } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
-            }
-        } else {
-            setErrorMessage('Ensure all fields are filled out.');
-        }
-        onClickClose();*/
-    }
-
+const AddIncomeModal = ( { modalVisible, incomeName, updateIncomeName,
+                            updateIncome, updateIncomeDate, onClickSubmit,
+                            onClickClose }: AddIncomeModalProp ) => {
     return(
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
                     <div>
-                        <p className="text-2xl">Enter Income</p>
+                        <p className="text-2xl">Income Name:</p>
+                        <input
+                            placeholder="Enter expense name"
+                            id="incomeName"
+                            type="text"
+                            value={incomeName}
+                            onChange={updateIncomeName}
+                            className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
+                        <p className="text-2xl">Income Value:</p>
+                        <input 
+                            placeholder="Enter income value"
+                            id="incomevalue"
+                            type="number"
+                            step="0.01"
+                            onChange={updateIncome}
+                            className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
+                        <p className="text-2xl">Income Date:</p>
+                        <input
+                            type="date"
+                            onChange={updateIncomeDate}
+                            className="border-2 p-2 text-lg border-white rounded-lg p2" />
                     </div>
                 </form>
                 <div className="flex justify-between">
                     <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
-                    <button className="btn mt-2 text-lg text-white" onClick={createIncome}>Submit</button>
+                    <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Submit</button>
                 </div>
             </div>
         </div>
