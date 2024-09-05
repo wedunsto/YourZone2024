@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 import Captcha from './Captcha';
 import "../../styles/LogInStyles.css";
+import { AuthProp, ErrorProp } from '../../props/CommonProps';
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 

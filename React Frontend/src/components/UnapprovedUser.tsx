@@ -5,23 +5,7 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import LogoutButton from "./LogoutButton";
 import HomeButton from "./HomeButton";
-
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ResponseProp {
-    status: number
-}
-
-interface ErrorProp {
-    response: ResponseProp
-}
+import { AuthProp, ErrorProp } from '../props/CommonProps';
 
 interface UnapprovedUserProp {
     username: string,

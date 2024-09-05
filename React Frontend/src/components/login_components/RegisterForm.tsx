@@ -6,6 +6,7 @@ import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import Captcha from './Captcha';
+import { ErrorProp } from "../../props/CommonProps";
 
 // Requirements for registering usernames and passwords
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -75,10 +76,10 @@ const RegisterForm = () => {
                 setPassword("");
                 setMatchingPassword("");
     
-                // Navigate back to login view
-                navigate("/");
+                // Navigate to unauthorized view
+                navigate("/unauthorized");
             } else {
-                setErrorMessage('Please complete CAPTCHA verification.');
+                setErrorMessage("Please complete CAPTCHA verification.");
             }
 
         } catch(err) {

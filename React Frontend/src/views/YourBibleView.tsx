@@ -1,28 +1,16 @@
 // View for all current Bible notes, and buttons to add, edit, and delete Bible notes
+// Create a note, then enter that note to add supporting Bible verses
 import "../styles/YourBibleStyles.css";
-import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
-import axios from "../api/axios";
-import { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
-import { v4 as uuidv4 } from 'uuid';
-import Header from "../components/Header";
 import "../../assets/images/OpenBible.jpeg"
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { Outlet, useLocation } from 'react-router-dom';
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    id: string;
-    accessToken: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
-}
+import Header from "../components/Header";
+import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
+import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+import { AuthProp } from "../props/CommonProps";
 
 interface NoteProp {
     _id: string
@@ -56,7 +44,7 @@ const YourBibleView = () => {
                     });
                 setBibleNotes(response?.data);
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         }
 
@@ -87,7 +75,8 @@ const YourBibleView = () => {
                                         id={note._id}
                                         title={note.title}
                                         submitted={submitted}
-                                        setSubmitted={setSubmitted}/>)
+                                        setSubmitted={setSubmitted}/>
+                                )
                             }
                         </div>
                     </div>

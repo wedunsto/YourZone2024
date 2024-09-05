@@ -2,11 +2,11 @@
 import axios from "../api/axios";
 import React, { createContext, useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
-// import { v4 as uuidv4 } from 'uuid';
 import Header from "../components/Header";
 import "../styles/YourExpensesStyles.css";
 import YourBudgetModal from "../components/yourbudget_components/AddExpensesModal";
 import AddIncomeButton from "../components/yourbudget_components/AddIncomeButton";
+import { AuthProp } from "../props/CommonProps";
 
 interface MongoDecimal {
     $numberDecimal: string;
@@ -55,7 +55,7 @@ const YourExpensesView = () => {
                         setTotalFunds(numberTotalFunds.toFixed(2));   
                     }
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         }
 
@@ -114,7 +114,7 @@ const YourExpensesView = () => {
                          }
                 );
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         } else {
             setErrorMessage('Ensure all fields are filled out.');

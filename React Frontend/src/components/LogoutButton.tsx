@@ -3,19 +3,7 @@ import "../styles/HomePageStyles.css";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
-}
+import { AuthProp, ErrorProp } from "../props/CommonProps";
 
 const LogoutButton = () => {
     const navigate = useNavigate();
@@ -27,8 +15,7 @@ const LogoutButton = () => {
         e.preventDefault();
     
         try {
-            // @ts-ignore
-            const response = await axios.get(LOGOUT_URL,
+            await axios.get(LOGOUT_URL,
                 {
                     headers: { 
                         'Content-Type': 'application/json',
@@ -36,15 +23,18 @@ const LogoutButton = () => {
                         withCredentials: true
                 }
             );
-            console.log(response);
             navigate("/");
         } catch(err) {
-            console.log((err as ErrorProp).response);
+            if ((err as ErrorProp).response?.status === 403) {
+                navigate("/");
+            } else {
+                console.log((err as ErrorProp).response);
+            }
         }
     }
 
     return (
-        <button className="logout-button" onClick={(e) => logout(e)}>Logout</button>
+        <button className="text-lg logout-button" onClick={(e) => logout(e)}>Logout</button>
     );
 }
 

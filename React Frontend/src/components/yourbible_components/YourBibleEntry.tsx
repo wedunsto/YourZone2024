@@ -6,26 +6,13 @@ import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 // import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
+import { AuthProp } from "../../props/CommonProps";
 
 interface YourBibleEntryProp{
     id: string,
     title: string,
     submitted: boolean,
     setSubmitted: (submittedStatus: boolean) => void
-}
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
 }
 
 const YourBibleEntry = (
@@ -56,11 +43,11 @@ const YourBibleEntry = (
             setDeleteEntryConfirmation(true);
         }
 
-        const updateTitle = (e: any) => {
+        const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
             setNewTitle(e.target.value);
         }
 
-        const deleteBibleStudy = async (e:any) => {
+        const deleteBibleStudy = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.preventDefault();
             
             try {
@@ -74,7 +61,7 @@ const YourBibleEntry = (
                   });
                     setSubmitted(!(submitted));
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         }
 

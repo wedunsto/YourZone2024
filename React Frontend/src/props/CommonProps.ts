@@ -6,7 +6,7 @@ interface accessTokenProp {
     roles: Array<number>
 }
 
-interface AuthProp {
+export interface AuthProp {
     auth: accessTokenProp;
     setAuth: (e: object) => void
 }
@@ -15,6 +15,6 @@ interface ResponseProp {
     status: number
 }
 
-interface ErrorProp {
+export interface ErrorProp {
     response: ResponseProp
 }

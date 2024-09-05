@@ -8,20 +8,10 @@ import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 import HomeButton from "../HomeButton";
+import { AuthProp } from "../../props/CommonProps";
 
 const BIBLE_STUDY_URL = '/createBibleStudyNote';
-
 const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
 
 interface BibleNoteProp {
     bibleVerse: string,

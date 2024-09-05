@@ -1,13 +1,14 @@
-// View of the home page, containing navigation buttons and descriptions of features
+// View of the home page, containing navigation buttons to YourZone feature
 import "../styles/HomePageStyles.css";
 import Header from "../components/Header";
 import HomePageButton from "../components/home_page_components/HomePageButton";
 import YourBibleButton from "../../assets/images/YourBibleButton.webp";
 import YourExpensesButton from "../../assets/images/YourExpensesButton.webp";
+import { v4 as uuidv4 } from 'uuid';
 
 const buttonProps= [{imageSrc: `${YourBibleButton}`, title: "YourBible", 
     subTitle: "Track your Bible verses", destination: "/yourbible"},
-                    {imageSrc: `${YourExpensesButton}`, title: "YourExpenses",
+    {imageSrc: `${YourExpensesButton}`, title: "YourExpenses",
     subTitle: "Track your expenses", destination: "/yourexpenses"}];
 const HomePageView = () => {
     return (
@@ -19,6 +20,7 @@ const HomePageView = () => {
             <div className="m-5 grid grid-cols-4 gap-4">
                 {buttonProps.map((buttonProp)=>(
                     <HomePageButton
+                        key={uuidv4()}
                         imageSrc={buttonProp.imageSrc}
                         title={buttonProp.title}
                         subTitle={buttonProp.subTitle}
