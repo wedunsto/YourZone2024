@@ -9,19 +9,6 @@ import "../../styles/LogInStyles.css";
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
-// Replace any type with details about objects
-interface ResponseProp {
-    status: number
-}
-
-interface ErrorProp {
-    response: ResponseProp
-}
-
-interface AuthProp {
-    setAuth: (e: object) => void
-}
-
 const LOGIN_URL = '/login';
 
 const LogInForm = () => {

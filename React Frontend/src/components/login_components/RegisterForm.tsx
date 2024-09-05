@@ -1,20 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Registration form that takes in new username and password
+import "../../styles/HomePageStyles.css";
 import { useState, useEffect, FormEvent } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import Captcha from './Captcha';
-
-// Replace any type with details about objects
-interface ResponseProp {
-    status: number
-}
-
-interface ErrorProp {
-    response: ResponseProp
-}
 
 // Requirements for registering usernames and passwords
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -62,9 +53,9 @@ const RegisterForm = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        const v1 = USER_REGEX.test(username);
-        const v2 = PASSWORD_REGEX.test(password);
-        if (!v1 || !v2) {
+        const validatedUsername = USER_REGEX.test(username);
+        const validatedPassword = PASSWORD_REGEX.test(password);
+        if (!validatedUsername || !validatedPassword) {
             setErrorMessage("Invalid Entry");
             return;
         }
@@ -72,7 +63,7 @@ const RegisterForm = () => {
         try {
             if(isCaptchaVerified) {
                 await axios.post(REGISTER_URL,
-                    JSON.stringify({username: username, password}),
+                    JSON.stringify({username, password}),
                     {
                         headers: {'Content-Type': 'application/json'},
                         withCredentials: true
@@ -157,9 +148,7 @@ const RegisterForm = () => {
             </form>
             <p className="text-white">
                 Already registered?<br />
-                <a 
-                    className='text-white underline'
-                    href="/">Sign In</a>
+                <a className='text-white underline' href="/">Sign In</a>
             </p>
         </div>
     );
