@@ -12,15 +12,22 @@ import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import { AuthProp } from "../props/CommonProps";
 
+interface BibleVerseNote {
+    bibleVerse: string;
+    bibleVerseNote: string;
+}
+
 interface NoteProp {
-    _id: string
-    title: string
+    _id: string;
+    title: string;
+    biblerVerseNotes: Array<BibleVerseNote>
+    date: Date
 }
 
 const YourBibleView = () => {
     const { auth } = useAuth() as AuthProp;
 
-    const BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
+    const GET_BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
 
     const [bibleNotes, setBibleNotes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -35,7 +42,7 @@ const YourBibleView = () => {
     useEffect(() => {
         const getBibleStudyNotes = async () => {
             try {
-                const response = await axios.get(BIBLE_URL,
+                const response = await axios.get(GET_BIBLE_URL,
                     {
                         headers: { 
                             'Content-Type': 'application/json',

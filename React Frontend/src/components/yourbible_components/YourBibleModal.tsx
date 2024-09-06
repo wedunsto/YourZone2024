@@ -1,19 +1,8 @@
-// import useAuth from "../../hooks/useAuth";
-
 // Modal used to create new Bible study notes and edit existing ones
 interface BibleNoteProp {
     bibleVerse: string,
     bibleVerseNote: string
 }
-
-/*interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}*/
 
 interface YourBibleModalProp {
     modalVisible: undefined | boolean,
@@ -25,9 +14,9 @@ interface YourBibleModalProp {
     bibleVerseNote: undefined | string,
     bibleVerseNotes: undefined | Array<BibleNoteProp>
     updateBibleVerse: undefined | ((e: React.ChangeEvent<HTMLInputElement>) => void)
-    updateBibleNotes: undefined | ((e: any) => void),
-    createNewBibleStudy: undefined | ((e: any) => void),
-    createNewBibleLesson: undefined | ((e: any) => void),
+    updateBibleNotes: undefined | ((e: React.ChangeEvent<HTMLInputElement>) => void),
+    createNewBibleStudy: undefined | ((e: React.ChangeEvent<HTMLInputElement>) => void),
+    createNewBibleLesson: undefined | ((e: React.ChangeEvent<HTMLInputElement>) => void),
     onClickClose: undefined | (() => void),
     errorMessage: string
 }

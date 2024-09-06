@@ -3,7 +3,7 @@
  *  Create: Creates a new Bible study entry
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
@@ -26,30 +26,29 @@ interface YourBibleButtonsProp {
     setSubmittedFtn: (value: boolean) => void;
 }
 
-interface ErrorProp {
-    response: string
-}
-
 const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
+    // State variables for the YourBibleEntries
     const [title, setTitle] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    // State variables for the YourBibleLessons
     const [bibleVerse, setBibleVerse] = useState('');
     const [bibleVerseNote, setBibleVerseNote] = useState('');
     const [bibleVerseNotes, setBibleVerseNotes] = useState(bibleNotes);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    
+    // Empty out existing error message when title or Bible verse change
+    useEffect(() => {
+        setErrorMessage("");
+    }, [title, bibleVerse]);
 
     const { auth } = useAuth() as AuthProp;
 
     const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
     }
 
     const updateBibleVerse = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBibleVerse(e.target.value);
-
-        if(errorMessage !== '') setErrorMessage('');
     }
 
     const onClickCreate = () => {
@@ -84,7 +83,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
                     }
                 );
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         } else {
             setErrorMessage('Ensure all fields are filled out.');
@@ -96,18 +95,22 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
     }
 
     const updateBibleLesson = async () => {
-        try {
-            await axios.post(BIBLE_LESSON_URL,
-                JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
-                {
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${auth.accessToken}`},
-                        withCredentials: true
-                }
-            )
-        } catch(err) {
-            
+        if(bibleVerse != "" && bibleVerseNote != "") {
+            try {
+                await axios.post(BIBLE_LESSON_URL,
+                    JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
+                    {
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${auth.accessToken}`},
+                            withCredentials: true
+                    }
+                )
+            } catch(err) {
+                setErrorMessage(`${err}`);
+            }
+        } else {
+            setErrorMessage('Ensure all fields are filled out.');
         }
 
         clearFields();

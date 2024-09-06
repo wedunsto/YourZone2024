@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Collapsable table entries for YourBible
 import { useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
 import { AuthProp } from "../../props/CommonProps";
 
@@ -17,7 +16,7 @@ interface YourBibleEntryProp{
 
 const YourBibleEntry = (
     {id, title, submitted, setSubmitted}: YourBibleEntryProp) => {
-        // const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
+        const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
         const [newTitle, setNewTitle] = useState('');
@@ -102,7 +101,7 @@ const YourBibleEntry = (
                         updateBibleNotes={undefined}
                         createNewBibleStudy={undefined}
                         createNewBibleLesson={undefined}
-                         bibleStudyId={undefined}                    />
+                         bibleStudyId={undefined}/>
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">
