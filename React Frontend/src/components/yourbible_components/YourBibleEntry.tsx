@@ -1,21 +1,20 @@
 // Collapsable table entries for YourBible
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
 import { AuthProp } from "../../props/CommonProps";
+import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
 
 interface YourBibleEntryProp{
     id: string,
     title: string,
-    submitted: boolean,
-    setSubmitted: (submittedStatus: boolean) => void
 }
 
 const YourBibleEntry = (
-    {id, title, submitted, setSubmitted}: YourBibleEntryProp) => {
+    { id, title }: YourBibleEntryProp) => {
         const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
@@ -25,6 +24,7 @@ const YourBibleEntry = (
         const [errorMessage, setErrorMessage] = useState('');
 
         const { auth } = useAuth() as AuthProp;
+        const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
 
         const navigate = useNavigate();
 
@@ -58,10 +58,10 @@ const YourBibleEntry = (
                     },
                     withCredentials: true,
                   });
-                    setSubmitted(!(submitted));
             } catch(err) {
                 setErrorMessage(`${err}`);
             }
+            toggleSubmitted();
         }
 
         return (
@@ -108,7 +108,7 @@ const YourBibleEntry = (
                         <span>Are you sure you want to delete this entry?</span>
                         <div>
                             <button className="btn btn-sm" onClick={() => {setDeleteEntryConfirmation(false)}}>No</button>
-                            <button className="btn btn-sm" onClick={deleteBibleStudy}>Yes</button>
+                            <button className="btn btn-sm">Yes</button>
                         </div>
                     </div>
                     :

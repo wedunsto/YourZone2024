@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
+import NewYourBibleEntryModal from "./NewYourBibleEntryModal";
 import HomeButton from "../HomeButton";
 import { AuthProp } from "../../props/CommonProps";
 
-const BIBLE_STUDY_URL = '/createBibleStudyNote';
 const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
 
 interface BibleNoteProp {
@@ -19,14 +19,9 @@ interface BibleNoteProp {
 }
 
 interface YourBibleButtonsProp {
-    buttonTitle: string,
-    bibleStudyId: string | undefined,
-    bibleNotes: Array<BibleNoteProp>
-    submittedBool: boolean,
-    setSubmittedFtn: (value: boolean) => void;
 }
 
-const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool, setSubmittedFtn}: YourBibleButtonsProp) => {
+const YourBibleButtons = () => {
     // State variables for the YourBibleEntries
     const [title, setTitle] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -34,7 +29,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
     // State variables for the YourBibleLessons
     const [bibleVerse, setBibleVerse] = useState('');
     const [bibleVerseNote, setBibleVerseNote] = useState('');
-    const [bibleVerseNotes, setBibleVerseNotes] = useState(bibleNotes);
+    //const [bibleVerseNotes, setBibleVerseNotes] = useState(bibleNotes);
     
     // Empty out existing error message when title or Bible verse change
     useEffect(() => {
@@ -43,12 +38,12 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
 
     const { auth } = useAuth() as AuthProp;
 
-    const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
-    }
-
     const updateBibleVerse = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBibleVerse(e.target.value);
+    }
+
+    const toggleModalVisible = () => {
+        setModalVisible(false)
     }
 
     const onClickCreate = () => {
@@ -59,7 +54,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
         setTitle('');
         setBibleVerse('');
         setBibleVerseNote('');
-        setBibleVerseNotes(bibleNotes);
+        //setBibleVerseNotes(bibleNotes);
         setErrorMessage('');
     }
 
@@ -68,33 +63,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
         setModalVisible(false);
     }
 
-    const createBibleStudy = async (e: React.FormEvent<HTMLInputElement>) => {
-        e.preventDefault();
-
-        if(!(title === '')) {
-            try {
-                await axios.post(BIBLE_STUDY_URL,
-                    JSON.stringify({ "userId": auth.id, title }),
-                    {
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${auth.accessToken}`},
-                            withCredentials: true
-                    }
-                );
-            } catch(err) {
-                setErrorMessage(`${err}`);
-            }
-        } else {
-            setErrorMessage('Ensure all fields are filled out.');
-        }
-
-        clearFields();
-        setSubmittedFtn(!(submittedBool)); // Reloads the screen
-        setModalVisible(false);
-    }
-
-    const updateBibleLesson = async () => {
+    /*const updateBibleLesson = async () => {
         if(bibleVerse != "" && bibleVerseNote != "") {
             try {
                 await axios.post(BIBLE_LESSON_URL,
@@ -116,7 +85,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
         clearFields();
         setSubmittedFtn(!(submittedBool)); // Reloads the screen
         setModalVisible(false);
-    };
+    };*/
 
     return (
         <div className="flex mr-10">
@@ -126,7 +95,7 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
                     <label 
                         className="btn"
                         onClick={onClickCreate}
-                        htmlFor="createBibleStudy">{buttonTitle}</label>
+                        htmlFor="createBibleStudy">Add Bible Study Notes</label>
                     <HomeButton />
                 </div>
                 <input
@@ -135,22 +104,10 @@ const YourBibleButtons = ({buttonTitle, bibleStudyId, bibleNotes, submittedBool,
                     className="modal-toggle"
                     readOnly
                     checked={modalVisible} />
-
-                    <YourBibleModal
-                    buttonTitle={buttonTitle}
-                    title={title}
-                    updateTitle={updateTitle}
-                    bibleVerse={bibleVerse}
-                    bibleVerseNote={bibleVerseNote}
-                    bibleVerseNotes={bibleVerseNotes}
-                    updateBibleVerse={updateBibleVerse}
-                    updateBibleNotes={setBibleVerseNotes}
-                    createNewBibleStudy={createBibleStudy}
-                    bibleStudyId={bibleStudyId}
+                <NewYourBibleEntryModal
                     modalVisible={modalVisible}
-                    onClickClose={onClickClose}
-                    errorMessage={errorMessage}
-                    createNewBibleLesson={updateBibleLesson} />
+                    toggleModalVisible={toggleModalVisible}
+                />
             </div>
         </div>
     );

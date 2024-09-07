@@ -2,7 +2,7 @@
 // Create a note, then enter that note to add supporting Bible verses
 import "../styles/YourBibleStyles.css";
 import "../../assets/images/OpenBible.jpeg"
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from "../components/Header";
@@ -23,6 +23,12 @@ interface NoteProp {
     biblerVerseNotes: Array<BibleVerseNote>
     date: Date
 }
+
+export interface ContextProp {
+    toggleSubmitted: () => void;
+}
+
+export const YourBible_Context = createContext<ContextProp>({toggleSubmitted: () => {}});
 
 const YourBibleView = () => {
     const { auth } = useAuth() as AuthProp;
@@ -58,6 +64,10 @@ const YourBibleView = () => {
         getBibleStudyNotes();
     },[submitted]);
 
+    const toggleSubmitted = () => {
+        setSubmitted(!submitted);
+    }
+
     return(
         <div className="your-bible-page-background h-screen w-screen">
             <div className="grow flex justify-center">
@@ -67,27 +77,24 @@ const YourBibleView = () => {
             { hasSubPath ? (
                 <Outlet />
                 ) : (
-                <>
-                    {errorMessage? <p>{errorMessage}</p> : null}
-                    <div className="flex flex-row ml-5 mt-5">
-                        <YourBibleButtons 
-                                buttonTitle="Add Bible Study Notes"
-                                submittedBool={submitted}
-                                setSubmittedFtn={setSubmitted} bibleStudyId={undefined} bibleNotes={[]} />
-                        <div className="flex flex-col">
-                            {
-                                bibleNotes.map((note: NoteProp) => 
-                                    <YourBibleEntry 
-                                        key={uuidv4()}
-                                        id={note._id}
-                                        title={note.title}
-                                        submitted={submitted}
-                                        setSubmitted={setSubmitted}/>
-                                )
-                            }
+                <YourBible_Context.Provider value={{toggleSubmitted}}>
+                    <>
+                        {errorMessage? <p>{errorMessage}</p> : null}
+                        <div className="flex flex-row ml-5 mt-5">
+                            <YourBibleButtons />
+                            <div className="flex flex-col">
+                                {
+                                    bibleNotes.map((note: NoteProp) => 
+                                        <YourBibleEntry 
+                                            key={uuidv4()}
+                                            id={note._id}
+                                            title={note.title}/>
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
-                </>
+                    </>
+                </YourBible_Context.Provider>  
                 )
             }
         </div>
