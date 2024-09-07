@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import axios from "../../api/axios";
-import useAuth from "../../hooks/useAuth";
-import { AuthProp } from "../../props/CommonProps";
-import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
+import axios from "../../../api/axios";
+import useAuth from "../../../hooks/useAuth";
+import { AuthProp } from "../../../props/CommonProps";
+import { ContextProp, YourBible_Context } from "../../../views/YourBibleView";
 
 // Modal used to create a new YourBible entry
 interface NewYourBibleEntryModalProp {
@@ -15,30 +15,30 @@ const NewYourBibleEntryModal = ( { modalVisible, toggleModalVisible }: NewYourBi
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
 
-    const [ title, setTitle ] = useState<string>("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [ newTitle, setNewTitle ] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
-    const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
+    const updateNewTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewTitle(e.target.value);
     }
 
-    const clearTitle = () => {
-        setTitle("");
+    const clearNewTitle = () => {
+        setNewTitle("");
     }
 
 
     const closeOrSubmit = () => {
-        clearTitle();
+        clearNewTitle();
         toggleModalVisible();
     }
 
     const createBibleStudy = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        if(!(title === '')) {
+        if(!(newTitle === '')) {
             try {
                 await axios.post(CREATE_BIBLE_URL,
-                    JSON.stringify({ "userId": auth.id, title }),
+                    JSON.stringify({ "userId": auth.id, "title": newTitle }),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
@@ -64,9 +64,9 @@ const NewYourBibleEntryModal = ( { modalVisible, toggleModalVisible }: NewYourBi
                     <input
                         id="title"
                         type="text"
-                        value={title}
+                        value={newTitle}
                         className="border-2 border-white rounded-lg mb-2 p-2"
-                        onChange={updateTitle}
+                        onChange={updateNewTitle}
                         placeholder="Enter Title"
                     />
                 </form>

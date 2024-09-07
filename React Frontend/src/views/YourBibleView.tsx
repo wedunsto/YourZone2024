@@ -39,7 +39,7 @@ const YourBibleView = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
-    // Used to conditionally render the parent or child route
+    // Used to conditionally render the parent and child route
     const location = useLocation();
     const hasSubPath = location.pathname !== "/yourbible";
 

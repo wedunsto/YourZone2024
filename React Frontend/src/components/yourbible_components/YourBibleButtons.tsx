@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import YourBibleModal from "./YourBibleModal";
-import NewYourBibleEntryModal from "./NewYourBibleEntryModal";
+import NewYourBibleEntryModal from "./modals/NewYourBibleEntryModal";
 import HomeButton from "../HomeButton";
-import { AuthProp } from "../../props/CommonProps";
 
 const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
 
@@ -24,7 +23,7 @@ interface YourBibleButtonsProp {
 const YourBibleButtons = () => {
     // State variables for the YourBibleEntries
     const [title, setTitle] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
+    const [newModalVisible, setNewModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     // State variables for the YourBibleLessons
     const [bibleVerse, setBibleVerse] = useState('');
@@ -36,18 +35,16 @@ const YourBibleButtons = () => {
         setErrorMessage("");
     }, [title, bibleVerse]);
 
-    const { auth } = useAuth() as AuthProp;
-
     const updateBibleVerse = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBibleVerse(e.target.value);
     }
 
     const toggleModalVisible = () => {
-        setModalVisible(false)
+        setNewModalVisible(false)
     }
 
     const onClickCreate = () => {
-        setModalVisible(true);
+        setNewModalVisible(true);
     }
 
     const clearFields = () => {
@@ -56,11 +53,6 @@ const YourBibleButtons = () => {
         setBibleVerseNote('');
         //setBibleVerseNotes(bibleNotes);
         setErrorMessage('');
-    }
-
-    const onClickClose = () => {
-        clearFields();
-        setModalVisible(false);
     }
 
     /*const updateBibleLesson = async () => {
@@ -103,9 +95,9 @@ const YourBibleButtons = () => {
                     id="createBibleStudy" 
                     className="modal-toggle"
                     readOnly
-                    checked={modalVisible} />
+                    checked={newModalVisible} />
                 <NewYourBibleEntryModal
-                    modalVisible={modalVisible}
+                    modalVisible={newModalVisible}
                     toggleModalVisible={toggleModalVisible}
                 />
             </div>

@@ -4,7 +4,7 @@ const eventLogger = require('../../middleware/logEvents');
 
 // Create new Bible study notes
 const createBibleStudyNotes = async (req, res) => {
-    const { userId, title, bibleVerseNotes } = req.body;
+    const { userId, title } = req.body;
     
     if(!userId || !title) {
         eventLogger.logEvents('Please enter the required properties.');
@@ -15,20 +15,11 @@ const createBibleStudyNotes = async (req, res) => {
 
     try {
         let result;
-        // Create and store a new Bible verse note
-        if(bibleVerseNotes) {
-            result = await BibleStudy.create({
-                "userId": userId,
-                "title": title,
-                "bibleVerseNotes": bibleVerseNotes
-            });
-        }
-        else {
-            result = await BibleStudy.create({
-                "userId": userId,
-                "title": title
-            });
-        }
+        result = await BibleStudy.create({
+            "userId": userId,
+            "title": title,
+            "bibleVerseNotes": []
+        });
 
         eventLogger.logEvents('Successfully create new Bible study note');
         res.status(201).json({ 
@@ -74,13 +65,13 @@ const getAllBibleLessonNotes = async (req, res) => {
 
 // Update a Bible study note
 const updateBibleStudyNote = async (req, res) => {
-    const { id, title, bibleVerseNotes } = req.body;
+    const { id, title } = req.body;
     
     try {
         // Find BibleStudy and update properties
         const updateStudy = await BibleStudy.findOneAndUpdate(
             { _id: id },
-            {$set: { title: title, bibleVerseNotes: bibleVerseNotes } },
+            {$set: { title: title } },
             { new: true }
         );
 

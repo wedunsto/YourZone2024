@@ -1,12 +1,7 @@
 // Collapsable table entries for YourBible
-import { useContext, useState } from "react";
-import axios from "../../api/axios";
-import useAuth from "../../hooks/useAuth";
-import YourBibleModal from "./YourBibleModal";
-import { v4 as uuidv4 } from 'uuid';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthProp } from "../../props/CommonProps";
-import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
+import EditYourBibleEntryModal from "./modals/EditYourBibleEntryModal";
 
 interface YourBibleEntryProp{
     id: string,
@@ -15,16 +10,14 @@ interface YourBibleEntryProp{
 
 const YourBibleEntry = (
     { id, title }: YourBibleEntryProp) => {
-        const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
+        
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
-        const [newTitle, setNewTitle] = useState('');
-        const [editModalVisible, setEditModalVisible] = useState(false);
-        const [deleteEntryConfirmation, setDeleteEntryConfirmation] = useState(false);
-        const [errorMessage, setErrorMessage] = useState('');
-
-        const { auth } = useAuth() as AuthProp;
-        const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
+        const [ newTitle, setNewTitle ] = useState<string>("");
+        const [ editModalVisible, setEditModalVisible ] = useState<boolean>(false);
+        const [ deleteModalVisible, setDeleteModalVisible ] = useState<boolean>(false);
+        const [ deleteEntryConfirmation, setDeleteEntryConfirmation ] = useState<boolean>(false);
+        const [ errorMessage, setErrorMessage ] = useState<string>("");
 
         const navigate = useNavigate();
 
@@ -32,9 +25,8 @@ const YourBibleEntry = (
             setNewTitle(title);
             setEditModalVisible(true);
         }
-    
-        const onClickClose = () => {
-            setErrorMessage('');
+
+        const toggleModalVisible =() => {
             setEditModalVisible(false);
         }
 
@@ -42,11 +34,7 @@ const YourBibleEntry = (
             setDeleteEntryConfirmation(true);
         }
 
-        const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setNewTitle(e.target.value);
-        }
-
-        const deleteBibleStudy = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        /*const deleteBibleStudy = async (e: React.ChangeEvent<HTMLInputElement>) => {
             e.preventDefault();
             
             try {
@@ -62,7 +50,7 @@ const YourBibleEntry = (
                 setErrorMessage(`${err}`);
             }
             toggleSubmitted();
-        }
+        }*/
 
         return (
             <div className="flex flex-col">
@@ -73,35 +61,21 @@ const YourBibleEntry = (
                             className="mb-2 bg-slate-400 text-black btn btn-sm"
                             onClick={onClickEdit}
                             htmlFor="updateBibleStudy">Edit</label>
-
                         <label
                             className="bg-red-600 text-black btn btn-sm"
                             onClick={onClickDelete}
                             htmlFor="deleteBibleStudy">Delete</label>
                     </div>
-
                     <input 
                         readOnly
                         type="checkbox"
                         id="updateBibleStudy"
                         className="modal-toggle"
                         checked={editModalVisible} />
-
-                    <YourBibleModal 
-                        title={newTitle}
-                        updateTitle={updateTitle}
+                    <EditYourBibleEntryModal
+                        bibleStudyId={id}
                         modalVisible={editModalVisible}
-                        onClickClose={onClickClose}
-                        errorMessage={errorMessage}
-                        buttonTitle={undefined}
-                        bibleVerse={undefined}
-                        bibleVerseNote={undefined}
-                        bibleVerseNotes={undefined}
-                        updateBibleVerse={undefined}
-                        updateBibleNotes={undefined}
-                        createNewBibleStudy={undefined}
-                        createNewBibleLesson={undefined}
-                         bibleStudyId={undefined}/>
+                        toggleModalVisible={toggleModalVisible} />
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">
