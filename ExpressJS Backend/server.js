@@ -41,23 +41,20 @@ app.use('/register', require('./routes/createUser'));
 app.use('/login', require('./routes/logUserIn'));
 // Receives the cookie that has the refresh token
 app.use('/refresh', require('./routes/refresh'));
-
 // Everything after this line will use the verifyJWT middleware
 // to protect the route
 app.use(verifyJWT);
-
 app.use('/logout', require('./routes/logUserOut'));
 app.use('/getUsersAwaitingApproval', require('./routes/getUsersAwaitingApproval'));
 app.use('/updateUserRoles', require('./routes/updateUserRoles'));
 app.use('/deleteUser', require('./routes/deleteUser'));
-
 app.use('/createBibleStudyNote', require('./routes/api/BibleStudy/createBibleStudyNote'));
 app.use('/getBibleStudyNotes/', require('./routes/api/BibleStudy/getBibleStudyNotes'));
 app.use('/getBibleLessonNotes', require('./routes/api/BibleStudy/getBibleLessonNotes'));
 app.use('/updateBibleStudyNote', require('./routes/api/BibleStudy/updateBibleStudyNote'));
-app.use('/updateBibleLessonNotes', require('./routes/api/BibleStudy/updateBibleLessonNotes'))
+app.use('/updateBibleLessonNote', require('./routes/api/BibleStudy/updateBibleLessonNote'));
+app.use('/updateBibleLessonNotes', require('./routes/api/BibleStudy/updateBibleLessonNotes'));
 app.use('/deleteBibleStudyNote', require('./routes/api/BibleStudy/deleteBibleStudyNote'));
-
 app.use('/createExpense', require('./routes/api/Expenses/createExpense'));
 app.use('/getExpenses', require('./routes/api/Expenses/getExpeneses'));
 

@@ -77,8 +77,10 @@ const BibleLessonView = () => {
                     {bibleNotes.map((bibleNote) =>
                         <YourBibleLessonEntry
                             key={uuidv4()}
-                            collapseText={bibleNote.bibleVerse} 
-                            expandedText={bibleNote.bibleVerseNote}             
+                            id={ bibleStudyId }
+                            index={bibleNotes.indexOf(bibleNote)}
+                            bibleVerse={bibleNote.bibleVerse} 
+                            bibleVerseNotes={bibleNote.bibleVerseNote}             
                         />
                     )}
                 </div>

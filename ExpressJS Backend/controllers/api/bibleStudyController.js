@@ -1,3 +1,16 @@
+/**
+ * Update the Bible verse and/or note(s) for a specific Bible lesson note.
+ * 
+ * @async
+ * @function updateBibleLessonNote
+ * @param {Object} req - The request object.
+ * @param {string} req.body.bibleStudyId - The ID of the Bible study to update.
+ * @param {string} req.body.bibleVerse - The Bible verse to add or update.
+ * @param {string} req.body.bibleVerseNote - The note associated with the Bible verse.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - Returns a promise that resolves to void.
+ * @throws {Error} - Throws an error if the update operation fails.
+ */
 // Controller containing functions to create, read, update, and delete Bible study notes
 const BibleStudy = require('../../models/BibleVerses');
 const eventLogger = require('../../middleware/logEvents');
@@ -82,7 +95,7 @@ const updateBibleStudyNote = async (req, res) => {
 
         eventLogger.logEvents('Bible study updated');
         // Send the updated document in the response
-        res.json(updateStudy)
+        res.json(updateStudy);
 
     } catch(err) {
         eventLogger.logEvents(`Error encountered while updating Bible study note: ${err.message}`);
@@ -90,8 +103,35 @@ const updateBibleStudyNote = async (req, res) => {
     }
 }
 
-// Update Bible study lesson: Contains Bible verse and note(s)
+// Update the Bible verse and or note(s) for a specific Bible lesson note
 const updateBibleLessonNote = async (req, res) => {
+    const { bibleStudyId, index, bibleVerse, bibleVerseNote } = req.body;
+    // Find BibleStudy and update the lesson
+    try {
+        const updateLesson = await BibleStudy.findOneAndUpdate(
+            { _id: bibleStudyId },
+            { $set: {
+                [`bibleVerseNotes.${index}`]: {bibleVerse: bibleVerse, bibleVerseNote: bibleVerseNote} 
+                }
+            },
+            { new: true }
+        );
+
+        if(!updateLesson) {
+            eventLogger.logEvents('Bible lesson not found for updates.');
+            return res.status(404).json({ message: 'Bible lesson not found for updates.' });
+        }
+
+        eventLogger.logEvents('Bible lesson updated');
+        res.json(updateLesson);
+    } catch(e) {
+        eventLogger.logEvents(`Error encountered while updating Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }
+}
+
+// Update Bible study lesson: Contains Bible verse and note(s)
+const updateBibleLessonNotes = async (req, res) => {
     const { bibleStudyId, bibleVerse, bibleVerseNote } = req.body;
 
     const newBibleLesson = {bibleVerse: bibleVerse, bibleVerseNote: bibleVerseNote}
@@ -147,6 +187,7 @@ module.exports = {
     getAllBibleStudyNotes,
     getAllBibleLessonNotes,
     updateBibleStudyNote,
+    updateBibleLessonNotes,
     updateBibleLessonNote,
     deleteBibleStudyNote
 }
