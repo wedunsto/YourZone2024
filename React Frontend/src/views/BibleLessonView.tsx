@@ -16,14 +16,6 @@ interface BibleNoteProp {
     bibleVerseNote: string
 }
 
-/*interface BibleNotesProp {
-    _id: string,
-    bibleVerseNotes: Array<BibleNoteProp>
-    date: string,
-    title: string,
-    userId: string
-}*/
-
 interface AuthProp {
     auth: accessTokenProp
 }
@@ -33,19 +25,25 @@ interface ErrorProp {
 }
 
 export interface BibleLessonContextProp {
+    toggleSubmitted: () => void,
     bibleStudyId: string | undefined
 }
 
-export const BibleLesson_Context = createContext<BibleLessonContextProp>({ bibleStudyId: '' });
+export const BibleLesson_Context = createContext<BibleLessonContextProp>({ bibleStudyId: '', toggleSubmitted: () => {} });
+
 
 const BibleLessonView = () => {
-    let { bibleStudyId } = useParams();
+    const { bibleStudyId } = useParams();
     const BIBLE_LESSON_URL = `/getBibleLessonNotes?bibleStudyId=${bibleStudyId}`;
     const { auth } = useAuth() as AuthProp;
 
     const [bibleNotes, setBibleNotes] = useState(Array<BibleNoteProp>);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [submitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [submitted, setSubmitted] = useState<boolean>(false);
+
+    const toggleSubmitted = () => {
+        setSubmitted(!submitted);
+    }
 
     useEffect(() => {
         const getBibleStudyNotes = async () => {
@@ -56,8 +54,9 @@ const BibleLessonView = () => {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
-                    });
-                setBibleNotes(response?.data[0]?.bibleVerseNotes);
+                    }
+                );
+                setBibleNotes(response?.data?.bibleVerseNotes);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
@@ -70,7 +69,7 @@ const BibleLessonView = () => {
         <div>
             {errorMessage? <p>{errorMessage}</p> : null}
             <div className="flex flex-row ml-5 mt-5">
-                <BibleLesson_Context.Provider value={{ bibleStudyId }}>
+                <BibleLesson_Context.Provider value={{ bibleStudyId, toggleSubmitted }}>
                     <YourBibleLessonButtons />
                 </BibleLesson_Context.Provider>
 

@@ -19,6 +19,7 @@ interface BibleVerseNote {
 
 interface NoteProp {
     _id: string;
+    userId: string;
     title: string;
     biblerVerseNotes: Array<BibleVerseNote>
     date: Date

@@ -50,7 +50,7 @@ const getAllBibleStudyNotes = async (req, res) => {
 const getAllBibleLessonNotes = async (req, res) => {
     const { bibleStudyId } = req.query;
 
-    const bibleLessonNotes = await BibleStudy.find(
+    const bibleLessonNotes = await BibleStudy.findOne(
         {_id: bibleStudyId }
     );
 
