@@ -1,7 +1,11 @@
 // Collapsable table entries for YourBible
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EditYourBibleEntryModal from "./modals/EditYourBibleEntryModal";
+import axios from "../../api/axios";
+import useAuth from "../../hooks/useAuth";
+import { AuthProp } from "../../props/CommonProps";
+import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
 
 interface YourBibleEntryProp{
     id: string,
@@ -10,8 +14,10 @@ interface YourBibleEntryProp{
 
 const YourBibleEntry = (
     { id, title }: YourBibleEntryProp) => {
-        
+        const { auth } = useAuth() as AuthProp;
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
+
+        const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
 
         const [ newTitle, setNewTitle ] = useState<string>(title);
         const [ editModalVisible, setEditModalVisible ] = useState<boolean>(false);
@@ -34,7 +40,7 @@ const YourBibleEntry = (
             setDeleteEntryConfirmation(true);
         }
 
-        /*const deleteBibleStudy = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const deleteBibleStudy = async (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             
             try {
@@ -50,7 +56,7 @@ const YourBibleEntry = (
                 setErrorMessage(`${err}`);
             }
             toggleSubmitted();
-        }*/
+        }
 
         return (
             <div className="flex flex-col">
@@ -83,7 +89,8 @@ const YourBibleEntry = (
                         <span>Are you sure you want to delete this entry?</span>
                         <div>
                             <button className="btn btn-sm" onClick={() => {setDeleteEntryConfirmation(false)}}>No</button>
-                            <button className="btn btn-sm">Yes</button>
+                            
+                            <button className="btn btn-sm" onClick={deleteBibleStudy}>Yes</button>
                         </div>
                     </div>
                     :
