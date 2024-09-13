@@ -6,7 +6,7 @@ import { useEffect, useState, createContext } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from "../components/Header";
-import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
+import YourBibleButtons from "../components/yourbible_components/buttons/YourBibleButtons";
 import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";

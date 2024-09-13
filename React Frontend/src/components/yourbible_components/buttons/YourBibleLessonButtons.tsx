@@ -4,13 +4,8 @@
  */
 
 import { useEffect, useState } from "react";
-import axios from "../../api/axios";
-import useAuth from "../../hooks/useAuth";
-import YourBibleModal from "./YourBibleModal";
-import NewYourBibleEntryModal from "./modals/NewYourBibleEntryModal";
+import NewYourBibleLessonModal from "../modals/NewYourBibleLessonModal";
 import HomeButton from "../../HomeButton";
-
-const BIBLE_LESSON_URL = '/updateBibleLessonNotes';
 
 interface BibleNoteProp {
     bibleVerse: string,
@@ -20,7 +15,7 @@ interface BibleNoteProp {
 interface YourBibleButtonsProp {
 }
 
-const YourBibleButtons = () => {
+const YourBibleLessonButtons = () => {
     // State variables for the YourBibleEntries
     const [title, setTitle] = useState('');
     const [newModalVisible, setNewModalVisible] = useState(false);
@@ -47,38 +42,6 @@ const YourBibleButtons = () => {
         setNewModalVisible(true);
     }
 
-    const clearFields = () => {
-        setTitle('');
-        setBibleVerse('');
-        setBibleVerseNote('');
-        //setBibleVerseNotes(bibleNotes);
-        setErrorMessage('');
-    }
-
-    /*const updateBibleLesson = async () => {
-        if(bibleVerse != "" && bibleVerseNote != "") {
-            try {
-                await axios.post(BIBLE_LESSON_URL,
-                    JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
-                    {
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${auth.accessToken}`},
-                            withCredentials: true
-                    }
-                )
-            } catch(err) {
-                setErrorMessage(`${err}`);
-            }
-        } else {
-            setErrorMessage('Ensure all fields are filled out.');
-        }
-
-        clearFields();
-        setSubmittedFtn(!(submittedBool)); // Reloads the screen
-        setModalVisible(false);
-    };*/
-
     return (
         <div className="flex mr-10">
             <div className="flex-1">
@@ -87,7 +50,7 @@ const YourBibleButtons = () => {
                     <label 
                         className="btn"
                         onClick={onClickCreate}
-                        htmlFor="createBibleStudy">Add Bible Study Notes</label>
+                        htmlFor="createBibleStudy">Add Bible Lesson Notes</label>
                     <HomeButton />
                 </div>
                 <input
@@ -96,7 +59,7 @@ const YourBibleButtons = () => {
                     className="modal-toggle"
                     readOnly
                     checked={newModalVisible} />
-                <NewYourBibleEntryModal
+                <NewYourBibleLessonModal
                     modalVisible={newModalVisible}
                     toggleModalVisible={toggleModalVisible}
                 />
@@ -105,4 +68,4 @@ const YourBibleButtons = () => {
     );
 }
 
-export default YourBibleButtons;
+export default YourBibleLessonButtons;

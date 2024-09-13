@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
-import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
+import { v4 as uuidv4 } from 'uuid';
+import YourBibleLessonButtons from "../components/yourbible_components/buttons/YourBibleLessonButtons";
 import YourBibleLessonEntry from "../components/yourbible_components/YourBibleLessonEntry";
 
 interface accessTokenProp {
@@ -30,6 +31,12 @@ interface AuthProp {
 interface ErrorProp {
     response: string
 }
+
+export interface BibleLessonContextProp {
+    bibleStudyId: string | undefined
+}
+
+export const BibleLesson_Context = createContext<BibleLessonContextProp>({ bibleStudyId: '' });
 
 const BibleLessonView = () => {
     let { bibleStudyId } = useParams();
@@ -63,16 +70,14 @@ const BibleLessonView = () => {
         <div>
             {errorMessage? <p>{errorMessage}</p> : null}
             <div className="flex flex-row ml-5 mt-5">
-                <YourBibleButtons 
-                    buttonTitle="Add Bible Verse Notes"
-                    bibleStudyId={bibleStudyId}
-                    bibleNotes = {bibleNotes}
-                    submittedBool={submitted}
-                    setSubmittedFtn={setSubmitted} />
+                <BibleLesson_Context.Provider value={{ bibleStudyId }}>
+                    <YourBibleLessonButtons />
+                </BibleLesson_Context.Provider>
 
                 <div className="flex flex-col">
                     {bibleNotes.map((bibleNote) =>
-                        <YourBibleLessonEntry 
+                        <YourBibleLessonEntry
+                            key={uuidv4()}
                             collapseText={bibleNote.bibleVerse} 
                             expandedText={bibleNote.bibleVerseNote}             
                         />

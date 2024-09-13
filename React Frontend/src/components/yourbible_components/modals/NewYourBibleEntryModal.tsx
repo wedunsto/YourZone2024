@@ -60,7 +60,7 @@ const NewYourBibleEntryModal = ( { modalVisible, toggleModalVisible }: NewYourBi
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
-                    <p className="text-xl mb-2">Enter Bible Lesson Title</p>
+                    <p className="text-xl mb-2">Enter Bible Study Title</p>
                     <input
                         id="title"
                         type="text"
