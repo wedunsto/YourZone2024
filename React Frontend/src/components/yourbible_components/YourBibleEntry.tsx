@@ -13,7 +13,7 @@ const YourBibleEntry = (
         
         const DELETE_STUDY_URL = '/deleteBibleStudyNote';
 
-        const [ newTitle, setNewTitle ] = useState<string>("");
+        const [ newTitle, setNewTitle ] = useState<string>(title);
         const [ editModalVisible, setEditModalVisible ] = useState<boolean>(false);
         const [ deleteModalVisible, setDeleteModalVisible ] = useState<boolean>(false);
         const [ deleteEntryConfirmation, setDeleteEntryConfirmation ] = useState<boolean>(false);
@@ -74,6 +74,7 @@ const YourBibleEntry = (
                         checked={editModalVisible} />
                     <EditYourBibleEntryModal
                         bibleStudyId={id}
+                        originalTitle={title}
                         modalVisible={editModalVisible}
                         toggleModalVisible={toggleModalVisible} />
                 </div>

@@ -1,8 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const cors = require('cors');
-const corsOptions = require('./config/corsOptions');
 const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
 const mongoose = require('mongoose');
@@ -18,8 +16,6 @@ connectDB();
 // and fetch cookie credentials requirement
 app.use(credentials);
 // Enables the frontend to access the backend
-//app.use(cors(corsOptions));
-
 app.use((req, res, next) => {
   const allowedOrigins = ['http://yourzone.hopto.org', 'http://localhost:5173'];
   const origin = req.headers.origin;

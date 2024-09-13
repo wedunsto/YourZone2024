@@ -6,17 +6,19 @@ import axios from "../../../api/axios";
 
 interface EditYourBibleEntryModalProp {
     bibleStudyId: string;
+    originalTitle: string;
     modalVisible: boolean;
     toggleModalVisible: () => void;
 }
 
-const EditYourBibleEntryModal = ( { bibleStudyId, modalVisible, toggleModalVisible }: EditYourBibleEntryModalProp ) => {
+const EditYourBibleEntryModal = ( { bibleStudyId, originalTitle,
+     modalVisible, toggleModalVisible }: EditYourBibleEntryModalProp ) => {
     const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
 
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
 
-    const [ editTitle, setEditTitle ] = useState<string>("");
+    const [ editTitle, setEditTitle ] = useState<string>(originalTitle);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const updateEditTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +26,7 @@ const EditYourBibleEntryModal = ( { bibleStudyId, modalVisible, toggleModalVisib
     }
 
     const clearEditTitle = () => {
-        setEditTitle("");
+        setEditTitle(originalTitle);
     }
 
     const closeOrSubmit = () => {
@@ -38,7 +40,7 @@ const EditYourBibleEntryModal = ( { bibleStudyId, modalVisible, toggleModalVisib
         if(!(editTitle === "")) {
             try {
                 await axios.post(UPDATE_BIBLE_URL,
-                    JSON.stringify( { bibleStudyId, editTitle } ),
+                    JSON.stringify( { id: bibleStudyId, title: editTitle } ),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
