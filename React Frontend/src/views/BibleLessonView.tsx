@@ -70,14 +70,14 @@ const BibleLessonView = () => {
                     submittedBool={submitted}
                     setSubmittedFtn={setSubmitted} />
 
-            <div className="flex flex-col">
-                {bibleNotes.map((bibleNote) =>
-                    <YourBibleLessonEntry 
-                        collapseText={bibleNote.bibleVerse} 
-                        expandedText={bibleNote.bibleVerseNote}             
-                    />
-                )}
-            </div>
+                <div className="flex flex-col">
+                    {bibleNotes.map((bibleNote) =>
+                        <YourBibleLessonEntry 
+                            collapseText={bibleNote.bibleVerse} 
+                            expandedText={bibleNote.bibleVerseNote}             
+                        />
+                    )}
+                </div>
                 
             </div>
         </div>
