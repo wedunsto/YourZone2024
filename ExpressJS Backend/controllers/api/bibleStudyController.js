@@ -124,7 +124,7 @@ const updateBibleLessonNote = async (req, res) => {
 
         eventLogger.logEvents('Bible lesson updated');
         res.json(updateLesson);
-    } catch(e) {
+    } catch(err) {
         eventLogger.logEvents(`Error encountered while updating Bible lesson note: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }

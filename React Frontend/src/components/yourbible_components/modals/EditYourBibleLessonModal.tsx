@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { AuthProp } from "../../../props/CommonProps";
-import { ContextProp, YourBible_Context } from "../../../views/YourBibleView";
 import axios from "../../../api/axios";
+import { BibleLesson_Context, BibleLessonContextProp } from "../../../views/BibleLessonView";
 
 interface EditYourBibleLessonModalProps {
     id: string | undefined,
@@ -18,7 +18,7 @@ const EditYourBibleLessonModal = ({ id, index, modalVisible, toggleModalVisible,
  
     const UPDATE_LESSON_URL = '/updateBibleLessonNote';
     const { auth } = useAuth() as AuthProp;
-    const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
+    const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     
     const [ editBibleVerse, setEditBibleVerse ] = useState<string>(bibleVerse);
     const [ editBibleVerseNotes, setEditBibleVerseNotes ] = useState<string>(bibleVerseNotes);
@@ -47,14 +47,14 @@ const EditYourBibleLessonModal = ({ id, index, modalVisible, toggleModalVisible,
         
         try {
             await axios.post(UPDATE_LESSON_URL,
-                JSON.stringify( { bibleStudyId: "66e481386181c533c4d19876" , index: 1, bibleVerse: "cap", bibleVerseNote:"can" } ),
+                JSON.stringify( { bibleStudyId: id  , index, bibleVerse: editBibleVerse, bibleVerseNote: editBibleVerseNotes } ),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${auth.accessToken}`},
                             withCredentials: true
                     }
-                )
+                );
             } catch(err) {
                 setErrorMessage(`${err}`);
             }

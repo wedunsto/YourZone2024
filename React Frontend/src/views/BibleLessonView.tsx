@@ -41,10 +41,6 @@ const BibleLessonView = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [submitted, setSubmitted] = useState<boolean>(false);
 
-    const toggleSubmitted = () => {
-        setSubmitted(!submitted);
-    }
-
     useEffect(() => {
         const getBibleStudyNotes = async () => {
             try {
@@ -65,26 +61,29 @@ const BibleLessonView = () => {
         getBibleStudyNotes();
     },[submitted]);
 
+    const toggleSubmitted = () => {
+        setSubmitted(!submitted);
+    }
+
     return (
         <div>
             {errorMessage? <p>{errorMessage}</p> : null}
             <div className="flex flex-row ml-5 mt-5">
                 <BibleLesson_Context.Provider value={{ bibleStudyId, toggleSubmitted }}>
                     <YourBibleLessonButtons />
-                </BibleLesson_Context.Provider>
 
-                <div className="flex flex-col">
-                    {bibleNotes.map((bibleNote) =>
-                        <YourBibleLessonEntry
-                            key={uuidv4()}
-                            id={ bibleStudyId }
-                            index={bibleNotes.indexOf(bibleNote)}
-                            bibleVerse={bibleNote.bibleVerse} 
-                            bibleVerseNotes={bibleNote.bibleVerseNote}             
-                        />
-                    )}
-                </div>
-                
+                    <div className="flex flex-col">
+                        {bibleNotes.map((bibleNote) =>
+                            <YourBibleLessonEntry
+                                key={uuidv4()}
+                                id={ bibleStudyId }
+                                index={bibleNotes.indexOf(bibleNote)}
+                                bibleVerse={bibleNote.bibleVerse} 
+                                bibleVerseNotes={bibleNote.bibleVerseNote}             
+                            />
+                        )}
+                    </div>
+                </BibleLesson_Context.Provider>
             </div>
         </div>
     );
