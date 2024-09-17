@@ -17,6 +17,7 @@ const EditYourBibleLessonModal = ({ id, index, modalVisible, toggleModalVisible,
     bibleVerse, bibleVerseNotes }: EditYourBibleLessonModalProps) => {
  
     const UPDATE_LESSON_URL = '/updateBibleLessonNote';
+    
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     

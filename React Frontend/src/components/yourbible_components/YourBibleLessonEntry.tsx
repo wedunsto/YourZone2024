@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import EditYourBibleLessonModal from "./modals/EditYourBibleLessonModal";
+import axios from "../../api/axios";
+import useAuth from "../../hooks/useAuth";
+import { AuthProp } from "../../props/CommonProps";
+import { BibleLesson_Context, BibleLessonContextProp } from "../../views/BibleLessonView";
 
 interface YourBibleLessonEntryProp {
     id: string | undefined,
@@ -10,7 +14,13 @@ interface YourBibleLessonEntryProp {
 
 const YourBibleLessonEntry = ({ id, index,
      bibleVerse, bibleVerseNotes }: YourBibleLessonEntryProp) => {
+    const DELETE_LESSON_URL = '/deleteBibleLesson';
+    const { auth } = useAuth() as AuthProp;
+    const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
+    
     const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+    const [ errorMessage, setErrorMessage ] = useState<string>('');
+    const [ deleteLessonConfirmation, setDeleteLessonConfirmation ] = useState<boolean>(false);
 
     const clickEdit = () => {
         setModalVisible(true);
@@ -20,8 +30,30 @@ const YourBibleLessonEntry = ({ id, index,
         setModalVisible(false);
     }
 
+    const onClickDelete = () => {
+        setDeleteLessonConfirmation(true);
+    }
+
+    const deleteBibleLesson = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        try {
+            await axios.delete(DELETE_LESSON_URL, {
+                data: JSON.stringify({ bibleStudyId: id, index }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${auth.accessToken}`,
+                },
+                withCredentials: true
+            });
+        } catch(err) {
+            setErrorMessage(`${err}`);
+        }
+        toggleSubmitted();
+    }
+
     return(
         <div className="flex flex-col">
+            {errorMessage === '' ? null : <p>{errorMessage}</p>}
             <div className="flex flex-row mb-6">
                 <div className="collapse collapse-arrow bg-base-200">
                     <input type="checkbox" />
@@ -55,8 +87,20 @@ const YourBibleLessonEntry = ({ id, index,
 
                         <label
                             className="bg-red-600 text-black btn btn-sm"
-                            htmlFor="deleteBibleStudy">Delete</label>
+                            htmlFor="deleteBibleStudy"
+                            onClick={onClickDelete}>Delete</label>
                     </div>
+                    { deleteLessonConfirmation ? 
+                        <div role="alert" className="alert">
+                            <span>Are you sure you want to delete this lesson?</span>
+                            <div>
+                                <button className="btn btn-sm" onClick={() => {setDeleteLessonConfirmation(false)}}>No</button>
+                                <button className="btn btn-sm" onClick={deleteBibleLesson}>Yes</button>
+                            </div>
+                        </div>
+                        :
+                        null
+                    }
             </div>
         </div>
     );

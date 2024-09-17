@@ -54,6 +54,7 @@ app.use('/getBibleLessonNotes', require('./routes/api/BibleStudy/getBibleLessonN
 app.use('/updateBibleStudyNote', require('./routes/api/BibleStudy/updateBibleStudyNote'));
 app.use('/updateBibleLessonNote', require('./routes/api/BibleStudy/updateBibleLessonNote'));
 app.use('/updateBibleLessonNotes', require('./routes/api/BibleStudy/updateBibleLessonNotes'));
+app.use('/deleteBibleLesson', require('./routes/api/BibleStudy/deleteBibleLesson'));
 app.use('/deleteBibleStudyNote', require('./routes/api/BibleStudy/deleteBibleStudyNote'));
 app.use('/createExpense', require('./routes/api/Expenses/createExpense'));
 app.use('/getExpenses', require('./routes/api/Expenses/getExpeneses'));

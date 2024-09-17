@@ -158,6 +158,50 @@ const updateBibleLessonNotes = async (req, res) => {
     }
 }
 
+// Delete Bible study lesson
+const deleteBibleStudyLesson = async (req, res) => {
+    const { bibleStudyId, index } = req.body;
+    // Loop through all lessons until the lesson with the specified index is found
+    try {
+        const bibleStudy = await BibleStudy.findOne(
+            {_id: bibleStudyId}
+        );
+
+        if(!bibleStudy) {
+            eventLogger.logEvents('Bible study not found for deletion.');
+            return res.status(404).json({ message: 'Bible study not found for deletion.' });
+        }
+
+        // Remove the lesson with the specified index
+        bibleStudy.bibleVerseNotes.splice(index, 1);
+        await bibleStudy.save();
+
+        eventLogger.logEvents('Bible lesson deleted');
+
+        // Send the updated document in the response
+        res.json(bibleStudy);
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while deleting Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }
+    // Find BibleStudy and delete the lesson
+    /*try {
+        const deleteLesson = await BibleStudy.updateOne(
+            {_id: bibleStudyId},
+            {$pull: {bibleVerseNotes: {index: index} } }
+        );
+        if(!deleteLesson) {
+            eventLogger.logEvents('Bible lesson not found for deletion.');
+            return res.status(404).json({ message: 'Bible lesson not found for deletion.' });
+        }
+        eventLogger.logEvents('Bible lesson deleted');
+        res.json(deleteLesson);
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while deleting Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }*/
+}
+
 // Delete a Bible study note
 const deleteBibleStudyNote = async (req, res) => {
     const { id } = req.body;
@@ -189,5 +233,6 @@ module.exports = {
     updateBibleStudyNote,
     updateBibleLessonNotes,
     updateBibleLessonNote,
+    deleteBibleStudyLesson,
     deleteBibleStudyNote
 }
