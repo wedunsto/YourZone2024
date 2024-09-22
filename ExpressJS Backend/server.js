@@ -6,6 +6,7 @@ const verifyJWT = require('./middleware/verifyJWT');
 const mongoose = require('mongoose');
 const connectDB = require('./config/dbConn');
 const cookieParser = require('cookie-parser');
+const corsOptions = require('./config/corsOptions');
 
 const PORT = process.env.PORT;
 
@@ -16,20 +17,7 @@ connectDB();
 // and fetch cookie credentials requirement
 app.use(credentials);
 // Enables the frontend to access the backend
-app.use((req, res, next) => {
-  const allowedOrigins = ['http://yourzone.hopto.org', 'http://localhost:5173'];
-  const origin = req.headers.origin;
-  if(allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(204);
-  } else {
-    next();
-  }
-});
+app.use(corsOptions);
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -37,27 +25,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/register', require('./routes/createUser'));
-app.use('/login', require('./routes/logUserIn'));
+app.use('/userCredentials', require('./routes/userCredentialsRoutes'));
 // Receives the cookie that has the refresh token
 app.use('/refresh', require('./routes/refresh'));
 // Everything after this line will use the verifyJWT middleware
 // to protect the route
 app.use(verifyJWT);
-app.use('/logout', require('./routes/logUserOut'));
-app.use('/getUsersAwaitingApproval', require('./routes/getUsersAwaitingApproval'));
-app.use('/updateUserRoles', require('./routes/updateUserRoles'));
-app.use('/deleteUser', require('./routes/deleteUser'));
-app.use('/createBibleStudyNote', require('./routes/api/BibleStudy/createBibleStudyNote'));
-app.use('/getBibleStudyNotes/', require('./routes/api/BibleStudy/getBibleStudyNotes'));
-app.use('/getBibleLessonNotes', require('./routes/api/BibleStudy/getBibleLessonNotes'));
-app.use('/updateBibleStudyNote', require('./routes/api/BibleStudy/updateBibleStudyNote'));
-app.use('/updateBibleLessonNote', require('./routes/api/BibleStudy/updateBibleLessonNote'));
-app.use('/updateBibleLessonNotes', require('./routes/api/BibleStudy/updateBibleLessonNotes'));
-app.use('/deleteBibleLesson', require('./routes/api/BibleStudy/deleteBibleLesson'));
-app.use('/deleteBibleStudyNote', require('./routes/api/BibleStudy/deleteBibleStudyNote'));
-app.use('/createExpense', require('./routes/api/Expenses/createExpense'));
-app.use('/getExpenses', require('./routes/api/Expenses/getExpeneses'));
+app.use('/updateUser', require('./routes/updateUserRoutes'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {

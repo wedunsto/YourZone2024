@@ -3,9 +3,10 @@ const User = require('../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const eventLogger = require('../middleware/logEvents');
+const { set } = require('mongoose');
 
 // Create a new user with the Submitted role
-const createUser = async (req, res) => {
+const createUser = async ( req, res ) => {
     const { username, password } = req.body;
 
     if(!username || !password) {
@@ -30,7 +31,7 @@ const createUser = async (req, res) => {
    
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await User.create({ 
+        await User.create({ 
             "username": username,
             "password": hashedPassword,
             "roles": {
@@ -50,7 +51,7 @@ const createUser = async (req, res) => {
 }
 
 // Log user into the web application
-const logUserIn = async (req, res) => {
+const logUserIn = async ( req, res ) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -95,7 +96,7 @@ const logUserIn = async (req, res) => {
 
         // Save refresh token in database. Invalidate refresh token when a user logs out
         foundUser.refreshToken = refreshToken;
-        const result = await foundUser.save();
+        await foundUser.save();
 
         /*
             Store access token as a cookie at HTTP only to avoid JavaScript access
@@ -115,7 +116,7 @@ const logUserIn = async (req, res) => {
 }
 
 // Get all users who's role includes Submitted
-const getUsersAwaitingApproval = async (req, res) => {
+const getUsersAwaitingApproval = async ( req, res ) => {
    try {
     const getSubmittedUsers = await User.find(
         { roles: { "Submitted": 2001 } }
@@ -136,18 +137,18 @@ const getUsersAwaitingApproval = async (req, res) => {
 }
 
 // Update a user's roles to User
-const updateUserRoles = async (req, res) => {
-    const { id } = req.body;
+const setUserRoleToUser = async ( req, res ) => {
+    const { userId } = req.query;
 
     try {
         // Find user by username and update the role property
         const updatedUserRole = await User.findOneAndUpdate(
-            { _id: id },
+            { _id: userId },
             { $set: { roles: { "User": 1984 } } },
             { new: true } // Return the new updated document
         );
 
-        if(!updatedUserRole) {
+        if( !updatedUserRole ) {
             eventLogger.logEvents(`User not found to update roles`);
             return res.status(404).json({ 
                 message: 'User not found' 
@@ -155,16 +156,15 @@ const updateUserRoles = async (req, res) => {
         }
 
         eventLogger.logEvents(`User roles updated`);
-        // Send the updated document in the response
-        res.json(updatedUserRole);
-    } catch(err) {
+        res.status(200).json({ message: 'User roles updated successfully', updatedUserRole });
+    } catch( err ) {
         eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
 }
 
 // Log user out of the web application
-const logUserOut = async (req, res) => {
+const logUserOut = async ( req, res ) => {
     const { userId } = req.query;
 
     // Clear out the value of the refresh token
@@ -188,7 +188,7 @@ const logUserOut = async (req, res) => {
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     
     eventLogger.logEvents("User successfully logged out");
-    return res.status(200).json({ 
+    res.status(200).json({ 
         message: "Successfully logged out." 
     });
 }
@@ -220,7 +220,7 @@ module.exports = {
     createUser,
     logUserIn,
     getUsersAwaitingApproval,
-    updateUserRoles,
+    setUserRoleToUser,
     logUserOut,
     deleteUser
 }
