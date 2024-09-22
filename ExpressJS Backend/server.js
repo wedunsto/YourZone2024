@@ -32,6 +32,7 @@ app.use('/refresh', require('./routes/refresh'));
 // to protect the route
 app.use(verifyJWT);
 app.use('/updateUser', require('./routes/updateUserRoutes'));
+app.use('/yourBible', require('./routes/api/yourBible'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {

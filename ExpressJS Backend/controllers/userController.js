@@ -129,6 +129,7 @@ const getUsersAwaitingApproval = async ( req, res ) => {
         });
     }
 
+    eventLogger.logEvents(`A user queried all the unauthorized users`);
     res.json(getSubmittedUsers);
    } catch( err ) {
     eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
@@ -149,15 +150,17 @@ const setUserRoleToUser = async ( req, res ) => {
         );
 
         if( !updatedUserRole ) {
-            eventLogger.logEvents(`User not found to update roles`);
+            eventLogger.logEvents(`UserId ${userId} not found to update roles`);
             return res.status(404).json({ 
                 message: 'User not found' 
             });
         }
 
-        eventLogger.logEvents(`User roles updated`);
-        res.status(200).json({ message: 'User roles updated successfully', updatedUserRole });
-    } catch( err ) {
+        eventLogger.logEvents(`User roles updated for ${userId}`);
+        res.status(201).json({ 
+            'success': `User ${username} has been granted access!` 
+        });
+        } catch( err ) {
         eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
         res.status(500).json({ 'message': err.message });
     }
@@ -187,7 +190,7 @@ const logUserOut = async ( req, res ) => {
     // secure: only serves on https; if you dont have https dont use this, apparently it works in dev?
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     
-    eventLogger.logEvents("User successfully logged out");
+    eventLogger.logEvents(`User ${userId} successfully logged out`);
     res.status(200).json({ 
         message: "Successfully logged out." 
     });
@@ -208,8 +211,9 @@ const deleteUser = async (req, res) => {
         }
 
         eventLogger.logEvents("Successfully deleted user");
-        // Send the deleted document in the response
-        res.json(deletedUser);
+        res.status(201).json({ 
+            'success': `User ${userId} deleted!` 
+        });
     } catch(err) {
         eventLogger.logEvents(`Error encountered while deleting user: ${err.message}`);
         res.status(500).json({ 'message': err.message });
