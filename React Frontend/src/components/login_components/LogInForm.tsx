@@ -10,7 +10,7 @@ import { AuthProp, ErrorProp } from '../../props/CommonProps';
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
-const LOGIN_URL = '/login';
+const LOGIN_URL = 'userCredentials/login';
 
 const LogInForm = () => {
     const { setAuth } = useAuth() as AuthProp;
@@ -41,7 +41,7 @@ const LogInForm = () => {
         try {
             if(isCaptchaVerified) {
                 const response = await axios.post(LOGIN_URL,
-                    JSON.stringify({username, password}),
+                    { username, password },
                     {
                         headers: { 'Content-Type': 'application/json'},
                         withCredentials: true
