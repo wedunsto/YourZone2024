@@ -13,11 +13,10 @@ interface NewYourBibleLessonModalProp {
 }
 
 const NewYourBibleLessonModal = ( { modalVisible, toggleModalVisible }: NewYourBibleLessonModalProp ) => {
-    const UPDATE_BIBLE_LESSON_URL = '/updateBibleLessonNotes';
-
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     const { bibleStudyId } = useContext<BibleLessonContextProp>(BibleLesson_Context);
+    const UPDATE_BIBLE_LESSON_URL = `yourBible/createBibleLesson?bibleStudyId=${bibleStudyId}`;
 
     const [ bibleVerse, setBibleVerse ] = useState<string>("");
     const [ bibleVerseNote, setBibleVerseNote ] = useState<string>("");
@@ -46,8 +45,8 @@ const NewYourBibleLessonModal = ( { modalVisible, toggleModalVisible }: NewYourB
 
         if(bibleVerse != "" && bibleVerseNote != "") {
             try {
-                await axios.post(UPDATE_BIBLE_LESSON_URL,
-                    JSON.stringify({bibleStudyId, bibleVerse, bibleVerseNote}),
+                await axios.put(UPDATE_BIBLE_LESSON_URL,
+                    JSON.stringify({ bibleVerse, bibleVerseNote}),
                     {
                         headers: { 
                             'Content-Type': 'application/json',
@@ -67,9 +66,9 @@ const NewYourBibleLessonModal = ( { modalVisible, toggleModalVisible }: NewYourB
 
     return (
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
-
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
+                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                     <label
                         htmlFor="bibleVerse"
                         className="text-xl mb-2">Bible Verse</label>

@@ -27,7 +27,7 @@ const App = () => {
         <Route element={<RequireAuth allowedRoles={[userRole, adminRole]} />}>
           <Route path="/home" element={<HomePageView />} />
           <Route path="/yourbible" element={<YourBibleView />}>
-            <Route path=":bibleStudyId" element={<BibleLessonView />}></Route>
+            <Route path=":bibleStudyId" element={<BibleLessonView />} />
           </Route>
           <Route path="/yourexpenses" element={<YourExpensesView />}/>
         </Route>

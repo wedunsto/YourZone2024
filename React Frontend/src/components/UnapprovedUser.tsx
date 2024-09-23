@@ -19,8 +19,8 @@ interface UnapprovedUsersProp {
     setErrorMessage: (e: string) => void
 }
 
-const USER_APPROVAL_URL = '/updateUserRoles';
-const USER_DENIAL_URL = '/deleteUser';
+const USER_APPROVAL_URL = 'updateUser/updateUserRole';
+const USER_DENIAL_URL = 'updateUser/deleteUser';
 
 const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMessage }: UnapprovedUsersProp) => {
     const { auth } = useAuth() as AuthProp;
@@ -30,8 +30,7 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
         e.preventDefault();
 
         try {
-            await axios.put(USER_APPROVAL_URL,
-                JSON.stringify({"id": userId}),
+            await axios.put(`${USER_APPROVAL_URL}?userId=${userId}`,
                 {
                     headers: { 
                         'Content-Type': 'application/json',

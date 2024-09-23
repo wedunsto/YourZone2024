@@ -24,7 +24,7 @@ interface ErrorProp {
     response: string
 }
 
-const USER_APPROVAL_URL = '/getUsersAwaitingApproval';
+const USER_APPROVAL_URL = '/updateUser/getUsersAwaitingApproval';
 
 const UserApprovalView = () => {
     const [unapprovedUsers, setUnapprovedUsers] = useState(new Array<UnapprovedUserProp>);
@@ -50,7 +50,6 @@ const UserApprovalView = () => {
         }
 
         getUsersAwaitingApproval();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [submitted]);
 
     return(

@@ -34,14 +34,14 @@ export const BibleLesson_Context = createContext<BibleLessonContextProp>({ bible
 
 const BibleLessonView = () => {
     const { bibleStudyId } = useParams();
-    const BIBLE_LESSON_URL = `/getBibleLessonNotes?bibleStudyId=${bibleStudyId}`;
     const { auth } = useAuth() as AuthProp;
-
     const [bibleNotes, setBibleNotes] = useState(Array<BibleNoteProp>);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [submitted, setSubmitted] = useState<boolean>(false);
 
     useEffect(() => {
+        const BIBLE_LESSON_URL = `yourBible/getBibleLessons?bibleStudyId=${bibleStudyId}`;
+
         const getBibleStudyNotes = async () => {
             try {
                 const response = await axios.get(BIBLE_LESSON_URL,
@@ -52,14 +52,15 @@ const BibleLessonView = () => {
                             withCredentials: true
                     }
                 );
-                setBibleNotes(response?.data?.bibleVerseNotes);
+                setBibleNotes(response?.data);
             } catch(err) {
                 setErrorMessage((err as ErrorProp).response);
             }
         }
 
         getBibleStudyNotes();
-    },[submitted]);
+        // Only submitted will change when a user submits a new Bible lesson
+    },[auth.accessToken, bibleStudyId, submitted]);
 
     const toggleSubmitted = () => {
         setSubmitted(!submitted);
@@ -67,21 +68,21 @@ const BibleLessonView = () => {
 
     return (
         <div>
-            {errorMessage? <p>{errorMessage}</p> : null}
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
             <div className="flex flex-row ml-5 mt-5">
                 <BibleLesson_Context.Provider value={{ bibleStudyId, toggleSubmitted }}>
                     <YourBibleLessonButtons />
-
                     <div className="flex flex-col">
                         {bibleNotes.map((bibleNote) =>
-                            <YourBibleLessonEntry
-                                key={uuidv4()}
-                                id={ bibleStudyId }
-                                index={bibleNotes.indexOf(bibleNote)}
-                                bibleVerse={bibleNote.bibleVerse} 
-                                bibleVerseNotes={bibleNote.bibleVerseNote}             
-                            />
-                        )}
+                                <YourBibleLessonEntry
+                                    key={uuidv4()}
+                                    id={ bibleStudyId }
+                                    index={bibleNotes.indexOf(bibleNote)}
+                                    bibleVerse={bibleNote.bibleVerse} 
+                                    bibleVerseNotes={bibleNote.bibleVerseNote}             
+                                />
+                            )
+                        }
                     </div>
                 </BibleLesson_Context.Provider>
             </div>

@@ -37,5 +37,5 @@ app.use('/yourBible', require('./routes/api/yourBible'));
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running`));
 });

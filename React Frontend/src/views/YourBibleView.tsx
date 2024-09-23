@@ -34,7 +34,7 @@ export const YourBible_Context = createContext<ContextProp>({toggleSubmitted: ()
 const YourBibleView = () => {
     const { auth } = useAuth() as AuthProp;
 
-    const GET_BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
+    const GET_BIBLE_URL = `yourBible/getBibleStudies?userId=${auth.id}`;
 
     const [bibleNotes, setBibleNotes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -63,7 +63,8 @@ const YourBibleView = () => {
         }
 
         getBibleStudyNotes();
-    },[submitted]);
+        // Only submitted will change when a user submits a new Bible lesson
+    },[GET_BIBLE_URL, auth.accessToken, submitted]);
 
     const toggleSubmitted = () => {
         setSubmitted(!submitted);

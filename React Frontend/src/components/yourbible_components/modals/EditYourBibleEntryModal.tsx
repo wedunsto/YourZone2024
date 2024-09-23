@@ -3,20 +3,20 @@ import useAuth from "../../../hooks/useAuth";
 import { AuthProp } from "../../../props/CommonProps";
 import { ContextProp, YourBible_Context } from "../../../views/YourBibleView";
 import axios from "../../../api/axios";
+import { BibleLesson_Context, BibleLessonContextProp } from "../../../views/BibleLessonView";
 
 interface EditYourBibleEntryModalProp {
-    bibleStudyId: string;
     originalTitle: string;
     modalVisible: boolean;
     toggleModalVisible: () => void;
 }
 
-const EditYourBibleEntryModal = ( { bibleStudyId, originalTitle,
+const EditYourBibleEntryModal = ( { originalTitle,
      modalVisible, toggleModalVisible }: EditYourBibleEntryModalProp ) => {
-    const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
-
     const { auth } = useAuth() as AuthProp;
-    const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
+    const { toggleSubmitted,  } = useContext<ContextProp>(YourBible_Context);
+    const { bibleStudyId } = useContext<BibleLessonContextProp>(BibleLesson_Context);
+    const UPDATE_BIBLE_URL = `yourBible/updateBibleStudyNote?bibleStudyId=${bibleStudyId}`;
 
     const [ editTitle, setEditTitle ] = useState<string>(originalTitle);
     const [errorMessage, setErrorMessage] = useState<string>("");
@@ -39,8 +39,8 @@ const EditYourBibleEntryModal = ( { bibleStudyId, originalTitle,
 
         if(!(editTitle === "")) {
             try {
-                await axios.post(UPDATE_BIBLE_URL,
-                    JSON.stringify( { id: bibleStudyId, title: editTitle } ),
+                await axios.put(UPDATE_BIBLE_URL,
+                    JSON.stringify( { title: editTitle } ),
                     {
                         headers: { 
                             'Content-Type': 'application/json',

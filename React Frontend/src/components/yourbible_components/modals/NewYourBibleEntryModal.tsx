@@ -11,7 +11,7 @@ interface NewYourBibleEntryModalProp {
 }
 
 const NewYourBibleEntryModal = ( { modalVisible, toggleModalVisible }: NewYourBibleEntryModalProp ) => {
-    const CREATE_BIBLE_URL = '/createBibleStudyNote';
+    const CREATE_BIBLE_URL = 'yourBible/createBibleStudy';
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
 
@@ -60,6 +60,7 @@ const NewYourBibleEntryModal = ( { modalVisible, toggleModalVisible }: NewYourBi
         <div className={`modal ${modalVisible ? 'visible' : ''}`}>
             <div className="modal-box">
                 <form className="flex flex-col rounded-lg">
+                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                     <p className="text-xl mb-2">Enter Bible Study Title</p>
                     <input
                         id="title"
