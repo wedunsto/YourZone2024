@@ -9,7 +9,7 @@ const LogoutButton = () => {
     const navigate = useNavigate();
     const { auth } = useAuth() as AuthProp;
 
-    const LOGOUT_URL= `/logout?userId=${auth.id}`;
+    const LOGOUT_URL= `userCredentials/logout?userId=${auth.id}`;
 
     const logout = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();

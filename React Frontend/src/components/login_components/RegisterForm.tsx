@@ -95,7 +95,7 @@ const RegisterForm = () => {
 
     return (
         <div className='ml-5 flex flex-col'>
-            {errorMessage? <p>{errorMessage}</p> : null}
+            {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
             <form onSubmit={handleSubmit}>
                 <CredentialInputField 
                     title='Username'

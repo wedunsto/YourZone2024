@@ -4,7 +4,7 @@
  */
 
 import { useState } from "react";
-import NewYourBibleLessonModal from "../modals/NewYourBibleLessonModal";
+import YourBibleLessonModal from "../modals/YourBibleLessonModal";
 import HomeButton from "../../HomeButton";
 
 const YourBibleLessonButtons = () => {
@@ -34,10 +34,10 @@ const YourBibleLessonButtons = () => {
                     className="modal-toggle"
                     readOnly
                     checked={newModalVisible} />
-                <NewYourBibleLessonModal
-                    modalVisible={newModalVisible}
-                    toggleModalVisible={toggleModalVisible}
-                />
+                <YourBibleLessonModal 
+                    mode={"create"} 
+                    modalVisible={newModalVisible} 
+                    toggleModalVisible={toggleModalVisible} />
             </div>
         </div>
     );

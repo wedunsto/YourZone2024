@@ -70,11 +70,12 @@ const LogInForm = () => {
             }
 
         } catch(err) {
-            if(!(err as ErrorProp)?.response) {
+            const error = err as ErrorProp;
+            if(!error?.response) {
                 setErrorMessage('No Server Response');
-            } else if ((err as ErrorProp).response?.status === 400) {
+            } else if (error.response?.status === 400) {
                 setErrorMessage('Missing Username or Password');
-            } else if ((err as ErrorProp).response?.status === 401) {
+            } else if (error.response?.status === 401) {
                 setErrorMessage('Unauthorized');
             } else {
                 setErrorMessage('Login Failed');
@@ -85,7 +86,7 @@ const LogInForm = () => {
     return(
         <div className='login-fields flex justify-center'>
             <div className="flex-col">
-                {errorMessage? <p className='text-white'>{errorMessage}</p> : null}
+                {errorMessage && <p>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <CredentialInputField 
                         title='Username'

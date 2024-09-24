@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import EditYourBibleLessonModal from "./modals/EditYourBibleLessonModal";
+import YourBibleLessonModal from "./modals/YourBibleLessonModal";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { AuthProp } from "../../props/CommonProps";
@@ -14,7 +14,7 @@ interface YourBibleLessonEntryProp {
 
 const YourBibleLessonEntry = ({ id, index,
      bibleVerse, bibleVerseNotes }: YourBibleLessonEntryProp) => {
-    const DELETE_LESSON_URL = '/deleteBibleLesson';
+    const DELETE_LESSON_URL = `yourBible/deleteBibleLesson?bibleStudyId=${id}`;
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     
@@ -37,14 +37,16 @@ const YourBibleLessonEntry = ({ id, index,
     const deleteBibleLesson = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            await axios.delete(DELETE_LESSON_URL, {
-                data: JSON.stringify({ bibleStudyId: id, index }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${auth.accessToken}`,
-                },
-                withCredentials: true
-            });
+            await axios.put(DELETE_LESSON_URL,
+                JSON.stringify({ index }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                    withCredentials: true
+                }
+            );
         } catch(err) {
             setErrorMessage(`${err}`);
         }
@@ -76,32 +78,31 @@ const YourBibleLessonEntry = ({ id, index,
                                 readOnly
                                 checked={modalVisible}
                             />
-                            <EditYourBibleLessonModal
+                            <YourBibleLessonModal
+                                mode="edit"
                                 id={id}
                                 index={index}
                                 bibleVerse={bibleVerse}
                                 bibleVerseNotes={bibleVerseNotes}
                                 modalVisible={modalVisible} 
-                                toggleModalVisible={toggleModalVisible}
-                            />
-
+                                toggleModalVisible={toggleModalVisible} />
                         <label
                             className="bg-red-600 text-black btn btn-sm"
                             htmlFor="deleteBibleStudy"
                             onClick={onClickDelete}>Delete</label>
-                    </div>
-                    { deleteLessonConfirmation ? 
-                        <div role="alert" className="alert">
-                            <span>Are you sure you want to delete this lesson?</span>
-                            <div>
-                                <button className="btn btn-sm" onClick={() => {setDeleteLessonConfirmation(false)}}>No</button>
-                                <button className="btn btn-sm" onClick={deleteBibleLesson}>Yes</button>
-                            </div>
-                        </div>
-                        :
-                        null
-                    }
+                </div>
             </div>
+            { deleteLessonConfirmation ? 
+                <div role="alert" className="alert">
+                    <span>Are you sure you want to delete this lesson?</span>
+                    <div>
+                        <button className="btn btn-sm" onClick={() => {setDeleteLessonConfirmation(false)}}>No</button>
+                        <button className="btn btn-sm" onClick={deleteBibleLesson}>Yes</button>
+                    </div>
+                </div>
+                :
+                null
+            }
         </div>
     );
 };

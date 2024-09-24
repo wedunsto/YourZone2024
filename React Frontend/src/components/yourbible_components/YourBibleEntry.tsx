@@ -1,11 +1,11 @@
 // Collapsable table entries for YourBible
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EditYourBibleEntryModal from "./modals/EditYourBibleEntryModal";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { AuthProp } from "../../props/CommonProps";
 import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
+import YourBibleEntryModal from "./modals/YourBibleEntryModal";
 
 interface YourBibleEntryProp{
     id: string,
@@ -15,20 +15,16 @@ interface YourBibleEntryProp{
 const YourBibleEntry = (
     { id, title }: YourBibleEntryProp) => {
         const { auth } = useAuth() as AuthProp;
-        const DELETE_STUDY_URL = '/deleteBibleStudyNote';
+        const DELETE_STUDY_URL = `yourBible/deleteBibleStudy?bibleStudyId=${id}`;
 
         const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
-
-        const [ newTitle, setNewTitle ] = useState<string>(title);
         const [ editModalVisible, setEditModalVisible ] = useState<boolean>(false);
-        const [ deleteModalVisible, setDeleteModalVisible ] = useState<boolean>(false);
         const [ deleteEntryConfirmation, setDeleteEntryConfirmation ] = useState<boolean>(false);
         const [ errorMessage, setErrorMessage ] = useState<string>("");
 
         const navigate = useNavigate();
 
         const onClickEdit = () => {
-            setNewTitle(title);
             setEditModalVisible(true);
         }
 
@@ -45,7 +41,6 @@ const YourBibleEntry = (
             
             try {
                 await axios.delete(DELETE_STUDY_URL, {
-                    data: JSON.stringify({ id }),
                     headers: {
                       'Content-Type': 'application/json',
                       Authorization: `Bearer ${auth.accessToken}`,
@@ -78,9 +73,10 @@ const YourBibleEntry = (
                         id="updateBibleStudy"
                         className="modal-toggle"
                         checked={editModalVisible} />
-                    <EditYourBibleEntryModal
-                        bibleStudyId={id}
+                    <YourBibleEntryModal 
+                        mode={"edit"}
                         originalTitle={title}
+                        bibleStudyId={id}
                         modalVisible={editModalVisible}
                         toggleModalVisible={toggleModalVisible} />
                 </div>

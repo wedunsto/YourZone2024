@@ -28,8 +28,8 @@ const USER_APPROVAL_URL = '/updateUser/getUsersAwaitingApproval';
 
 const UserApprovalView = () => {
     const [unapprovedUsers, setUnapprovedUsers] = useState(new Array<UnapprovedUserProp>);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [submitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [submitted, setSubmitted] = useState<boolean>(false);
     const { auth } = useAuth() as AuthProp;
 
     // On page load, get all users who are awaiting approval
@@ -45,16 +45,16 @@ const UserApprovalView = () => {
                     });
                 setUnapprovedUsers(response?.data);
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                const error = err as ErrorProp;
+                setErrorMessage(error.response);
             }
         }
 
         getUsersAwaitingApproval();
     }, [submitted]);
-
     return(
         <div className="h-screen w-screen">
-            {errorMessage? <p>{errorMessage}</p> : null}
+            {errorMessage && <p>{errorMessage}</p>}
             <UnapprovedUser
                 unapprovedUsers={unapprovedUsers}
                 submitted={submitted}
