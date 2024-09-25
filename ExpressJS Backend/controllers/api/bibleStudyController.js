@@ -4,7 +4,8 @@ const eventLogger = require('../../middleware/logEvents');
 
 // Create new Bible study notes
 const createBibleStudyNotes = async (req, res) => {
-    const { userId, title, bibleVerseNotes } = req.body;
+    const { userId } = req.query;
+    const { title } = req.body;
     
     if(!userId || !title) {
         eventLogger.logEvents('Please enter the required properties.');
@@ -15,20 +16,11 @@ const createBibleStudyNotes = async (req, res) => {
 
     try {
         let result;
-        // Create and store a new Bible verse note
-        if(bibleVerseNotes) {
-            result = await BibleStudy.create({
-                "userId": userId,
-                "title": title,
-                "bibleVerseNotes": bibleVerseNotes
-            });
-        }
-        else {
-            result = await BibleStudy.create({
-                "userId": userId,
-                "title": title
-            });
-        }
+        result = await BibleStudy.create({
+            "userId": userId,
+            "title": title,
+            "bibleVerseNotes": []
+        });
 
         eventLogger.logEvents('Successfully create new Bible study note');
         res.status(201).json({ 
@@ -59,28 +51,29 @@ const getAllBibleStudyNotes = async (req, res) => {
 const getAllBibleLessonNotes = async (req, res) => {
     const { bibleStudyId } = req.query;
 
-    const bibleLessonNotes = await BibleStudy.find(
+    const bibleStudy = await BibleStudy.findOne(
         {_id: bibleStudyId }
     );
 
-    if (!bibleLessonNotes) {
+    if (!bibleStudy) {
         eventLogger.logEvents('No Bible notes found.');
         return res.status(204).json({ 'message': 'No Bible notes found.' });
     }
 
     eventLogger.logEvents('Bible lessons retrieved');
-    res.json(bibleLessonNotes);
+    res.json(bibleStudy.bibleVerseNotes);
 };
 
 // Update a Bible study note
 const updateBibleStudyNote = async (req, res) => {
-    const { id, title, bibleVerseNotes } = req.body;
+    const { bibleStudyId } = req.query;
+    const { title } = req.body;
     
     try {
         // Find BibleStudy and update properties
         const updateStudy = await BibleStudy.findOneAndUpdate(
-            { _id: id },
-            {$set: { title: title, bibleVerseNotes: bibleVerseNotes } },
+            { _id: bibleStudyId },
+            {$set: { title: title } },
             { new: true }
         );
 
@@ -90,8 +83,7 @@ const updateBibleStudyNote = async (req, res) => {
         }
 
         eventLogger.logEvents('Bible study updated');
-        // Send the updated document in the response
-        res.json(updateStudy)
+        res.status(201).json({ 'success': `Bible notes updated` });
 
     } catch(err) {
         eventLogger.logEvents(`Error encountered while updating Bible study note: ${err.message}`);
@@ -99,9 +91,40 @@ const updateBibleStudyNote = async (req, res) => {
     }
 }
 
-// Update Bible study lesson: Contains Bible verse and note(s)
+// Update the Bible verse and or note(s) for a specific Bible lesson note
 const updateBibleLessonNote = async (req, res) => {
-    const { bibleStudyId, bibleVerse, bibleVerseNote } = req.body;
+    const { bibleStudyId } = req.query;
+    const { index, bibleVerse, bibleVerseNote } = req.body;
+    // Find BibleStudy and update the lesson
+    try {
+        const updateLesson = await BibleStudy.findOneAndUpdate(
+            { _id: bibleStudyId },
+            { $set: {
+                [`bibleVerseNotes.${index}`]: {bibleVerse: bibleVerse, bibleVerseNote: bibleVerseNote} 
+                }
+            },
+            { new: true }
+        );
+
+        if(!updateLesson) {
+            eventLogger.logEvents('Bible lesson not found for updates.');
+            return res.status(404).json({ message: 'Bible lesson not found for updates.' });
+        }
+
+        eventLogger.logEvents('Bible lesson updated');
+        res.status(201).json({ 
+            'success': `Bible lesson updated!` 
+        });
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while updating Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }
+}
+
+// Update Bible study lesson: Contains Bible verse and note(s)
+const updateBibleLessonNotes = async (req, res) => {
+    const { bibleStudyId } = req.query;
+    const { bibleVerse, bibleVerseNote } = req.body;
 
     const newBibleLesson = {bibleVerse: bibleVerse, bibleVerseNote: bibleVerseNote}
 
@@ -117,9 +140,10 @@ const updateBibleLessonNote = async (req, res) => {
             return res.status(404).json({ message: 'Bible lesson not found for updates.' });
         }
 
-        eventLogger.logEvents('Bible lesson updated');
-        // Send the updated document in the response
-        res.json(updateLesson)
+        eventLogger.logEvents('Bible lesson notes updated');
+        res.status(201).json({ 
+            'success': `Bible lesson notes updated!` 
+        });
 
     } catch(e) {
         eventLogger.logEvents(`Error encountered while updating Bible lesson note: ${err.message}`);
@@ -127,14 +151,43 @@ const updateBibleLessonNote = async (req, res) => {
     }
 }
 
+// Delete Bible study lesson
+const deleteBibleStudyLesson = async (req, res) => {
+    const { bibleStudyId } = req.query;
+    const { index } = req.body;
+    // Loop through all lessons until the lesson with the specified index is found
+    try {
+        const bibleStudy = await BibleStudy.findOne(
+            {_id: bibleStudyId}
+        );
+
+        if(!bibleStudy) {
+            eventLogger.logEvents('Bible study not found for deletion.');
+            return res.status(404).json({ message: 'Bible study not found for deletion.' });
+        }
+
+        // Remove the lesson with the specified index
+        bibleStudy.bibleVerseNotes.splice(index, 1);
+        await bibleStudy.save();
+
+        eventLogger.logEvents('Bible lesson deleted');
+        res.status(201).json({ 
+            'success': `Bible lesson deleted!` 
+        });
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while deleting Bible lesson note: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
+    }
+}
+
 // Delete a Bible study note
 const deleteBibleStudyNote = async (req, res) => {
-    const { id } = req.body;
+    const { bibleStudyId } = req.query;
 
     try {
         // Find BibleStudy and delete it
         const deletedStudy = await BibleStudy.findOneAndDelete(
-            {_id: id}
+            {_id: bibleStudyId}
         );
 
         if(!deletedStudy) {
@@ -143,8 +196,9 @@ const deleteBibleStudyNote = async (req, res) => {
         }
 
         eventLogger.logEvents('Bible study note successfully deleted');
-        // Send the deleted document in response
-        res.json(deletedStudy);
+        res.status(201).json({ 
+            'success': `Bible study deleted!` 
+        });
     } catch( err) {
         eventLogger.logEvents(`Error encountered while deleting Bible study note: ${err.message}`);
         res.status(500).json({ 'message': err.message });
@@ -156,6 +210,8 @@ module.exports = {
     getAllBibleStudyNotes,
     getAllBibleLessonNotes,
     updateBibleStudyNote,
+    updateBibleLessonNotes,
     updateBibleLessonNote,
+    deleteBibleStudyLesson,
     deleteBibleStudyNote
 }

@@ -1,54 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Collapsable table entries for YourBible
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
-import YourBibleModal from "./YourBibleModal";
-// import { v4 as uuidv4 } from 'uuid';
-import { useNavigate } from "react-router-dom";
+import { AuthProp } from "../../props/CommonProps";
+import { ContextProp, YourBible_Context } from "../../views/YourBibleView";
+import YourBibleEntryModal from "./modals/YourBibleEntryModal";
 
 interface YourBibleEntryProp{
     id: string,
     title: string,
-    submitted: boolean,
-    setSubmitted: (submittedStatus: boolean) => void
-}
-
-// Explicit types for properties in this component
-interface accessTokenProp {
-    accessToken: string,
-    id: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
 }
 
 const YourBibleEntry = (
-    {id, title, submitted, setSubmitted}: YourBibleEntryProp) => {
-        // const UPDATE_BIBLE_URL = '/updateBibleStudyNote';
-        const DELETE_STUDY_URL = '/deleteBibleStudyNote';
-
-        const [newTitle, setNewTitle] = useState('');
-        const [editModalVisible, setEditModalVisible] = useState(false);
-        const [deleteEntryConfirmation, setDeleteEntryConfirmation] = useState(false);
-        const [errorMessage, setErrorMessage] = useState('');
-
+    { id, title }: YourBibleEntryProp) => {
         const { auth } = useAuth() as AuthProp;
+        const DELETE_STUDY_URL = `yourBible/deleteBibleStudy?bibleStudyId=${id}`;
+
+        const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
+        const [ editModalVisible, setEditModalVisible ] = useState<boolean>(false);
+        const [ deleteEntryConfirmation, setDeleteEntryConfirmation ] = useState<boolean>(false);
+        const [ errorMessage, setErrorMessage ] = useState<string>("");
 
         const navigate = useNavigate();
 
         const onClickEdit = () => {
-            setNewTitle(title);
             setEditModalVisible(true);
         }
-    
-        const onClickClose = () => {
-            setErrorMessage('');
+
+        const toggleModalVisible =() => {
             setEditModalVisible(false);
         }
 
@@ -56,26 +36,21 @@ const YourBibleEntry = (
             setDeleteEntryConfirmation(true);
         }
 
-        const updateTitle = (e: any) => {
-            setNewTitle(e.target.value);
-        }
-
-        const deleteBibleStudy = async (e:any) => {
+        const deleteBibleStudy = async (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             
             try {
                 await axios.delete(DELETE_STUDY_URL, {
-                    data: JSON.stringify({ id }),
                     headers: {
                       'Content-Type': 'application/json',
                       Authorization: `Bearer ${auth.accessToken}`,
                     },
                     withCredentials: true,
                   });
-                    setSubmitted(!(submitted));
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
+            toggleSubmitted();
         }
 
         return (
@@ -87,41 +62,30 @@ const YourBibleEntry = (
                             className="mb-2 bg-slate-400 text-black btn btn-sm"
                             onClick={onClickEdit}
                             htmlFor="updateBibleStudy">Edit</label>
-
                         <label
                             className="bg-red-600 text-black btn btn-sm"
                             onClick={onClickDelete}
                             htmlFor="deleteBibleStudy">Delete</label>
                     </div>
-
                     <input 
                         readOnly
                         type="checkbox"
                         id="updateBibleStudy"
                         className="modal-toggle"
                         checked={editModalVisible} />
-
-                    <YourBibleModal 
-                        title={newTitle}
-                        updateTitle={updateTitle}
+                    <YourBibleEntryModal 
+                        mode={"edit"}
+                        originalTitle={title}
+                        bibleStudyId={id}
                         modalVisible={editModalVisible}
-                        onClickClose={onClickClose}
-                        errorMessage={errorMessage}
-                        buttonTitle={undefined}
-                        bibleVerse={undefined}
-                        bibleVerseNote={undefined}
-                        bibleVerseNotes={undefined}
-                        updateBibleVerse={undefined}
-                        updateBibleNotes={undefined}
-                        createNewBibleStudy={undefined}
-                        createNewBibleLesson={undefined}
-                         bibleStudyId={undefined}                    />
+                        toggleModalVisible={toggleModalVisible} />
                 </div>
                 { deleteEntryConfirmation ? 
                     <div role="alert" className="alert">
                         <span>Are you sure you want to delete this entry?</span>
                         <div>
                             <button className="btn btn-sm" onClick={() => {setDeleteEntryConfirmation(false)}}>No</button>
+                            
                             <button className="btn btn-sm" onClick={deleteBibleStudy}>Yes</button>
                         </div>
                     </div>

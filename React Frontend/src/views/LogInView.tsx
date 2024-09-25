@@ -1,3 +1,4 @@
+// View the log in elements
 import "../styles/LogInStyles.css";
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

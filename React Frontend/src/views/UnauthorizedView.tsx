@@ -1,7 +1,6 @@
 // View reached when a user without sufficient access reaches an application feature
 import { useNavigate } from "react-router-dom"
 import LogoutButton from "../components/LogoutButton";
-import HomeButton from "../components/HomeButton";
 
 const UnauthorizedView = () => {
     const navigate = useNavigate();
@@ -14,14 +13,12 @@ const UnauthorizedView = () => {
     return (
             <div className="flex justify-center">
                 <section className="m-10">
-                    <h1 className="text-white">Unauthorized</h1>
+                    <h1 className="text-white">Validate Your Account</h1>
                     <br />
-                    <p className="text-white text-xl">You do not have access to the requested page.</p>
                     <p className="text-white text-xl">If you have just registered, please email: <a className="underline text-green-300" href={`mailto:${emailAddress}`}>{emailAddress}</a></p>
-                    <p className="text-white text-xl">with your full name and username, so that I can manually approve your access.</p>
+                    <p className="text-white text-xl">with your full name and username, so that your account can be validated.</p>
                     <div className="my-5 flexGrow">
-                        <button onClick={goBack}>Go Back</button>
-                        <HomeButton />
+                        <button className="text-lg mr-3" onClick={goBack}>Go Back</button>
                         <LogoutButton />
                     </div>
                 </section>

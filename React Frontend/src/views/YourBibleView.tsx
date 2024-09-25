@@ -1,44 +1,46 @@
 // View for all current Bible notes, and buttons to add, edit, and delete Bible notes
+// Create a note, then enter that note to add supporting Bible verses
 import "../styles/YourBibleStyles.css";
-import YourBibleButtons from "../components/yourbible_components/YourBibleButtons";
-import axios from "../api/axios";
-import { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
-import { v4 as uuidv4 } from 'uuid';
-import Header from "../components/Header";
 import "../../assets/images/OpenBible.jpeg"
+import { useEffect, useState, createContext } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import { Outlet, useLocation } from 'react-router-dom';
+import Header from "../components/Header";
+import YourBibleButtons from "../components/yourbible_components/buttons/YourBibleButtons";
+import YourBibleEntry from "../components/yourbible_components/YourBibleEntry";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+import { AuthProp } from "../props/CommonProps";
 
-// Explicit types for properties in this component
-interface accessTokenProp {
-    id: string;
-    accessToken: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
+interface BibleVerseNote {
+    bibleVerse: string;
+    bibleVerseNote: string;
 }
 
 interface NoteProp {
-    _id: string
-    title: string
+    _id: string;
+    userId: string;
+    title: string;
+    biblerVerseNotes: Array<BibleVerseNote>
+    date: Date
 }
+
+export interface ContextProp {
+    toggleSubmitted: () => void;
+}
+
+export const YourBible_Context = createContext<ContextProp>({toggleSubmitted: () => {}});
 
 const YourBibleView = () => {
     const { auth } = useAuth() as AuthProp;
 
-    const BIBLE_URL = `/getBibleStudyNotes?userId=${auth.id}`;
+    const GET_BIBLE_URL = `yourBible/getBibleStudies?userId=${auth.id}`;
 
     const [bibleNotes, setBibleNotes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
-    // Used to conditionally render the parent or child route
+    // Used to conditionally render the parent and child route
     const location = useLocation();
     const hasSubPath = location.pathname !== "/yourbible";
 
@@ -47,7 +49,7 @@ const YourBibleView = () => {
     useEffect(() => {
         const getBibleStudyNotes = async () => {
             try {
-                const response = await axios.get(BIBLE_URL,
+                const response = await axios.get(GET_BIBLE_URL,
                     {
                         headers: { 
                             'Content-Type': 'application/json',
@@ -56,12 +58,17 @@ const YourBibleView = () => {
                     });
                 setBibleNotes(response?.data);
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         }
 
         getBibleStudyNotes();
-    },[submitted]);
+        // Only submitted will change when a user submits a new Bible lesson
+    },[GET_BIBLE_URL, auth.accessToken, submitted]);
+
+    const toggleSubmitted = () => {
+        setSubmitted(!submitted);
+    }
 
     return(
         <div className="your-bible-page-background h-screen w-screen">
@@ -72,26 +79,24 @@ const YourBibleView = () => {
             { hasSubPath ? (
                 <Outlet />
                 ) : (
-                <>
-                    {errorMessage? <p>{errorMessage}</p> : null}
-                    <div className="flex flex-row ml-5 mt-5">
-                        <YourBibleButtons 
-                                buttonTitle="Add Bible Study Notes"
-                                submittedBool={submitted}
-                                setSubmittedFtn={setSubmitted} bibleStudyId={undefined} bibleNotes={[]} />
-                        <div className="flex flex-col">
-                            {
-                                bibleNotes.map((note: NoteProp) => 
-                                    <YourBibleEntry 
-                                        key={uuidv4()}
-                                        id={note._id}
-                                        title={note.title}
-                                        submitted={submitted}
-                                        setSubmitted={setSubmitted}/>)
-                            }
+                <YourBible_Context.Provider value={{toggleSubmitted}}>
+                    <>
+                        {errorMessage? <p>{errorMessage}</p> : null}
+                        <div className="flex flex-row ml-5 mt-5">
+                            <YourBibleButtons />
+                            <div className="flex flex-col">
+                                {
+                                    bibleNotes.map((note: NoteProp) => 
+                                        <YourBibleEntry 
+                                            key={uuidv4()}
+                                            id={note._id}
+                                            title={note.title}/>
+                                    )
+                                }
+                            </div>
                         </div>
-                    </div>
-                </>
+                    </>
+                </YourBible_Context.Provider>  
                 )
             }
         </div>

@@ -1,25 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // Registration form that takes in new username and password
+import "../../styles/HomePageStyles.css";
 import { useState, useEffect, FormEvent } from 'react';
 import CredentialInputField from './CredentialInputField';
 import ValidationNotice from "./ValidationNotice";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import Captcha from './Captcha';
-
-// Replace any type with details about objects
-interface ResponseProp {
-    status: number
-}
-
-interface ErrorProp {
-    response: ResponseProp
-}
+import { ErrorProp } from "../../props/CommonProps";
 
 // Requirements for registering usernames and passwords
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
+const REGISTER_URL = 'userCredentials/createUser';
 
 const RegisterForm = () => {
     const navigate = useNavigate();
@@ -62,9 +54,9 @@ const RegisterForm = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        const v1 = USER_REGEX.test(username);
-        const v2 = PASSWORD_REGEX.test(password);
-        if (!v1 || !v2) {
+        const validatedUsername = USER_REGEX.test(username);
+        const validatedPassword = PASSWORD_REGEX.test(password);
+        if (!validatedUsername || !validatedPassword) {
             setErrorMessage("Invalid Entry");
             return;
         }
@@ -72,7 +64,7 @@ const RegisterForm = () => {
         try {
             if(isCaptchaVerified) {
                 await axios.post(REGISTER_URL,
-                    JSON.stringify({username: username, password}),
+                    JSON.stringify({username, password}),
                     {
                         headers: {'Content-Type': 'application/json'},
                         withCredentials: true
@@ -84,10 +76,10 @@ const RegisterForm = () => {
                 setPassword("");
                 setMatchingPassword("");
     
-                // Navigate back to login view
-                navigate("/");
+                // Navigate to unauthorized view
+                navigate("/unauthorized");
             } else {
-                setErrorMessage('Please complete CAPTCHA verification.');
+                setErrorMessage("Please complete CAPTCHA verification.");
             }
 
         } catch(err) {
@@ -103,7 +95,7 @@ const RegisterForm = () => {
 
     return (
         <div className='ml-5 flex flex-col'>
-            {errorMessage? <p>{errorMessage}</p> : null}
+            {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
             <form onSubmit={handleSubmit}>
                 <CredentialInputField 
                     title='Username'
@@ -157,9 +149,7 @@ const RegisterForm = () => {
             </form>
             <p className="text-white">
                 Already registered?<br />
-                <a 
-                    className='text-white underline'
-                    href="/">Sign In</a>
+                <a className='text-white underline' href="/">Sign In</a>
             </p>
         </div>
     );

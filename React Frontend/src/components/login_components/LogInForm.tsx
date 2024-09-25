@@ -6,23 +6,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CredentialInputField from './CredentialInputField';
 import Captcha from './Captcha';
 import "../../styles/LogInStyles.css";
+import { AuthProp, ErrorProp } from '../../props/CommonProps';
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
-// Replace any type with details about objects
-interface ResponseProp {
-    status: number
-}
-
-interface ErrorProp {
-    response: ResponseProp
-}
-
-interface AuthProp {
-    setAuth: (e: object) => void
-}
-
-const LOGIN_URL = '/login';
+const LOGIN_URL = 'userCredentials/login';
 
 const LogInForm = () => {
     const { setAuth } = useAuth() as AuthProp;
@@ -53,7 +41,7 @@ const LogInForm = () => {
         try {
             if(isCaptchaVerified) {
                 const response = await axios.post(LOGIN_URL,
-                    JSON.stringify({username, password}),
+                    { username, password },
                     {
                         headers: { 'Content-Type': 'application/json'},
                         withCredentials: true
@@ -82,11 +70,12 @@ const LogInForm = () => {
             }
 
         } catch(err) {
-            if(!(err as ErrorProp)?.response) {
+            const error = err as ErrorProp;
+            if(!error?.response) {
                 setErrorMessage('No Server Response');
-            } else if ((err as ErrorProp).response?.status === 400) {
+            } else if (error.response?.status === 400) {
                 setErrorMessage('Missing Username or Password');
-            } else if ((err as ErrorProp).response?.status === 401) {
+            } else if (error.response?.status === 401) {
                 setErrorMessage('Unauthorized');
             } else {
                 setErrorMessage('Login Failed');
@@ -97,7 +86,7 @@ const LogInForm = () => {
     return(
         <div className='login-fields flex justify-center'>
             <div className="flex-col">
-                {errorMessage? <p className='text-white'>{errorMessage}</p> : null}
+                {errorMessage && <p>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <CredentialInputField 
                         title='Username'
