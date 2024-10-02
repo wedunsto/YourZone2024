@@ -1,0 +1,179 @@
+{  
+    "openapi": "3.0.0",
+    "info": {  
+        "title": "YourBudget API",  
+        "description": "API to manage user transactions, and budgets",  
+        "version": "1.0.0"  
+},  
+"servers": [
+    {  
+        "url": "http://localhost:3000",
+        "description": "Local server for development"
+    }  
+],  
+"paths": {  
+    "/transactions": {  
+        "get": 
+        {  
+            "summary": "Get all transactions for a user",
+            "description": "Retrieves all the transactions for a user based on their userId",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {  
+                "200": {  
+                    "description": "A list of all transactions for a user",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/transaction"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post": {
+            "summary": "Create a new transaction for a user",
+            "description": "Add a new transaction for a user based on their userId",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "transaction to be created",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/transactionInput"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "transaction created successfully"
+                }
+            }
+        },
+        "put": {
+            "summary": "Update an transaction for a user",
+            "description": "Update an existing transaction for a user based on the transactionId",
+            "parameters": [
+                {
+                    "name": "transactionId",
+                    "in": "query",
+                    "description": "ID of the transaction",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "transaction data to update",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/transactionInput"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "transaction updated successfully"
+                }
+            }
+        },
+        "delete": {
+            "summary": "Delete an transaction for a user",
+            "description": "Delete an existing transaction for a user based on the transactionId",
+            "parameters": [
+                {
+                    "name": "transactionId",
+                    "in": "query",
+                    "description": "ID of the transaction",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "transaction deleted successfully"
+                }
+            }
+        }
+    }
+},  
+    "components": {
+        "schemas": {
+            "transaction": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 99.99
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Shopping"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "transactionInput": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },  
+                    "description": {  
+                        "type": "string"  
+                    },  
+                    "date": {  
+                        "type": "string",  
+                        "format": "date-time"  
+                    }  
+	            }  
+	        }  
+	    }
+    }
+}
