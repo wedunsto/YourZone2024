@@ -44,7 +44,8 @@
                 }
             }
         },
-        "post": {
+        "post": 
+        {
             "summary": "Create a new transaction for a user",
             "description": "Add a new transaction for a user based on their userId",
             "parameters": [
@@ -75,7 +76,8 @@
                 }
             }
         },
-        "put": {
+        "put": 
+        {
             "summary": "Update an transaction for a user",
             "description": "Update an existing transaction for a user based on the transactionId",
             "parameters": [
@@ -106,7 +108,8 @@
                 }
             }
         },
-        "delete": {
+        "delete": 
+        {
             "summary": "Delete an transaction for a user",
             "description": "Delete an existing transaction for a user based on the transactionId",
             "parameters": [
@@ -123,6 +126,239 @@
             "responses": {
                 "200": {
                     "description": "transaction deleted successfully"
+                }
+            }
+        }
+    },
+    "/budgets": {
+        "get": 
+        {
+            "summary": "Get all budgets for a user",
+            "description": "Retrieves all the budgets for a user based on their userId",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "A list of all budgets for a user",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/budget"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post": 
+        {
+            "summary": "Create a new budget for a user",
+            "description": "Add a new budget for a user based on their userId with a due date",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "budget to be created with due date",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/budgetInput"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "budget created successfully"
+                }
+            }
+        },
+        "put": 
+        {
+            "summary": "Update an budget for a user",
+            "description": "Update an existing budget for a user based on the budgetId",
+            "parameters": [
+                {
+                    "name": "budgetId",
+                    "in": "query",
+                    "description": "ID of the budget",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "budget data to update",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/budgetInput"
+                        }
+                    }
+                }
+            }
+        },
+        "delete": 
+        {
+            "summary": "Delete an budget for a user",
+            "description": "Delete an existing budget for a user based on the budgetId",
+            "parameters": [
+                {
+                    "name": "budgetId",
+                    "in": "query",
+                    "description": "ID of the budget",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "budget deleted successfully"
+                }
+            }
+        }
+    },
+    "/trends": {
+        "get": 
+        {
+            "summary": "Get trends for a user",
+            "description": "Retrieves trends for a user based on their userId. Trends are based on the user's weekly, monthly, and yearly transactions",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "A list of trends for a user",
+                    "content": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/trend"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "post": 
+        {
+            "summary": "Create a new trend for a user",
+            "description": "Add a new trend for a user based on their userId. Trends are based on the user's weekly, monthly, and yearly transactions",
+            "parameters": [
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "description": "ID of the user",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "trend to be created",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/trendInput"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "trend created successfully"
+                }
+            }
+        },
+        "put": 
+        {
+            "summary": "Update an trend for a user",
+            "description": "Update an existing trend for a user based on the trendId. Trends are based on the user's weekly, monthly, and yearly transactions",
+            "parameters": [
+                {
+                    "name": "trendId",
+                    "in": "query",
+                    "description": "ID of the trend",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "description": "trend data to update",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/trendInput"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "trend updated successfully"
+                }
+            }
+        },
+        "delete": 
+        {
+            "summary": "Delete an trend for a user",
+            "description": "Delete an existing trend for a user based on the trendId",
+            "parameters": [
+                {
+                    "name": "trendId",
+                    "in": "query",
+                    "description": "ID of the trend",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "trend deleted successfully"
                 }
             }
         }
@@ -160,20 +396,118 @@
                 "type": "object",
                 "properties": {
                     "userId": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "123"
                     },
                     "amount": {
-                        "type": "number"
+                        "type": "number",
+                        "example": 99.99
                     },  
                     "description": {  
-                        "type": "string"  
+                        "type": "string",
+                        "example": "Grocery Shopping" 
                     },  
                     "date": {  
                         "type": "string",  
-                        "format": "date-time"  
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"  
                     }  
-	            }  
-	        }  
+	            }
+            },
+            "budget": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Budget"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "budgetInput": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Budget"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "trend": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "weekly": {
+                        "type": "number",
+                        "example": 100.00
+                    },
+                    "monthly": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "yearly": {
+                        "type": "number",
+                        "example": 6000.00
+                    }
+                }
+            },
+            "trendInput": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "weekly": {
+                        "type": "number",
+                        "example": 100.00
+                    },
+                    "monthly": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "yearly": {
+                        "type": "number",
+                        "example": 6000.00
+                    }
+                }
+            }
 	    }
     }
 }
