@@ -3,6 +3,7 @@ import AddIncomeModal from './AddIncomeModal';
 import useAuth from '../../hooks/useAuth';
 import { TotalFundsContext } from '../../views/YourExpensesView'
 import axios from '../../api/axios';
+import { AuthProp } from '../../props/CommonProps';
 
 interface AddIncomeButtonProp {
     rerender: (() => void)

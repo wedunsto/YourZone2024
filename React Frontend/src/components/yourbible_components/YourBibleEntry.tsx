@@ -55,6 +55,7 @@ const YourBibleEntry = (
 
         return (
             <div className="flex flex-col">
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                 <div className="flex flex-row mb-6">
                     <button onClick={() => navigate(`/yourbible/${id}`)}>{title}</button>
                     <div className="flex flex-col ml-5">

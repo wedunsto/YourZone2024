@@ -16,8 +16,8 @@ interface NewYourBibleLessonModalProp {
     bibleVerseNotes?: string;
 }
 
-const YourBibleLessonModal = ( { mode, modalVisible, toggleModalVisible,
-     id, index, bibleVerse, bibleVerseNotes }: NewYourBibleLessonModalProp ) => {
+const YourBibleLessonModal = ( { mode, modalVisible, toggleModalVisible, 
+    index, bibleVerse, bibleVerseNotes }: NewYourBibleLessonModalProp ) => {
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     const { bibleStudyId } = useContext<BibleLessonContextProp>(BibleLesson_Context);
