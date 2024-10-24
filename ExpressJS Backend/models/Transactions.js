@@ -2,24 +2,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const expensesSchema = new Schema({
+const transactionSchema = new Schema({
     userId: {
         type: String,
         required: true
     },
-    totalfunds: {
-        type: mongoose.Types.Decimal128,
-        get: inValue => parseFloat(inValue.toString()),
-        set: outValue => {
-            return mongoose.Types.Decimal128.fromString(outValue.toFixed(2))
-        },
-        required: true
-    },
-    transactionname: {
+    description: {
         type: String,
         required: true
     },
-    transactionamount: {
+    amount: {
         type: mongoose.Types.Decimal128,
         get: inValue => parseFloat(inValue.toString()),
         set: outValue => {
@@ -27,10 +19,14 @@ const expensesSchema = new Schema({
         },
         required: true
     },
-    transactiondate: {
+    date: {
         type: Date,
-        default: Date.now,
+        default: () => {
+            const now = new Date();
+            now.setHours(now.getHours() - now.getTimezoneOffset() / 60);
+            return now;
+        },
     }
 });
 
-module.exports = mongoose.model('Expense', expensesSchema)
+module.exports = mongoose.model('Transaction', transactionSchema)

@@ -1,0 +1,492 @@
+{  
+    "openapi": "3.0.0",
+    "info": {  
+        "title": "YourBudget API",  
+        "description": "API to manage user transactions, and budgets",  
+        "version": "1.0.0"  
+    },
+    "tags": [
+        {
+            "name": "YourBudget",
+            "description": "API to manage YourBudget financial transactions, budgets, and trends"
+        }
+    ],
+    "servers": [
+        {  
+            "url": "http://localhost:3000",
+            "description": "Local server for development"
+        }  
+    ],  
+    "paths": {  
+        "/yourBudget/transactions": {  
+            "get": 
+            {  
+                "tags": ["YourBudget"],
+                "summary": "Get all transactions for a user",
+                "description": "Retrieves all the transactions for a user based on their userId",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {  
+                    "200": {  
+                        "description": "A list of all transactions for a user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found: The requested resource could not be found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": 
+            {
+                "tags": ["YourBudget"],
+                "summary": "Create a new transaction for a user",
+                "description": "Add a new transaction for a user based on their userId \n\n amount can be positive for expense, or negative for income",
+                "requestBody": {
+                    "description": "transaction to be created",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/transactionInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "transaction created successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request: The request could not be understood or was missing required parameters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": 
+            {
+                "tags": ["YourBudget"],
+                "summary": "Update an transaction for a user",
+                "description": "Update an existing transaction for a user based on the transactionId",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "in": "query",
+                        "description": "ID of the transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "transaction data to update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/transactionInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "transaction updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/transaction"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content: The update was successful but there is no content to return.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request: The request could not be understood or was missing required parameters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "404 Not Found: The requested resource could not be found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": 
+            {
+                "tags": ["YourBudget"],
+                "summary": "Delete an transaction for a user",
+                "description": "Delete an existing transaction for a user based on the transactionId",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "in": "query",
+                        "description": "ID of the transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "transaction deleted successfully"
+                    },
+                    "404": {
+                        "description": "Not Found: The resource to be deleted was not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/yourBudget/budgets": {
+            "get": 
+            {
+                "summary": "Get all budgets for a user",
+                "description": "Retrieves all the budgets for a user based on their userId",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of all budgets for a user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/budget"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": 
+            {
+                "summary": "Create a new budget for a user",
+                "description": "Add a new budget for a user based on their userId with a due date",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "budget to be created with due date",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/budgetInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "budget created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": 
+            {
+                "summary": "Update an budget for a user",
+                "description": "Update an existing budget for a user based on the budgetId",
+                "parameters": [
+                    {
+                        "name": "budgetId",
+                        "in": "query",
+                        "description": "ID of the budget",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "budget data to update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/budgetInput"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": 
+            {
+                "summary": "Delete an budget for a user",
+                "description": "Delete an existing budget for a user based on the budgetId",
+                "parameters": [
+                    {
+                        "name": "budgetId",
+                        "in": "query",
+                        "description": "ID of the budget",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "budget deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },  
+    "components": {
+        "schemas": {
+            "transaction": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 99.99
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Shopping"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "transactionInput": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 99.99
+                    },  
+                    "description": {  
+                        "type": "string",
+                        "example": "Grocery Shopping" 
+                    },  
+                    "date": {  
+                        "type": "string",  
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"  
+                    }  
+	            }
+            },
+            "budget": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Budget"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "amountPerCheck": {
+                        "type": "number",
+                        "example": 100.00
+                    },
+                    "dateSubmitted": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "budgetInput": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Grocery Budget"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 500.00
+                    },
+                    "amountPerCheck": {
+                        "type": "number",
+                        "example": 100.00
+                    },
+                    "dateSubmitted": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-09-25T08:30:00Z"
+                    }
+                }
+            },
+            "error": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Bad Request"
+                    }
+                }
+            }
+	    },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
+}

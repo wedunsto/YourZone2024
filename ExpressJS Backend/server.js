@@ -25,14 +25,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/userCredentials', require('./routes/userCredentialsRoutes'));
+app.use('/userCredentials', require('./routes/userCredentials'));
 // Receives the cookie that has the refresh token
 app.use('/refresh', require('./routes/refresh'));
 // Everything after this line will use the verifyJWT middleware
 // to protect the route
 app.use(verifyJWT);
-app.use('/updateUser', require('./routes/updateUserRoutes'));
+app.use('/updateUser', require('./routes/updateUsers'));
 app.use('/yourBible', require('./routes/api/yourBible'));
+app.use('/yourBudget', require('./routes/api/yourBudget'));
 
 // If our connection to the database fails, we dont want to listen for connections
 mongoose.connection.once('open', () => {

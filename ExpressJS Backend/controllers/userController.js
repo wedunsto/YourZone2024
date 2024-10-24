@@ -61,25 +61,19 @@ const logUserIn = async ( req, res ) => {
         });
     }
 
-    // Find the user in the database. If its not found, send 404 unauthorized error
-    const foundUser = await User.findOne({username: username }).exec();
+    try {
+        // Find the user in the database. If its not found, send 404 unauthorized error
+        const foundUser = await User.findOne({username: username }).exec();
 
-    if(!foundUser) {
-        eventLogger.logEvents(`Did not find user: ${username} to log in`);
-        return res.sendStatus(404);
-    }
+        // Evaluate password using bcrypt
+        const match = await bcrypt.compare(password, foundUser.password);
 
-    // Evaluate password using bcrypt
-    const match = await bcrypt.compare(password, foundUser.password);
-
-    // Create a JWT to use with other routes we want protected in our API
-    if(match) {
+        // Create a JWT to use with other routes we want protected in our API
         const roles = Object.values(foundUser.roles).filter(Boolean);
         const id = Object.values(foundUser.id).join('');
         const accessToken = jwt.sign(
-            {
-                "UserInfo": {
-                    "id": id,
+            { "UserInfo": 
+                { "id": id,
                     "username": foundUser.username,
                     "roles": roles
                 }
@@ -87,7 +81,7 @@ const logUserIn = async ( req, res ) => {
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: '1hr' }
         );
-
+        
         const refreshToken = jwt.sign(
             { "username": foundUser.username },
             process.env.REFRESH_TOKEN_SECRET,
@@ -109,9 +103,11 @@ const logUserIn = async ( req, res ) => {
         eventLogger.logEvents(`User ${username} successfully logged in`);
         // Sent as JSON so the front end can grab this
         res.json({id, roles, accessToken});
-    } else {
-        eventLogger.logEvents(`Invalid password for user: ${username}, while logging in`);
-        res.sendStatus(401);
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while logging in: ${err.messsage}`);
+        return res.status(404).json({
+            'message': `Error encountered while logging in: ${err.messsage}`
+        });
     }
 }
 
