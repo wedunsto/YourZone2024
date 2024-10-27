@@ -29,7 +29,7 @@ const createTransaction = async (req, res) => {
         const result = await Transactions.create({
             "userId": userId,
             "description": description,
-            "amount": -amount,
+            "amount": -Math.abs(amount),
             "date": date
         });
 

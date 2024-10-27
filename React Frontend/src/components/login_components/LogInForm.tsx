@@ -10,8 +10,6 @@ import { AuthProp, ErrorProp } from '../../props/CommonProps';
 
 const adminRole = import.meta.env.VITE_ADMIN_ROLE;
 
-const LOGIN_URL = 'userCredentials/login';
-
 const LogInForm = () => {
     const { setAuth } = useAuth() as AuthProp;
     const navigate = useNavigate();
@@ -25,6 +23,7 @@ const LogInForm = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const LOGIN_URL = `userCredentials/login?username=${username}&password=${password}`;
 
     // Hook used to confirm captcha status
     const [isCaptchaVerified, setCaptchaVerified] = useState(false);
@@ -40,13 +39,7 @@ const LogInForm = () => {
 
         try {
             if(isCaptchaVerified) {
-                const response = await axios.post(LOGIN_URL,
-                    { username, password },
-                    {
-                        headers: { 'Content-Type': 'application/json'},
-                        withCredentials: true
-                    }
-                );
+                const response = await axios.get(LOGIN_URL);
                 const id = response?.data?.id;
                 const accessToken = response?.data?.accessToken;
                 const roles =response?.data?.roles;

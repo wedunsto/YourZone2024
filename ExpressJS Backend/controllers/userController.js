@@ -52,8 +52,7 @@ const createUser = async ( req, res ) => {
 
 // Log user into the web application
 const logUserIn = async ( req, res ) => {
-    const { username, password } = req.body;
-
+    const { username, password } = req.query;
     if (!username || !password) {
         eventLogger.logEvents('Username and password are required to log a user in.');
         return res.status(400).json({ 
