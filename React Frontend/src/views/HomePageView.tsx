@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 const buttonProps= [{imageSrc: `${YourBibleButton}`, title: "YourBible", 
     subTitle: "Track your Bible verses", destination: "/yourbible"},
     {imageSrc: `${YourExpensesButton}`, title: "YourExpenses",
-    subTitle: "Track your expenses", destination: "/yourexpenses"}];
+    subTitle: "Track your expenses", destination: "/yourbudget"}];
 const HomePageView = () => {
     return (
         <div className="home-page-background h-screen w-screen">

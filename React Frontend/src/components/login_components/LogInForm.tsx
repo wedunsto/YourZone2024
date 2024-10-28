@@ -39,7 +39,14 @@ const LogInForm = () => {
 
         try {
             if(isCaptchaVerified) {
-                const response = await axios.get(LOGIN_URL);
+                const response = await axios.get(LOGIN_URL,
+                    {
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                            withCredentials: true
+                    }
+                );
                 const id = response?.data?.id;
                 const accessToken = response?.data?.accessToken;
                 const roles =response?.data?.roles;

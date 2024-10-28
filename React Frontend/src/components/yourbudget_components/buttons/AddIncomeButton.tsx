@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
-import AddIncomeModal from './AddIncomeModal';
-import useAuth from '../../hooks/useAuth';
-import { TotalFundsContext } from '../../views/YourBudgetView'
-import axios from '../../api/axios';
+import AddIncomeModal from '../modals/AddIncomeModal';
+import useAuth from '../../../hooks/useAuth';
+import { TotalFundsContext } from '../../../views/YourBudgetView'
+import axios from '../../../api/axios';
 
 interface AddIncomeButtonProp {
     rerender: (() => void)
