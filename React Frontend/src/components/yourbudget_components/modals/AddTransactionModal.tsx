@@ -1,76 +1,57 @@
-// Modal used to create new expenses and edit existing expenses
+// Modal used to create new transactions and edit existing expenses
 
 interface YourBudgetModalProp {
     modalVisible: boolean,
-    expenseId: string,
-    expenseName: string,
-    expensesLength: number,
-    updateExpenseName: ((e: React.ChangeEvent<HTMLInputElement>) => void)
-    updateExpenseCost: ((e: React.ChangeEvent<HTMLInputElement>) => void)
-    updateExpenseDate: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    income: boolean,
+    description: string,
+    amount: number,
+    updateDescription: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    updateAmount: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    updateDate: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     onClickSubmit: ((e: any) => void)
     onClickClose: (() => void)
 }
 
-const YourBudgetModal =({ modalVisible, expenseName,
-                          expensesLength, updateExpenseName, updateExpenseDate,
-                        updateExpenseCost, onClickSubmit, onClickClose }: YourBudgetModalProp) => {
-    return(
-        <div className={`modal ${modalVisible ? 'visible' : ''}`}>
-            <div className="modal-box">
-                <form className="flex flex-col rounded-lg">
-                    <div>
-                        {expensesLength === 0?
-                            <div>
-                                <p className="text-2xl mb-2">Initial funds:</p>
-                                <input 
-                                    placeholder="Enter initial funds"
-                                    id="expenseCost"
-                                    type="number"
-                                    step="0.01"
-                                    onChange={updateExpenseCost}
-                                    className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
-                                <p className="text-2xl">Start Date:</p>
-                                <input
-                                    type="date"
-                                    onChange={updateExpenseDate}
-                                    className="border-2 p-2 text-lg border-white rounded-lg p2" />
-                            </div> 
-                            : 
-                            <div>
-                                <p className="text-2xl mb-2">Expense name:</p>
+const YourBudgetModal =({ modalVisible, income, description,
+    amount, updateDescription, updateAmount, updateDate, 
+    onClickSubmit, onClickClose }: YourBudgetModalProp) => {
+        return(
+            <div className={`modal ${modalVisible ? 'visible' : ''}`}>
+                <div className="modal-box">
+                    <form className="flex flex-col rounded-lg">
+                        <div>
+                            <p className="text-2xl mb-2">{income? "Income" : "Expense"} name:</p>
                                 <input
                                     placeholder="Enter expense name"
                                     id="expenseName"
                                     type="text"
-                                    value={expenseName}
-                                    onChange={updateExpenseName}
+                                    value={description}
+                                    onChange={updateDescription}
                                     className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
-                                <p className="text-2xl mb-2">Expense Cost:</p>
+                                <p className="text-2xl mb-2">{income? "Income" : "Expense"} amount:</p>
                                 <input
                                     placeholder="Enter Expense"
                                     id="expenseCost"
                                     type="number"
                                     step="0.01"
-                                    onChange={updateExpenseCost}
+                                    value={amount}
+                                    onChange={updateAmount}
                                     className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
-                                <p className="text-2xl">Expense Date:</p>
+                                <p className="text-2xl">{income? "Income" : "Expense"} date:</p>
                                 <input
                                     placeholder="Enter Date"
                                     type="date"
-                                    onChange={updateExpenseDate}
+                                    onChange={updateDate}
                                     className="border-2 p-2 text-lg border-white rounded-lg p2" />
-                            </div>
-                        }
+                        </div>
+                    </form>
+                    <div className="flex justify-between">
+                        <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
+                        <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Submit</button>
                     </div>
-                </form>
-                <div className="flex justify-between">
-                    <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
-                    <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Submit</button>
                 </div>
             </div>
-        </div>
-    )
+        );
 }
 
 export default YourBudgetModal;

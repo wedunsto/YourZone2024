@@ -7,7 +7,7 @@ import UserApprovalView from "./views/UserApprovalView";
 import HomePageView from "./views/HomePageView";
 import MissingView from "./views/MissingView";
 import YourBibleView from "./views/YourBibleView";
-import BibleLessonView from "./views/BibleLessonView";
+import BibleLessonView from "./views/YourBibleLessonView";
 import './App.css';
 import YourExpensesView from "./views/YourBudgetView";
 

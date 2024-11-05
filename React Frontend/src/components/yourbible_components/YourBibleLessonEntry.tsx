@@ -3,7 +3,7 @@ import YourBibleLessonModal from "./modals/YourBibleLessonModal";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { AuthProp } from "../../props/CommonProps";
-import { BibleLesson_Context, BibleLessonContextProp } from "../../views/BibleLessonView";
+import { BibleLesson_Context, BibleLessonContextProp } from "../../views/YourBibleLessonView";
 
 interface YourBibleLessonEntryProp {
     id: string | undefined,

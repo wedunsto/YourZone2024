@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import axios from "../../../api/axios";
 import useAuth from "../../../hooks/useAuth";
 import { AuthProp } from "../../../props/CommonProps";
-import { BibleLesson_Context, BibleLessonContextProp } from "../../../views/BibleLessonView";
+import { BibleLesson_Context, BibleLessonContextProp } from "../../../views/YourBibleLessonView";
 
 interface NewYourBibleLessonModalProp {
     mode: "create" | "edit";
@@ -17,7 +17,7 @@ interface NewYourBibleLessonModalProp {
 }
 
 const YourBibleLessonModal = ( { mode, modalVisible, toggleModalVisible,
-     id, index, bibleVerse, bibleVerseNotes }: NewYourBibleLessonModalProp ) => {
+    index, bibleVerse, bibleVerseNotes }: NewYourBibleLessonModalProp ) => {
     const { auth } = useAuth() as AuthProp;
     const { toggleSubmitted } = useContext<BibleLessonContextProp>(BibleLesson_Context);
     const { bibleStudyId } = useContext<BibleLessonContextProp>(BibleLesson_Context);
