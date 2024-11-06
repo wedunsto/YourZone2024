@@ -8,6 +8,7 @@ import "../styles/YourExpensesStyles.css";
 import { AuthProp } from "../props/CommonProps";
 import ButtonMenu from "../components/yourbudget_components/buttons/ButtonMenu";
 import AddTransactionButton from "../components/yourbudget_components/buttons/AddTransactionButton";
+import InitialBalanceModal from "../components/yourbudget_components/modals/InitialBalanceModal";
 
 interface MongoDecimal {
     $numberDecimal: string;
@@ -22,16 +23,11 @@ interface TransactionsProp {
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
     const GET_TRANSACTIONS_URL = `/yourBudget/transactions?userId=${auth.id}`;
-    // const CREATE_EXPENSE_URL = 'yourBudget/transactions';
-
-    const [_, setModalVisible] = useState<boolean>(false);
-    const [transactions, setTransactions] = useState(Array<TransactionsProp>);
-    const [totalFunds, setTotalFunds] = useState<number>(0);
-    // const [description, setDescription] = useState<string>("");
-    // const [amount, setAmount] = useState<number>(0);
-    // const [date, setDate] = useState<Date>(new Date())
-    const [submitted, setSubmitted] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+    const [ transactions, setTransactions ] = useState(Array<TransactionsProp>);
+    const [ totalFunds, setTotalFunds ] = useState<number>(0);
+    const [ submitted, setSubmitted ] = useState<boolean>(false);
+    const [ errorMessage, setErrorMessage ] = useState<string>("");
 
     useEffect(() => {
         const calculateTotalFunds = (transactions: Array<TransactionsProp>) => {
@@ -66,63 +62,9 @@ const YourExpensesView = () => {
     }, [submitted]);
 
     const rerender = () => {
+        setModalVisible(false);
         setSubmitted(!submitted);
     }
-    
-    /*const onClickCreate = () => {
-        setModalVisible(true);
-    }
-
-    const onClickClose = () => {
-        setModalVisible(false);
-        setDescription("");
-        setAmount(0);
-    }
-
-    const updateDescription =(e: React.ChangeEvent<HTMLInputElement>) => {
-        setDescription(e.target.value);
-    }
-
-    const updateAmount =(e: React.ChangeEvent<HTMLInputElement>) => {
-        const temp: number = +e.target.value;
-        setAmount(temp);
-    }
-
-    const updateDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(new Date(Date.parse(e.target.value + "T00:00:00")));
-    };
-    
-
-    const createTransaction = async (e: React.FormEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        let newDescription = description;
-
-        if(transactions.length === 0) {
-            newDescription = "Initial funds";
-        } 
-        if(!(description === '') && !(amount === 0)) {
-            try {
-                await axios.post(CREATE_EXPENSE_URL,
-                    JSON.stringify({"userId": auth.id, description, amount, date}),
-                         {
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                Authorization: `Bearer ${auth.accessToken}`},
-                                withCredentials: true
-                         }
-                );
-            } catch(err) {
-                setErrorMessage(`${err}`);
-            }
-        } else {
-            setErrorMessage('Ensure all fields are filled out.');
-        }
-        setSubmitted(!submitted)
-        setAmount(0);
-        setDescription("");
-        setDate(new Date());
-        setModalVisible(false);
-    }*/
 
     return(
         <div className="your-expenses-page-background h-screen w-screen">
@@ -167,7 +109,17 @@ const YourExpensesView = () => {
                         </tbody>
                     </table>
                 </div>
-            </div>                
+            </div>
+            <input
+                type="checkbox"
+                id="createInitialTransaction"
+                className="modal-toggle"
+                readOnly
+                checked={modalVisible} /> 
+            <InitialBalanceModal 
+                modalVisible={modalVisible}
+                rerender={rerender}
+                setErrorMessage={setErrorMessage} />               
         </div>
     );
 }

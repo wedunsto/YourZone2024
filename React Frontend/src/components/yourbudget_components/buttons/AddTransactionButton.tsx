@@ -43,7 +43,7 @@ const AddTransactionButton =({rerender, income}: AddTransactionButtonProp) => {
 
     const onClickSubmit = () => {
         createTransaction(auth.id, auth.accessToken, description, 
-            amount, date, setErrorMessage);
+            amount, date, income, setErrorMessage);
         rerender();
         setAmount(0);
         setDescription("");
