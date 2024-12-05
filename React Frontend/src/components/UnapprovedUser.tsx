@@ -28,15 +28,17 @@ const UnapprovedUser = ({ unapprovedUsers, submitted, setSubmitted, setErrorMess
     // Approve a user to User status
     const handleApproval = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
         e.preventDefault();
-
         try {
             await axios.put(`${USER_APPROVAL_URL}?userId=${userId}`,
+                {},
                 {
                     headers: { 
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${auth.accessToken}`},
+                        Authorization: `Bearer ${auth.accessToken}`
+                    },
                         withCredentials: true
-                });
+                }
+            );
             setSubmitted(!submitted);
         } catch(err) {
             if(!(err as ErrorProp)?.response) {

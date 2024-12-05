@@ -5,6 +5,7 @@ interface MongoDecimal {
 interface TransactionsProp {
     description: string,
     amount: MongoDecimal,
+    category: string,
     date: string
 }
 

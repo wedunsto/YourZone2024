@@ -8,6 +8,7 @@ interface BudgetsProp {
     description: string,
     amount: MongoDecimal,
     amountPerCheck: MongoDecimal,
+    category: string,
     dateSubmitted: string,
     futureDate: string
 }

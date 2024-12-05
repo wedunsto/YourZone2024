@@ -27,6 +27,10 @@ const budgetSchema = new Schema({
         },
         required: false
     },
+    category :{
+        type: String,
+        require: false
+    },
     dateSubmitted: {
         type: Date,
         default: () => {

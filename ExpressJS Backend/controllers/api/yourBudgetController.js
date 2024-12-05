@@ -6,7 +6,7 @@ const eventLogger = require('../../middleware/logEvents');
 // Create new transaction
 const createTransaction = async (req, res) => {
     const { userId, description, 
-        amount, date} = req.body;
+        amount, category, date} = req.body;
 
     if(!userId) {
         eventLogger.logEvents('User Id missing.');
@@ -27,10 +27,11 @@ const createTransaction = async (req, res) => {
 
     try {
         // Create and store a new transaction
-        const result = await Transactions.create({
+        await Transactions.create({
             "userId": userId,
             "description": description,
             "amount": amount,
+            "category": category,
             "date": date
         });
 
@@ -72,7 +73,7 @@ const getTransactions = async (req, res) => {
 // Update an existing transaction
 const updateTransaction = async (req, res) => {
     const { transactionId } = req.query;
-    const { description, amount, date } = req.body;
+    const { description, amount, category, date } = req.body;
 
     if(!transactionId) {
         eventLogger.logEvents('Transaction Id is missing');
@@ -98,6 +99,9 @@ const updateTransaction = async (req, res) => {
     }
     if(date) {
         updatedData.date = date;
+    }
+    if(category) {
+        updatedData.category = category;
     }
 
     try {
@@ -139,7 +143,7 @@ const deleteTransaction = async (req, res) => {
 
 // Create a new budget for a user
 const createBudget = async (req, res) => {
-    const { userId, description, amount, amountPerCheck,
+    const { userId, description, amount, amountPerCheck, category, 
         dateSubmitted, futureDate} = req.body;
 
     if(!userId) {
@@ -168,6 +172,9 @@ const createBudget = async (req, res) => {
     if (amountPerCheck) {
         newBudget.amountPerCheck = amountPerCheck;
     }
+    if (category) {
+        newBudget.category = category;
+    }
     if (dateSubmitted) {
         newBudget.dateSubmitted = dateSubmitted;
     }
@@ -176,7 +183,7 @@ const createBudget = async (req, res) => {
     }
     try {
         // Create and store a new transaction
-        const result = await Budgets.create(newBudget);
+        await Budgets.create(newBudget);
 
         eventLogger.logEvents('Successfully created a new budget');
         res.status(201).json({
@@ -216,7 +223,7 @@ const getBudgets = async (req, res) => {
 // Update an existing budget
 const updateBudget = async (req, res) => {
     const { budgetId } = req.query;
-    const { description, amount, amountPerCheck,
+    const { description, amount, amountPerCheck, category,
          dateSubmitted, futureDate } = req.body;
 
     if(!budgetId) {
@@ -243,6 +250,9 @@ const updateBudget = async (req, res) => {
     }
     if (amountPerCheck) {
         updatedData.amountPerCheck = amountPerCheck;
+    }
+    if (category) {
+        updatedData.category = category;
     }
     if (dateSubmitted) {
         updatedData.dateSubmitted;

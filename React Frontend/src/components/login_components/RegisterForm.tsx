@@ -11,7 +11,7 @@ import { ErrorProp } from "../../props/CommonProps";
 // Requirements for registering usernames and passwords
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = 'userCredentials/createUser';
+const REGISTER_URL = 'userCredentials/';
 
 const RegisterForm = () => {
     const navigate = useNavigate();

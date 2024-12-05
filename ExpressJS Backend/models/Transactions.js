@@ -19,6 +19,10 @@ const transactionSchema = new Schema({
         },
         required: true
     },
+    category :{
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         default: () => {

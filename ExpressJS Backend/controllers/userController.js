@@ -153,12 +153,12 @@ const setUserRoleToUser = async ( req, res ) => {
 
         eventLogger.logEvents(`User roles updated for ${userId}`);
         res.status(201).json({ 
-            'success': `User ${username} has been granted access!` 
+            'success': `User has been granted access!` 
         });
         } catch( err ) {
-        eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
-        res.status(500).json({ 'message': err.message });
-    }
+            eventLogger.logEvents(`Error encountered while updating user roles: ${err.message}`);
+            res.status(500).json({ 'message': err.message });
+        }
 }
 
 // Log user out of the web application
@@ -194,7 +194,6 @@ const logUserOut = async ( req, res ) => {
 // Delete a user from the backend database
 const deleteUser = async (req, res) => {
     const { userId } = req.query;
-
     try {
         const deletedUser = await User.findOneAndDelete(
             { _id: userId }
