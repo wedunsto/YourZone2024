@@ -19,6 +19,7 @@ const YourBibleEntryModal = ({ mode, originalTitle, bibleStudyId,
     const { toggleSubmitted } = useContext<ContextProp>(YourBible_Context);
     const CREATE_BIBLE_URL = `yourBible/createBibleStudy?userId=${auth.id}`;
     const UPDATE_BIBLE_URL = `yourBible/updateBibleStudy?bibleStudyId=${bibleStudyId}`;
+    
     // If mode is create, set title to empty string, otherwise set it to the original title
     const [title, setTitle] = useState<string>(originalTitle || "");
     

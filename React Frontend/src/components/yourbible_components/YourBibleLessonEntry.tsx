@@ -3,6 +3,7 @@ import YourBibleLessonModal from "./modals/YourBibleLessonModal";
 import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { AuthProp } from "../../props/CommonProps";
+import { hasNewLine, getSubStrings } from "../../helper/yourbible_helper/YourBibleHelperFunctions";
 import { BibleLesson_Context, BibleLessonContextProp } from "../../views/YourBibleLessonView";
 
 interface YourBibleLessonEntryProp {
@@ -63,7 +64,15 @@ const YourBibleLessonEntry = ({ id, index,
                         {bibleVerse}
                     </div>
                     <div className="collapse-content">
-                        {bibleVerseNotes}
+                         <ul className="list-disc list-inside">
+                            { hasNewLine(bibleVerseNotes) === true ? 
+                            getSubStrings(bibleVerseNotes).map((bibleVerse: string) => 
+                                <li>{bibleVerse}</li>
+                            )
+                            :
+                            <li>{bibleVerseNotes}</li> }
+                            
+                         </ul>
                     </div>
                 </div>
                 <div className="flex flex-col ml-5">
