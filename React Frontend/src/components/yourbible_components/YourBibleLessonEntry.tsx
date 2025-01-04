@@ -63,7 +63,9 @@ const YourBibleLessonEntry = ({ id, index,
                         {bibleVerse}
                     </div>
                     <div className="collapse-content">
-                        {bibleVerseNotes}
+                         <ul className="list-disc list-inside">
+                            <li>{bibleVerseNotes}</li>
+                         </ul>
                     </div>
                 </div>
                 <div className="flex flex-col ml-5">
