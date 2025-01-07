@@ -6,6 +6,7 @@
 import { useState } from "react";
 import YourBibleLessonModal from "../modals/YourBibleLessonModal";
 import HomeButton from "../../HomeButton";
+import GoBackButton from "../../common_components/GoBackButton";
 
 const YourBibleLessonButtons = () => {
     const [newModalVisible, setNewModalVisible] = useState(false);
@@ -21,11 +22,12 @@ const YourBibleLessonButtons = () => {
     return (
         <div className="flex mr-10">
             <div className="flex-1">
-                <div className="flex flex-col space-y-3">
+                <div className="flex flex-col space-y-3 w-full">
                     <label 
-                        className="btn"
+                        className="btn w-full"
                         onClick={onClickCreate}
                         htmlFor="createBibleStudy">Add Bible Lesson Notes</label>
+                    <GoBackButton />
                     <HomeButton />
                 </div>
                 <input

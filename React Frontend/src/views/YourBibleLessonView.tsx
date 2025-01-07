@@ -3,25 +3,13 @@ import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
 import { v4 as uuidv4 } from 'uuid';
+import { AuthProp } from "../props/CommonProps";
 import YourBibleLessonButtons from "../components/yourbible_components/buttons/YourBibleLessonButtons";
 import YourBibleLessonEntry from "../components/yourbible_components/YourBibleLessonEntry";
-
-interface accessTokenProp {
-    id: string;
-    accessToken: string
-}
 
 interface BibleNoteProp {
     bibleVerse: string,
     bibleVerseNote: string
-}
-
-interface AuthProp {
-    auth: accessTokenProp
-}
-
-interface ErrorProp {
-    response: string
 }
 
 export interface BibleLessonContextProp {
@@ -54,7 +42,7 @@ const BibleLessonView = () => {
                 );
                 setBibleNotes(response?.data);
             } catch(err) {
-                setErrorMessage((err as ErrorProp).response);
+                setErrorMessage(`${err}`);
             }
         }
 
