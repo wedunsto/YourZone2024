@@ -6,7 +6,7 @@ const HomeButton = () => {
     const navigate = useNavigate();
     
     return(
-        <button className="text-lg" onClick={() => navigate("/home")}>Home</button>
+        <button className="text-lg w-full" onClick={() => navigate("/home")}>Home</button>
     );
 }
 
