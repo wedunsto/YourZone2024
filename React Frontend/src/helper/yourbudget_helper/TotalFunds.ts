@@ -1,3 +1,5 @@
+import { formatCurrency } from "./FormatCurrency";
+
 interface MongoDecimal {
     $numberDecimal: string;
 }
@@ -14,5 +16,6 @@ export const getTotalFunds = (transactionsArray: Array<TransactionsProp>) => {
     for(let i=0; i<transactionsArray.length; i++) {
         totalFunds += parseFloat(transactionsArray[i].amount.$numberDecimal.toString());
     }
-    return totalFunds;
+
+    return formatCurrency(totalFunds);
 }

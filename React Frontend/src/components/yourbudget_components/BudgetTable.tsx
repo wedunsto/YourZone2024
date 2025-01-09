@@ -3,6 +3,7 @@
  * Budgets include: description, amount, amountPerPaycheck,
  * dateSubmitted, futureDate
  */
+import { formatCurrency } from "../../helper/yourbudget_helper/FormatCurrency";
 import "../../styles/YourExpensesStyles.css";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -41,11 +42,15 @@ const BudgetTable = ({budgetsArray}: BudgetTableProp) => {
                         const futureDate = new Date(budget.futureDate);
                         const formattedSubmittedDate = submittedDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric',}); 
                         const formattedFutureDate = futureDate.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric',}); 
+                        const amount = parseFloat(budget.amount.$numberDecimal.toString());
+                        const formattedAmount = formatCurrency(amount);
+                        const amountPerPaycheck = parseFloat(budget.amountPerCheck.$numberDecimal.toString());
+                        const formattedAmountPerPaycheck = formatCurrency(amountPerPaycheck);
                         return(
                             <tr key={uuidv4()} className="border border-slate-600">
                                 <td className="border border-slate-600 px-2 text-bold text-md">{budget.description}</td>
-                                <td className="border border-slate-600 px-2 text-bold text-md">${budget.amount.$numberDecimal}</td>
-                                <td className="border border-slate-600 px-2 text-bold text-md">${budget.amountPerCheck.$numberDecimal}</td>
+                                <td className="border border-slate-600 px-2 text-bold text-md">{formattedAmount}</td>
+                                <td className="border border-slate-600 px-2 text-bold text-md">{formattedAmountPerPaycheck}</td>
                                 <td className="border border-slate-600 px-2 text-bold text-md">{formattedSubmittedDate}</td>
                                 <td className="border border-slate-600 px-2 text-bold text-md">{formattedFutureDate}</td>
                             </tr>

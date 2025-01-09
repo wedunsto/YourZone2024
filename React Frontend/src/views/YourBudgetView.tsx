@@ -40,7 +40,7 @@ const YourExpensesView = () => {
     
     const [ modalVisible, setModalVisible ] = useState<boolean>(false);
     const [ transactions, setTransactions ] = useState(Array<TransactionsProp>);
-    const [ totalFunds, setTotalFunds ] = useState<number>(0);
+    const [ totalFunds, setTotalFunds ] = useState<string>("");
 
     const [ budgets, setBudgets ] = useState(Array<BudgetsProp>);
     const [ _, setTotalBudgetCost ] = useState<number>(0);
@@ -82,7 +82,7 @@ const YourExpensesView = () => {
             <div className="flex flex-row">
                 <ButtonMenu />
                 <div className="ml-5 flex flex-col">
-                    <p className="text-7xl text-black font-bold">${totalFunds}</p>
+                    <p className="text-7xl text-black font-bold">{totalFunds}</p>
                     <div className="m-5 flex flex-row space-x-5">
                         <AddTransactionButton
                             rerender={rerender}
