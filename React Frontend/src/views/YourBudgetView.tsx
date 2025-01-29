@@ -43,7 +43,7 @@ const YourExpensesView = () => {
     const [ totalFunds, setTotalFunds ] = useState<string>("");
 
     const [ budgets, setBudgets ] = useState(Array<BudgetsProp>);
-    const [ _, setTotalBudgetCost ] = useState<number>(0);
+    const [ totalBudgetCost, setTotalBudgetCost ] = useState<number>(0);
     
     const [ submitted, setSubmitted ] = useState<boolean>(false);
     const [ errorMessage, setErrorMessage ] = useState<string>("");
@@ -95,7 +95,7 @@ const YourExpensesView = () => {
                                 rerender={rerender} />
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-4">
+                    <div className="grid grid-cols-2 gap-x-4 items-start">
                         <TransactionTable transactionsArray={transactions} />
                         <BudgetTable budgetsArray={budgets} />
                     </div>
