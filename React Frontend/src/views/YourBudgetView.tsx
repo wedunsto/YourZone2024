@@ -96,7 +96,9 @@ const YourExpensesView = () => {
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-x-4 items-start">
-                        <TransactionTable transactionsArray={transactions} />
+                        <TransactionTable 
+                            renderer={rerender}
+                            transactionsArray={transactions} />
                         <BudgetTable budgetsArray={budgets} />
                     </div>
                 </div>

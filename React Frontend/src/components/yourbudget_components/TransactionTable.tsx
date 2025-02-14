@@ -3,12 +3,16 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCurrency } from '../../helper/yourbudget_helper/FormatCurrency';
 import EditTransactionModal from './modals/EditTransactionModal';
+import { updateTransaction } from '../../helper/yourbudget_helper/EditTransaction';
+import { AuthProp } from '../../props/CommonProps';
+import useAuth from '../../hooks/useAuth';
 
 interface MongoDecimal {
     $numberDecimal: string;
 }
 
 interface TransactionsProp {
+    _id: string,
     description: string,
     amount: MongoDecimal,
     category: string,
@@ -16,16 +20,23 @@ interface TransactionsProp {
 }
 
 interface TransactionsTableProp {
+    renderer: () => void,
     transactionsArray: Array<TransactionsProp>,
 }
 
-const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
+const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp) => {
+    const [transactionId, setTransactionId] = useState("");
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState(0);
     const [date, setDate] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState<string>("");
 
-    const toggleEditModal = (paramDescription: string, paramAmount: number, paramDate: string) => {
+
+    const { auth } = useAuth() as AuthProp;
+
+    const toggleEditModal = (paramTransactionId: string, paramDescription: string, paramAmount: number, paramDate: string) => {
+        setTransactionId(paramTransactionId);
         setDescription(paramDescription);
         setAmount(paramAmount);
         setDate(paramDate);
@@ -37,12 +48,22 @@ const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
     }
 
     const updateAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAmount(e.target.value);
+        setAmount(parseFloat(e.target.value));
     }
 
     const updateDate = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.target.value + "T00:00:00");
     }
+
+    const onClickSubmit = () => {
+            updateTransaction( auth.accessToken, transactionId, description, 
+                amount, date, setErrorMessage);
+            renderer();
+            setAmount(0);
+            setDescription("");
+            setDate("");
+            setModalVisible(false);
+        }
 
     const onClose = () => {
         setModalVisible(false);
@@ -61,6 +82,7 @@ const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
                 <tbody>
                     {
                         transactionsArray.map((transaction) => {
+                            const transactionId = transaction._id;
                             const description = transaction.description;
                             const date = new Date(transaction.date);
                             const formattedDate = date.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric',}); 
@@ -70,7 +92,7 @@ const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
                             return(
                                 <tr key={uuidv4()} className="border border-slate-600">
                                     <td className="border border-slate-600 px-2 text-bold text-md">
-                                        <a href="#" onClick={() => toggleEditModal(description, amount, functionDate)}>
+                                        <a href="#" onClick={() => toggleEditModal(transactionId, description, amount, functionDate)}>
                                             {transaction.description}
                                         </a>
                                     </td>
@@ -92,14 +114,15 @@ const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
 
             <EditTransactionModal 
                 modalVisible={modalVisible}
+                id={transactionId}
                 description={description}
                 amount={amount}
                 date={date}
                 updateDescription={updateDescription}
                 updateAmount={updateAmount}
-                onClickSubmit={function (e: any): void {
-                    throw new Error('Function not implemented.');
-                } } onClickClose={onClose}
+                updateDate={updateDate}
+                onClickSubmit={onClickSubmit}
+                onClickClose={onClose}
                 />
         </div>
     );

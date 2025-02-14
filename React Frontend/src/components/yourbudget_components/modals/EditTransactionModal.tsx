@@ -1,19 +1,29 @@
 // Modal used to create new transactions and edit existing expenses
 
+import { useState } from "react"
+import axios from "../../../api/axios"
+import useAuth from "../../../hooks/useAuth"
+import { AuthProp } from "../../../props/CommonProps"
+
 interface EditModalProp {
     modalVisible: boolean,
+    id: string,
     description: string,
     amount: number,
     date: string,
     updateDescription: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     updateAmount: ((e: React.ChangeEvent<HTMLInputElement>) => void)
+    updateDate: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     onClickSubmit: ((e: any) => void)
     onClickClose: (() => void)
 }
 
-const EditTransactionModal =({ modalVisible, description,
+const EditTransactionModal =({ modalVisible, id, description,
     amount, date, updateDescription, updateAmount, updateDate, 
     onClickSubmit, onClickClose }: EditModalProp) => {
+
+        const [errorMessage, setErrorMessage] = useState<string>("");
+
         return(
             <div className={`modal ${modalVisible ? 'visible' : ''}`}>
                 <div className="modal-box">
@@ -40,7 +50,7 @@ const EditTransactionModal =({ modalVisible, description,
                                 <input
                                     placeholder="Enter Date"
                                     type="date"
-                                    value={date}
+                                    defaultValue={date}
                                     onChange={updateDate}
                                     className="border-2 p-2 text-lg border-white rounded-lg p2" />
                         </div>
