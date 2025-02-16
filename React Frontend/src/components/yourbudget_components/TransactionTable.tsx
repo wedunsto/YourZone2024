@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { formatCurrency } from '../../helper/yourbudget_helper/FormatCurrency';
 import EditTransactionModal from './modals/EditTransactionModal';
 import { updateTransaction } from '../../helper/yourbudget_helper/EditTransaction';
+import { deleteTransaction } from '../../helper/yourbudget_helper/DeleteTransaction';
 import { AuthProp } from '../../props/CommonProps';
 import useAuth from '../../hooks/useAuth';
 
@@ -65,6 +66,15 @@ const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp
             setModalVisible(false);
         }
 
+    const onClickDelete = () => {
+        deleteTransaction(auth.accessToken, transactionId, setErrorMessage)
+        renderer();
+        setAmount(0);
+        setDescription("");
+        setDate("");
+        setModalVisible(false);
+    }
+
     const onClose = () => {
         setModalVisible(false);
     }
@@ -122,6 +132,7 @@ const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp
                 updateAmount={updateAmount}
                 updateDate={updateDate}
                 onClickSubmit={onClickSubmit}
+                onClickDelete={onClickDelete}
                 onClickClose={onClose}
                 />
         </div>

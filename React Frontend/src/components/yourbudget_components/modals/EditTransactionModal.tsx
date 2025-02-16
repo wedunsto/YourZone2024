@@ -15,12 +15,13 @@ interface EditModalProp {
     updateAmount: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     updateDate: ((e: React.ChangeEvent<HTMLInputElement>) => void)
     onClickSubmit: ((e: any) => void)
+    onClickDelete: ((e: any) => void)
     onClickClose: (() => void)
 }
 
-const EditTransactionModal =({ modalVisible, id, description,
+const EditTransactionModal =({ modalVisible, description,
     amount, date, updateDescription, updateAmount, updateDate, 
-    onClickSubmit, onClickClose }: EditModalProp) => {
+    onClickSubmit, onClickDelete, onClickClose }: EditModalProp) => {
 
         const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -58,6 +59,7 @@ const EditTransactionModal =({ modalVisible, id, description,
                     <div className="flex justify-between">
                         <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
                         <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Submit</button>
+                        <button className="btn mt-2 text-lg bg-red text-white" onClick={onClickDelete}>Delete</button>
                     </div>
                 </div>
             </div>
