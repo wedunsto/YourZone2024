@@ -11,41 +11,18 @@ import { getTransactionsArray } from "../helper/yourbudget_helper/TransactionsAr
 import { getTotalFunds } from "../helper/yourbudget_helper/TotalFunds";
 import BudgetTable from "../components/yourbudget_components/BudgetTable";
 import { getBudgetsArray } from "../helper/yourbudget_helper/BudgetsArray";
-import { getTotalBudgetsCosts } from "../helper/yourbudget_helper/TotalBudgetsCost";
 import AddBudgetButton from "../components/yourbudget_components/buttons/AddBudgetButton";
 import TransactionTable from '../components/yourbudget_components/TransactionTable';
+import { TransactionsProp, BudgetsProp } from "../props/YourExpensesProps";
 
-interface MongoDecimal {
-    $numberDecimal: string;
-}
-
-interface TransactionsProp {
-    description: string,
-    amount: MongoDecimal,
-    category: string,
-    date: string
-}
-
-interface BudgetsProp {
-    description: string,
-    amount: MongoDecimal,
-    amountPerCheck: MongoDecimal,
-    category: string,
-    dateSubmitted: string,
-    futureDate: string
-}
 
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
     
     const [ modalVisible, setModalVisible ] = useState<boolean>(false);
-    const [ transactions, setTransactions ] = useState(Array<TransactionsProp>);
+    const [ transactions, setTransactions ] = useState<Array<TransactionsProp>>([]);
+    const [ budgets, setBudgets ] = useState<Array<BudgetsProp>>([]);
     const [ totalFunds, setTotalFunds ] = useState<string>("");
-
-    const [ budgets, setBudgets ] = useState(Array<BudgetsProp>);
-    const [ totalBudgetCost, setTotalBudgetCost ] = useState<number>(0);
-    
-    const [ submitted, setSubmitted ] = useState<boolean>(false);
     const [ errorMessage, setErrorMessage ] = useState<string>("");
 
     useEffect(() => {
@@ -61,12 +38,11 @@ const YourExpensesView = () => {
         const getBudgets = async () => {
             const budgetsArray = await getBudgetsArray(auth.id, auth.accessToken);
             setBudgets(budgetsArray);
-            setTotalBudgetCost(getTotalBudgetsCosts(budgetsArray));
         }
 
         getTransactions();
         getBudgets();
-    }, [submitted]);
+    }, [totalFunds]);
 
     const rerender = () => {
         setModalVisible(false);
