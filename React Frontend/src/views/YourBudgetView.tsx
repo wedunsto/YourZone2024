@@ -14,6 +14,7 @@ import { getBudgetsArray } from "../helper/yourbudget_helper/BudgetsArray";
 import AddBudgetButton from "../components/yourbudget_components/buttons/AddBudgetButton";
 import TransactionTable from '../components/yourbudget_components/TransactionTable';
 import { TransactionsProp, BudgetsProp } from "../props/YourExpensesProps";
+import { getTotalBudgetsCosts } from "../helper/yourbudget_helper/TotalBudgetsCost";
 
 
 const YourExpensesView = () => {
@@ -23,6 +24,7 @@ const YourExpensesView = () => {
     const [ transactions, setTransactions ] = useState<Array<TransactionsProp>>([]);
     const [ budgets, setBudgets ] = useState<Array<BudgetsProp>>([]);
     const [ totalFunds, setTotalFunds ] = useState<string>("");
+    const [ totalBudgetCost, setTotalBudgetCost ] = useState<string>("");
     const [ errorMessage, setErrorMessage ] = useState<string>("");
 
     useEffect(() => {
@@ -38,16 +40,12 @@ const YourExpensesView = () => {
         const getBudgets = async () => {
             const budgetsArray = await getBudgetsArray(auth.id, auth.accessToken);
             setBudgets(budgetsArray);
+            setTotalBudgetCost(getTotalBudgetsCosts(budgetsArray));
         }
 
         getTransactions();
         getBudgets();
-    }, [totalFunds]);
-
-    const rerender = () => {
-        setModalVisible(false);
-        setSubmitted(!submitted);
-    }
+    }, []);
 
     return(
         <div className="your-expenses-page-background h-screen w-screen">
@@ -61,19 +59,18 @@ const YourExpensesView = () => {
                     <p className="text-7xl text-black font-bold">{totalFunds}</p>
                     <div className="m-5 flex flex-row space-x-5">
                         <AddTransactionButton
-                            rerender={rerender}
                             income={true} />
                         <AddTransactionButton
-                            rerender={rerender}
                             income={false} />
                         <div className="flex grow justify-end">
                             <AddBudgetButton
-                                rerender={rerender} />
+                                budgets={budgets}
+                                setBudgets={setBudgets}
+                            />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-x-4 items-start">
-                        <TransactionTable 
-                            renderer={rerender}
+                        <TransactionTable
                             transactionsArray={transactions} />
                         <BudgetTable budgetsArray={budgets} />
                     </div>
@@ -87,7 +84,6 @@ const YourExpensesView = () => {
                 checked={modalVisible} /> 
             <InitialBalanceModal 
                 modalVisible={modalVisible}
-                rerender={rerender}
                 setErrorMessage={setErrorMessage} />               
         </div>
     );

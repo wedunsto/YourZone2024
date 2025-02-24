@@ -5,12 +5,14 @@ import CreateBudgetModal from "../modals/CreateBudgetModal";
 import { CreateBudget } from "../../../helper/yourbudget_helper/CreateBudget";
 import { AuthProp } from '../../../props/CommonProps';
 import useAuth from "../../../hooks/useAuth";
+import { BudgetsProp } from "../../../props/YourExpensesProps";
 
 interface AddBudgetButtonProp {
-    rerender: () => void,
+    budgets: Array<BudgetsProp>,
+    setBudgets: React.Dispatch<React.SetStateAction<Array<BudgetsProp>>>
 }
 
-const AddBudgetButton = ({rerender}: AddBudgetButtonProp) => {
+const AddBudgetButton = ({ budgets, setBudgets }: AddBudgetButtonProp) => {
     const [ modalVisible, setModalVisible ] = useState<boolean>(false);
     const [ description, setDescription ] = useState<string>("");
     const [ amount, setAmount ] = useState<number>(0);
@@ -45,11 +47,13 @@ const AddBudgetButton = ({rerender}: AddBudgetButtonProp) => {
         setFutureDate(new Date(Date.parse(e.target.value + "T00:00:00")));
     }
 
-    const onClickSubmit = () => {
-        CreateBudget(auth.id, auth.accessToken, description, amount,
+    const onClickSubmit = async () => {
+        const newBudget = await CreateBudget(auth.id, auth.accessToken, description, amount,
             amountPerCheck, dateSubmitted, futureDate, setErrorMessage
         );
-        rerender();
+        if (newBudget) {
+            setBudgets(prevBudgets => [...prevBudgets, newBudget]);
+        }
         setDescription("");
         setAmount(0);
         setAmountPerCheck(0);

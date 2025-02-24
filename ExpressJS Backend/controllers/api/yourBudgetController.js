@@ -163,7 +163,7 @@ const createBudget = async (req, res) => {
         });
     }
 
-    newBudget = {
+    const newBudget = {
         "userId": userId,
         "description": description,
         "amount": amount,
@@ -189,6 +189,8 @@ const createBudget = async (req, res) => {
         res.status(201).json({
             'success': `New budget created!`
         });
+        
+        res.json(budgets);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while created an budget: ${err.message}`);
         res.status(500).json({ 'message': err.message });
