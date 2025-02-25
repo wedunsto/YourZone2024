@@ -5,9 +5,8 @@ const eventLogger = require('../../middleware/logEvents');
 
 // Create new transaction
 const createTransaction = async (req, res) => {
-    const { userId, description, 
-        amount, category, date} = req.body;
-
+    const { userId, description, amount, category, date} = req.body;
+    let newDate = date;
     if(!userId) {
         eventLogger.logEvents('User Id missing.');
         return res.status(400).json({
@@ -25,8 +24,21 @@ const createTransaction = async (req, res) => {
         });
     }
 
+    // If no date is provided, use today's date
+    if(!date) {
+        newDate = new Date().now();
+    }
+
     try {
         // Create and store a new transaction
+        const newTransaction = {
+            "userId": userId,
+            "description": description,
+            "amount": amount,
+            "category": category,
+            "date": newDate
+        };
+
         await Transactions.create({
             "userId": userId,
             "description": description,
@@ -36,9 +48,9 @@ const createTransaction = async (req, res) => {
         });
 
         eventLogger.logEvents('Successfully created a new transaction');
-        res.status(201).json({
-            'success': `New transaction created!`
-        });
+
+        // Return the new transactions
+        res.status(201).json(newTransaction);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while created an transaction: ${err.message}`);
         res.status(500).json({ 'message': err.message });
@@ -56,7 +68,7 @@ const getTransactions = async (req, res) => {
         });
     }
 
-    let transactions = await Transactions.find(
+    const transactions = await Transactions.find(
         { userId: userId }
     );
 
@@ -105,16 +117,14 @@ const updateTransaction = async (req, res) => {
     }
 
     try {
-        await Transactions.findOneAndUpdate(
+        const updatedTransaction = await Transactions.findOneAndUpdate(
             {_id: transactionId},
             {$set: updatedData},
             {new: true}
 
         );
         eventLogger.logEvents('Transaction updated.');
-        return res.status(200).json({
-            'message': 'Transaction updated.'
-        });
+        return res.status(200).json(updatedTransaction);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while updating Transaction: ${err.message}`);
         res.status(400).json({ 'message': err.message });
@@ -126,13 +136,19 @@ const deleteTransaction = async (req, res) => {
     const { transactionId } = req.query;
 
     try {
-        await Transactions.findOneAndDelete({
+        const deletedTransaction = await Transactions.findOneAndDelete({
             _id: transactionId
         });
+
+        if (!deletedTransaction) {
+            eventLogger.logEvents('Transaction not found.');
+            return res.status(404).json({
+                'message': 'Transaction not found'
+            });
+        }
+
         eventLogger.logEvents('Transaction successfully deleted.');
-        return res.status(200).json({
-            'message': 'Transaction successfully deleted'
-        });
+        return res.status(200).json(deletedTransaction);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while deleting Transaction: ${err.message}`);
         return res.status(404).json({

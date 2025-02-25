@@ -21,11 +21,10 @@ interface TransactionsProp {
 }
 
 interface TransactionsTableProp {
-    renderer: () => void,
     transactionsArray: Array<TransactionsProp>,
 }
 
-const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp) => {
+const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
     const [transactionId, setTransactionId] = useState("");
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState(0);
@@ -59,7 +58,6 @@ const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp
     const onClickSubmit = () => {
             updateTransaction( auth.accessToken, transactionId, description, 
                 amount, date, setErrorMessage);
-            renderer();
             setAmount(0);
             setDescription("");
             setDate("");
@@ -67,8 +65,7 @@ const TransactionTable = ({ renderer, transactionsArray }: TransactionsTableProp
         }
 
     const onClickDelete = () => {
-        deleteTransaction(auth.accessToken, transactionId, setErrorMessage)
-        renderer();
+        deleteTransaction(auth.accessToken, transactionId, setErrorMessage);
         setAmount(0);
         setDescription("");
         setDate("");

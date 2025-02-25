@@ -3,6 +3,7 @@ export interface MongoDecimal {
 }
 
 export interface TransactionsProp {
+    _id: string,
     description: string,
     amount: MongoDecimal,
     category: string,

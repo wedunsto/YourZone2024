@@ -104,7 +104,7 @@ const logUserIn = async ( req, res ) => {
         res.json({id, roles, accessToken});
     } catch(err) {
         eventLogger.logEvents(`Error encountered while logging in: ${err.messsage}`);
-        return res.status(404).json({
+        return res.status(500).json({
             'message': `Error encountered while logging in: ${err.messsage}`
         });
     }

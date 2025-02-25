@@ -6,11 +6,10 @@ import { createInitialBalance } from '../../../helper/yourbudget_helper/CreateIn
 
 interface InitialBalanceModalProp {
     modalVisible: boolean,
-    rerender: () => void,
     setErrorMessage: (errorMessage: string) => void
 }
 
-const InitialBalanceModal = ({ modalVisible, rerender, setErrorMessage }: InitialBalanceModalProp) => {
+const InitialBalanceModal = ({ modalVisible, setErrorMessage }: InitialBalanceModalProp) => {
     const { auth } = useAuth() as AuthProp;
 
     const [ amount, setAmount ] = useState<number>(0);
@@ -26,7 +25,6 @@ const InitialBalanceModal = ({ modalVisible, rerender, setErrorMessage }: Initia
 
     const onClickSubmit =() => {
         createInitialBalance(auth.id, auth.accessToken, amount, date, setErrorMessage);
-        rerender();
     }
 
     return(

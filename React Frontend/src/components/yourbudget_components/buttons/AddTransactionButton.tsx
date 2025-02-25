@@ -9,11 +9,10 @@ import useAuth from '../../../hooks/useAuth';
 import { AuthProp } from '../../../props/CommonProps';
 
 interface AddTransactionButtonProp {
-    rerender: ()=> void,
     income: boolean
 }
 
-const AddTransactionButton =({rerender, income}: AddTransactionButtonProp) => {
+const AddTransactionButton =({ income }: AddTransactionButtonProp) => {
     const labelText = income ? "Add Income" : "Add Expense"
     const functionCall = income ? "addIncome" : "addExpense"
 
@@ -44,7 +43,6 @@ const AddTransactionButton =({rerender, income}: AddTransactionButtonProp) => {
     const onClickSubmit = () => {
         createTransaction(auth.id, auth.accessToken, description, 
             amount, date, income, setErrorMessage);
-        rerender();
         setAmount(0);
         setDescription("");
         setDate(new Date());
