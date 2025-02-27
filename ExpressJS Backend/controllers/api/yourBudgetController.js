@@ -32,7 +32,7 @@ const createTransaction = async (req, res) => {
 
     try {
         // Create and store a new transaction
-        const newTransaction = {
+        const newTransactionProperties = {
             "userId": userId,
             "description": description,
             "amount": amount,
@@ -40,7 +40,7 @@ const createTransaction = async (req, res) => {
             "date": date
         };
 
-        await Transactions.create(newTransaction);
+        const newTransaction = await Transactions.create(newTransactionProperties);
 
         eventLogger.logEvents('Successfully created a new transaction');
 

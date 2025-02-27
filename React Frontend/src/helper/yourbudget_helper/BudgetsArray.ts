@@ -13,14 +13,14 @@ interface BudgetsProp {
     futureDate: string
 }
 
-export const getBudgetsArray = async (authID: string, authAccessToken: string) => {
-    const GET_BUDGETS_URL = `/yourBudget/budgets?userId=${authID}`;
+export const getBudgetsArray = async (userId:string, accessToken: string) => {
+    const GET_BUDGETS_URL = `/yourBudget/budgets?userId=${userId}`;
     try {
         const response = await axios.get(GET_BUDGETS_URL,
             {
                 headers: { 
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authAccessToken}`},
+                    Authorization: `Bearer ${accessToken}`},
                     withCredentials: true
             });
         const budgetsArray: Array<BudgetsProp> = response?.data;

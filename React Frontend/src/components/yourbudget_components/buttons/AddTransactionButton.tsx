@@ -5,27 +5,31 @@
 import { useState } from 'react';
 import AddTransactionModal from '../modals/AddTransactionModal';
 import { createTransaction } from '../../../helper/yourbudget_helper/CreateTransaction';
+import { TransactionsProp } from '../../../props/YourExpensesProps';
 import useAuth from '../../../hooks/useAuth';
 import { AuthProp } from '../../../props/CommonProps';
+import { formatCurrency } from '../../../helper/yourbudget_helper/FormatCurrency';
 
 interface AddTransactionButtonProp {
     income: boolean
+    setTransactions: ((e: any) => void)
+    setTotalFunds: ((e: any) => void)
 }
 
-const AddTransactionButton =({ income }: AddTransactionButtonProp) => {
+const AddTransactionButton =({ income, setTransactions, setTotalFunds }: AddTransactionButtonProp) => {
+    const { auth } = useAuth() as AuthProp;
+
     const labelText = income ? "Add Income" : "Add Expense"
     const functionCall = income ? "addIncome" : "addExpense"
 
-    const { auth } = useAuth() as AuthProp;
-
-    const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+    const [ transactionModalVisible, setTransactionModalVisible ] = useState<boolean>(false);
     const [ amount, setAmount ] = useState<number>(0);
     const [ description, setDescription ] = useState<string>("");
     const [ date, setDate ] = useState<Date>(new Date());
     const [ errorMessage, setErrorMessage ] = useState<string>("");
 
     const onClickAddTransaction = () => {
-        setModalVisible(true);
+        setTransactionModalVisible(true);
     }
 
     const updateDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,17 +44,21 @@ const AddTransactionButton =({ income }: AddTransactionButtonProp) => {
         setDate(new Date(Date.parse(e.target.value + "T00:00:00")));
     }
 
-    const onClickSubmit = () => {
-        createTransaction(auth.id, auth.accessToken, description, 
+    const onClickSubmit = async () => {
+        const newTransaction = await createTransaction(auth.id, auth.accessToken, description, 
             amount, date, income, setErrorMessage);
+        setTransactions((prevTransactions: Array<TransactionsProp>) => [
+            ...prevTransactions, newTransaction
+        ]);
+        setTotalFunds((prevTotalFunds: String) => (Number(prevTotalFunds) + amount).toString());
         setAmount(0);
         setDescription("");
         setDate(new Date());
-        setModalVisible(false);
+        setTransactionModalVisible(false);
     }
 
     const onClickClose = () => {
-        setModalVisible(false);
+        setTransactionModalVisible(false);
     }
 
     return(
@@ -65,9 +73,9 @@ const AddTransactionButton =({ income }: AddTransactionButtonProp) => {
                 id= "createTransaction"
                 className= "modal-toggle"
                 readOnly
-                checked={modalVisible} />
+                checked={transactionModalVisible} />
             <AddTransactionModal 
-                modalVisible={modalVisible} 
+                modalVisible={transactionModalVisible} 
                 income={income} 
                 description={description} 
                 amount={amount} 

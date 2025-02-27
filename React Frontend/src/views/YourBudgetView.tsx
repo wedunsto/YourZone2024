@@ -1,9 +1,7 @@
 // View for all current expenses, and buttons to add, edit, and delete expenses
 import { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
 import Header from "../components/Header";
 import "../styles/YourExpensesStyles.css"; 
-import { AuthProp } from "../props/CommonProps";
 import ButtonMenu from "../components/yourbudget_components/buttons/ButtonMenu";
 import AddTransactionButton from "../components/yourbudget_components/buttons/AddTransactionButton";
 import InitialBalanceModal from "../components/yourbudget_components/modals/InitialBalanceModal";
@@ -14,24 +12,24 @@ import { getBudgetsArray } from "../helper/yourbudget_helper/BudgetsArray";
 import AddBudgetButton from "../components/yourbudget_components/buttons/AddBudgetButton";
 import TransactionTable from '../components/yourbudget_components/TransactionTable';
 import { TransactionsProp, BudgetsProp } from "../props/YourExpensesProps";
-import { getTotalBudgetsCosts } from "../helper/yourbudget_helper/TotalBudgetsCost";
+import useAuth from "../hooks/useAuth";
+import { AuthProp } from "../props/CommonProps";
 
 
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
     
-    const [ modalVisible, setModalVisible ] = useState<boolean>(false);
+    const [ initialBalanceModalVisible, setinitialBalanceModalVisible ] = useState<boolean>(false);
     const [ transactions, setTransactions ] = useState<Array<TransactionsProp>>([]);
     const [ budgets, setBudgets ] = useState<Array<BudgetsProp>>([]);
     const [ totalFunds, setTotalFunds ] = useState<string>("");
-    const [ totalBudgetCost, setTotalBudgetCost ] = useState<string>("");
     const [ errorMessage, setErrorMessage ] = useState<string>("");
 
     useEffect(() => {
         const getTransactions = async () => {
             const transactionsArray = await getTransactionsArray(auth.id, auth.accessToken);
             if(transactionsArray.length === 0) {
-                setModalVisible(true);
+                setinitialBalanceModalVisible(true);
             }
             setTransactions(transactionsArray);
             setTotalFunds(getTotalFunds(transactionsArray));
@@ -40,7 +38,6 @@ const YourExpensesView = () => {
         const getBudgets = async () => {
             const budgetsArray = await getBudgetsArray(auth.id, auth.accessToken);
             setBudgets(budgetsArray);
-            setTotalBudgetCost(getTotalBudgetsCosts(budgetsArray));
         }
 
         getTransactions();
@@ -59,9 +56,15 @@ const YourExpensesView = () => {
                     <p className="text-7xl text-black font-bold">{totalFunds}</p>
                     <div className="m-5 flex flex-row space-x-5">
                         <AddTransactionButton
-                            income={true} />
+                            income={true} 
+                            setTransactions={setTransactions}
+                            setTotalFunds={setTotalFunds}
+                        />
                         <AddTransactionButton
-                            income={false} />
+                            income={false}
+                            setTransactions={setTransactions}
+                            setTotalFunds={setTotalFunds}
+                        />
                         <div className="flex grow justify-end">
                             <AddBudgetButton
                                 budgets={budgets}
@@ -81,10 +84,15 @@ const YourExpensesView = () => {
                 id="createInitialTransaction"
                 className="modal-toggle"
                 readOnly
-                checked={modalVisible} /> 
+                checked={initialBalanceModalVisible}
+            /> 
             <InitialBalanceModal 
-                modalVisible={modalVisible}
-                setErrorMessage={setErrorMessage} />               
+                modalVisible={initialBalanceModalVisible}
+                setModalVisible={setinitialBalanceModalVisible}
+                setErrorMessage={setErrorMessage}
+                setTransactions={setTransactions}
+                setTotalFunds={setTotalFunds}
+            />               
         </div>
     );
 }

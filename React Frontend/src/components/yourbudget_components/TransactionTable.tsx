@@ -7,17 +7,10 @@ import { updateTransaction } from '../../helper/yourbudget_helper/EditTransactio
 import { deleteTransaction } from '../../helper/yourbudget_helper/DeleteTransaction';
 import { AuthProp } from '../../props/CommonProps';
 import useAuth from '../../hooks/useAuth';
+import { TransactionsProp } from '../../props/YourExpensesProps';
 
 interface MongoDecimal {
     $numberDecimal: string;
-}
-
-interface TransactionsProp {
-    _id: string,
-    description: string,
-    amount: MongoDecimal,
-    category: string,
-    date: string
 }
 
 interface TransactionsTableProp {
@@ -75,7 +68,6 @@ const TransactionTable = ({ transactionsArray }: TransactionsTableProp) => {
     const onClose = () => {
         setModalVisible(false);
     }
-
     return (
         <div>
             <table className="border-collapse border border-slate-500 ml-5 text-black">

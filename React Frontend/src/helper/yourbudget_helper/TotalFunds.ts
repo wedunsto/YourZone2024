@@ -1,15 +1,5 @@
+import { TransactionsProp } from "../../props/YourExpensesProps";
 import { formatCurrency } from "./FormatCurrency";
-
-interface MongoDecimal {
-    $numberDecimal: string;
-}
-
-interface TransactionsProp {
-    description: string,
-    amount: MongoDecimal,
-    category: string,
-    date: string
-}
 
 export const getTotalFunds = (transactionsArray: Array<TransactionsProp>) => {
     let totalFunds = 0;

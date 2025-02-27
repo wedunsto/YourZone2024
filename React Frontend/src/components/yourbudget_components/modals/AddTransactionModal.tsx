@@ -12,8 +12,7 @@ interface YourBudgetModalProp {
     onClickClose: (() => void)
 }
 
-const YourBudgetModal =({ modalVisible, income, description,
-    amount, updateDescription, updateAmount, updateDate, 
+const YourBudgetModal =({ modalVisible, income, description, amount, updateDescription, updateAmount, updateDate, 
     onClickSubmit, onClickClose }: YourBudgetModalProp) => {
         return(
             <div className={`modal ${modalVisible ? 'visible' : ''}`}>
