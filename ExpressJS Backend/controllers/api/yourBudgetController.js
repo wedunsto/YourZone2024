@@ -6,7 +6,8 @@ const eventLogger = require('../../middleware/logEvents');
 // Create new transaction
 const createTransaction = async (req, res) => {
     const { userId, description, amount, category, date} = req.body;
-    let newDate = date;
+    let newCategory = category;
+
     if(!userId) {
         eventLogger.logEvents('User Id missing.');
         return res.status(400).json({
@@ -24,9 +25,9 @@ const createTransaction = async (req, res) => {
         });
     }
 
-    // If no date is provided, use today's date
-    if(!date) {
-        newDate = new Date().now();
+    // If no category is provided, set it to None
+    if(!category) {
+        newCategory = "None";
     }
 
     try {
@@ -35,17 +36,11 @@ const createTransaction = async (req, res) => {
             "userId": userId,
             "description": description,
             "amount": amount,
-            "category": category,
-            "date": newDate
+            "category": newCategory,
+            "date": date
         };
 
-        await Transactions.create({
-            "userId": userId,
-            "description": description,
-            "amount": amount,
-            "category": category,
-            "date": date
-        });
+        await Transactions.create(newTransaction);
 
         eventLogger.logEvents('Successfully created a new transaction');
 
@@ -159,8 +154,8 @@ const deleteTransaction = async (req, res) => {
 
 // Create a new budget for a user
 const createBudget = async (req, res) => {
-    const { userId, description, amount, amountPerCheck, category, 
-        dateSubmitted, futureDate} = req.body;
+    const { userId, description, amount, amountPerCheck, category, dateSubmitted, futureDate} = req.body;
+    let newCategory = category;
 
     if(!userId) {
         eventLogger.logEvents('User Id missing.');
@@ -178,38 +173,39 @@ const createBudget = async (req, res) => {
             'message': 'Budget amount missing.'
         });
     }
+    // If there is no category, set it to none
+    if(!category) {
+        newCategory = "None";
+    }
 
-    const newBudget = {
+    const newBudgetProperties = {
         "userId": userId,
         "description": description,
         "amount": amount,
+        "category": newCategory
     };
 
     if (amountPerCheck) {
-        newBudget.amountPerCheck = amountPerCheck;
+        newBudgetProperties.amountPerCheck = amountPerCheck;
     }
-    if (category) {
-        newBudget.category = category;
+
+    if(dateSubmitted) {
+        newBudgetProperties.dateSubmitted = dateSubmitted;
     }
-    if (dateSubmitted) {
-        newBudget.dateSubmitted = dateSubmitted;
-    }
+
     if (futureDate) {
-        newBudget.futureDate = futureDate;
+        newBudgetProperties.futureDate = futureDate;
     }
+
     try {
         // Create and store a new transaction
-        await Budgets.create(newBudget);
+        const newBudget = await Budgets.create(newBudgetProperties);
 
         eventLogger.logEvents('Successfully created a new budget');
-        res.status(201).json({
-            'success': `New budget created!`
-        });
-        
-        res.json(budgets);
+        return res.status(201).json(newBudget);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while created an budget: ${err.message}`);
-        res.status(500).json({ 'message': err.message });
+        return res.status(500).json({ 'message': err.message });
     }
 }
 
@@ -224,7 +220,7 @@ const getBudgets = async (req, res) => {
         });
     }
 
-    let budgets = await Budgets.find(
+    const budgets = await Budgets.find(
         { userId: userId }
     );
 
@@ -235,7 +231,7 @@ const getBudgets = async (req, res) => {
     }
 
     eventLogger.logEvents('budgets retrieved');
-    res.json(budgets);
+    res.status(200).json(budgets);
 }
 
 // Update an existing budget
@@ -280,16 +276,14 @@ const updateBudget = async (req, res) => {
     }
 
     try {
-        await Budgets.findOneAndUpdate(
+        const updatedBudget = await Budgets.findOneAndUpdate(
             {_id: budgetId},
             {$set: updatedData},
             {new: true}
 
         );
         eventLogger.logEvents('Budget updated.');
-        return res.status(200).json({
-            'message': 'Budget updated.'
-        });
+        return res.status(200).json(updatedBudget);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while updating Budget: ${err.message}`);
         res.status(400).json({ 'message': err.message });
@@ -301,18 +295,54 @@ const deleteBudget = async (req, res) => {
     const { budgetId } = req.query;
 
     try {
-        await Budgets.findOneAndDelete({
+        const deletedBudget = await Budgets.findOneAndDelete({
             _id: budgetId
         });
         eventLogger.logEvents('Budget successfully deleted.');
-        return res.status(200).json({
-            'message': 'Budget successfully deleted'
-        });
+        return res.status(200).json(deletedBudget);
     } catch(err) {
         eventLogger.logEvents(`Error encountered while deleting Budget: ${err.message}`);
         return res.status(404).json({
             'message': `Error encountered while deleting Budget: ${err.message}`
         });
+    }
+}
+
+// Convert a budget to an transaction
+const convertBudget = async (req, res) => {
+    const {budgetId} = req.body;
+    let deletedBudget = {};
+
+    try {
+        deletedBudget = await Budgets.findOneAndDelete({
+            _id: budgetId
+        });
+        eventLogger.logEvents('Budget successfully deleted.');
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while deleting Budget: ${err.message}`);
+        return res.status(404).json({
+            'message': `Error encountered while deleting Budget: ${err.message}`
+        });
+    }
+
+    try {
+        const newTransaction = {
+            "userId": deletedBudget.userId,
+            "description": deletedBudget.description,
+            "amount": deletedBudget.amount,
+            "category": deletedBudget.category,
+            "date": deletedBudget.futureDate
+        }
+
+        const convertedTransaction = await Transactions.create(newTransaction);
+
+        eventLogger.logEvents('Successfully created a new transaction');
+
+        // Return the new transactions
+        res.status(201).json(convertedTransaction);
+    } catch(err) {
+        eventLogger.logEvents(`Error encountered while created an transaction: ${err.message}`);
+        res.status(500).json({ 'message': err.message });
     }
 }
 
@@ -324,5 +354,6 @@ module.exports = {
     createBudget,
     getBudgets,
     updateBudget,
-    deleteBudget
+    deleteBudget,
+    convertBudget
 }

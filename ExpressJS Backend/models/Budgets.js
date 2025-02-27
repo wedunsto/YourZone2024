@@ -41,11 +41,7 @@ const budgetSchema = new Schema({
     },
     futureDate: {
         type: Date,
-        default: () => {
-            const now = new Date();
-            now.setHours(now.getHours() - now.getTimezoneOffset() / 60);
-            return now;
-        },
+        required: false
     }
 });
 
