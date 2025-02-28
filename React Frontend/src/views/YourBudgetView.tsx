@@ -56,12 +56,14 @@ const YourExpensesView = () => {
                     <p className="text-7xl text-black font-bold">{totalFunds}</p>
                     <div className="m-5 flex flex-row space-x-5">
                         <AddTransactionButton
-                            income={true} 
+                            income={true}
+                            totalFunds={totalFunds}
                             setTransactions={setTransactions}
                             setTotalFunds={setTotalFunds}
                         />
                         <AddTransactionButton
                             income={false}
+                            totalFunds={totalFunds}
                             setTransactions={setTransactions}
                             setTotalFunds={setTotalFunds}
                         />

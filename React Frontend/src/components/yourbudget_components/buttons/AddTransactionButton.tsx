@@ -11,12 +11,13 @@ import { AuthProp } from '../../../props/CommonProps';
 import { formatCurrency } from '../../../helper/yourbudget_helper/FormatCurrency';
 
 interface AddTransactionButtonProp {
-    income: boolean
-    setTransactions: ((e: any) => void)
+    income: boolean,
+    totalFunds: string,
+    setTransactions: ((e: any) => void),
     setTotalFunds: ((e: any) => void)
 }
 
-const AddTransactionButton =({ income, setTransactions, setTotalFunds }: AddTransactionButtonProp) => {
+const AddTransactionButton =({ income, totalFunds, setTransactions, setTotalFunds }: AddTransactionButtonProp) => {
     const { auth } = useAuth() as AuthProp;
 
     const labelText = income ? "Add Income" : "Add Expense"
@@ -50,7 +51,9 @@ const AddTransactionButton =({ income, setTransactions, setTotalFunds }: AddTran
         setTransactions((prevTransactions: Array<TransactionsProp>) => [
             ...prevTransactions, newTransaction
         ]);
-        setTotalFunds((prevTotalFunds: String) => (Number(prevTotalFunds) + amount).toString());
+        const newTotalFunds = Number(totalFunds.substring(1)) + amount;
+        
+        setTotalFunds(formatCurrency(newTotalFunds));
         setAmount(0);
         setDescription("");
         setDate(new Date());
