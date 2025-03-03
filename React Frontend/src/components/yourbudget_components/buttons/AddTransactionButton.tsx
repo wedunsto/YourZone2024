@@ -45,15 +45,22 @@ const AddTransactionButton =({ income, totalFunds, setTransactions, setTotalFund
         setDate(new Date(Date.parse(e.target.value + "T00:00:00")));
     }
 
+    // Update the total funds and transactions array based on the transaction being added
+    const addTransaction = (newTransaction: TransactionsProp) => {
+        const convertedNewAmount = Number(newTransaction.amount.$numberDecimal.replace(/[$,]/g, ''));
+        const convertedTotalFunds = Number(totalFunds.replace(/[$,]/g, ''));
+
+        setTotalFunds(formatCurrency(convertedTotalFunds + convertedNewAmount));
+        setTransactions((prevTransactions: Array<TransactionsProp>) => [...prevTransactions, newTransaction]);
+    }
+
     const onClickSubmit = async () => {
-        const newTransaction = await createTransaction(auth.id, auth.accessToken, description, 
-            amount, date, income, setErrorMessage);
-        setTransactions((prevTransactions: Array<TransactionsProp>) => [
-            ...prevTransactions, newTransaction
-        ]);
-        const newTotalFunds = Number(totalFunds.substring(1)) + amount;
+        const newTransaction = await createTransaction(auth.id, auth.accessToken, description, amount, date, income, setErrorMessage);
         
-        setTotalFunds(formatCurrency(newTotalFunds));
+        if (newTransaction) {
+            addTransaction(newTransaction);
+        }
+        
         setAmount(0);
         setDescription("");
         setDate(new Date());
