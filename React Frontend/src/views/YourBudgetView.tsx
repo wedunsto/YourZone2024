@@ -1,5 +1,5 @@
 // View for all current expenses, and buttons to add, edit, and delete expenses
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import "../styles/YourExpensesStyles.css"; 
 import ButtonMenu from "../components/yourbudget_components/buttons/ButtonMenu";
@@ -15,6 +15,19 @@ import { TransactionsProp, BudgetsProp } from "../props/YourExpensesProps";
 import useAuth from "../hooks/useAuth";
 import { AuthProp } from "../props/CommonProps";
 
+export interface YourBudget_ContextProp {
+    transactions: Array<TransactionsProp>,
+    totalFunds: string,
+    setTransactions: (e: Array<TransactionsProp>) => void,
+    setTotalFunds: (e: string) => void
+}
+
+export const YourBudget_Context = createContext<YourBudget_ContextProp>({
+    setTransactions: () => { },
+    transactions: [],
+    totalFunds: "",
+    setTotalFunds: () => {}
+})
 
 const YourExpensesView = () => {
     const { auth } = useAuth() as AuthProp;
@@ -75,9 +88,14 @@ const YourExpensesView = () => {
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-x-4 items-start">
-                        <TransactionTable
-                            transactionsArray={transactions} />
-                        <BudgetTable budgetsArray={budgets} />
+                        <YourBudget_Context.Provider value={{
+                            transactions: transactions,
+                            totalFunds: totalFunds,
+                            setTransactions: setTransactions,
+                            setTotalFunds: setTotalFunds }}>
+                            <TransactionTable />
+                            <BudgetTable budgetsArray={budgets} />
+                        </YourBudget_Context.Provider>
                     </div>
                 </div>
             </div>

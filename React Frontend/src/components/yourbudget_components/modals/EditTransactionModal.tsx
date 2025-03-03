@@ -1,9 +1,6 @@
 // Modal used to create new transactions and edit existing expenses
 
 import { useState } from "react"
-import axios from "../../../api/axios"
-import useAuth from "../../../hooks/useAuth"
-import { AuthProp } from "../../../props/CommonProps"
 
 interface EditModalProp {
     modalVisible: boolean,
