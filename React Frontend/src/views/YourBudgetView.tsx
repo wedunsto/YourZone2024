@@ -17,14 +17,18 @@ import { AuthProp } from "../props/CommonProps";
 
 export interface YourBudget_ContextProp {
     transactions: Array<TransactionsProp>,
+    budgets: Array<BudgetsProp>,
     totalFunds: string,
     setTransactions: (e: Array<TransactionsProp>) => void,
-    setTotalFunds: (e: string) => void
+    setTotalFunds: (e: string) => void,
+    setBudgets: (e: Array<BudgetsProp>) => void
 }
 
 export const YourBudget_Context = createContext<YourBudget_ContextProp>({
     setTransactions: () => { },
+    setBudgets: () => { },
     transactions: [],
+    budgets: [],
     totalFunds: "",
     setTotalFunds: () => {}
 })
@@ -90,11 +94,13 @@ const YourExpensesView = () => {
                     <div className="grid grid-cols-2 gap-x-4 items-start">
                         <YourBudget_Context.Provider value={{
                             transactions: transactions,
+                            budgets: budgets,
                             totalFunds: totalFunds,
                             setTransactions: setTransactions,
+                            setBudgets: setBudgets,
                             setTotalFunds: setTotalFunds }}>
                             <TransactionTable />
-                            <BudgetTable budgetsArray={budgets} />
+                            <BudgetTable />
                         </YourBudget_Context.Provider>
                     </div>
                 </div>

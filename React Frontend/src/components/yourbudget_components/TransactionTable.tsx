@@ -1,4 +1,5 @@
 // Table of transactions for the logged in user
+
 import { useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCurrency } from '../../helper/yourbudget_helper/FormatCurrency';
@@ -22,13 +23,13 @@ const TransactionTable = () => {
     const { auth } = useAuth() as AuthProp;
     const { transactions, totalFunds, setTransactions, setTotalFunds } = useContext<YourBudget_ContextProp>(YourBudget_Context);
 
-    const toggleEditModal = (paramTransactionId: string, paramDescription: string, paramAmount: number, paramDate: string) => {
-        setPreviousAmount(paramAmount);
+    const toggleEditModal = (paramTransactionId: string, paramTransactionDescription: string, paramTransactionAmount: number, paramTransactionDate: string) => {
+        setPreviousAmount(paramTransactionAmount);
 
         setTransactionId(paramTransactionId);
-        setDescription(paramDescription);
-        setAmount(paramAmount);
-        setDate(paramDate);
+        setDescription(paramTransactionDescription);
+        setAmount(paramTransactionAmount);
+        setDate(paramTransactionDate);
         setModalVisible(true);
     }
 

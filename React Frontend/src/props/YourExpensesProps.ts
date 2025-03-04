@@ -11,6 +11,7 @@ export interface TransactionsProp {
 }
 
 export interface BudgetsProp {
+    _id: string,
     description: string,
     amount: MongoDecimal,
     amountPerCheck: MongoDecimal,

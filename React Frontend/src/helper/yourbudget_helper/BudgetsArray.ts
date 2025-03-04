@@ -1,17 +1,5 @@
 import axios from "../../api/axios"
-
-interface MongoDecimal {
-    $numberDecimal: string;
-}
-
-interface BudgetsProp {
-    description: string,
-    amount: MongoDecimal,
-    amountPerCheck: MongoDecimal,
-    category: string,
-    dateSubmitted: string,
-    futureDate: string
-}
+import { BudgetsProp } from "../../props/YourExpensesProps";
 
 export const getBudgetsArray = async (userId:string, accessToken: string) => {
     const GET_BUDGETS_URL = `/yourBudget/budgets?userId=${userId}`;

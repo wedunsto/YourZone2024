@@ -37,7 +37,7 @@ const EditTransactionModal =({ modalVisible, description,
                                     className="border-2 p-2 text-lg border-white rounded-lg mb-2 p2" />
                                 <p className="text-2xl mb-2">Transaction amount:</p>
                                 <input
-                                    placeholder="Enter Expense"
+                                    placeholder="Enter expense amount"
                                     id="expenseCost"
                                     type="number"
                                     step="0.01"
@@ -55,7 +55,7 @@ const EditTransactionModal =({ modalVisible, description,
                     </form>
                     <div className="flex justify-between">
                         <button className="btn mt-2 text-lg text-white" onClick={onClickClose}>Close</button>
-                        <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Submit</button>
+                        <button className="btn mt-2 text-lg text-white" onClick={onClickSubmit}>Update</button>
                         <button className="btn mt-2 text-lg bg-red text-white" onClick={onClickDelete}>Delete</button>
                     </div>
                 </div>
